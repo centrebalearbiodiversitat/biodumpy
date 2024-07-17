@@ -1,2 +1,5 @@
 /venv/
 .idea
+/[Dd]ownload*/
+
+main.py
