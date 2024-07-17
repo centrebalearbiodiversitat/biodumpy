@@ -9,6 +9,7 @@ from Bio import Entrez, SeqIO
 from http.client import IncompleteRead
 import logging
 
+
 class CustomEncoder (json.JSONEncoder):
 	def default(self, obj):
 		if hasattr(obj, 'to_dict'):
