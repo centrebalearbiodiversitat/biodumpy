@@ -71,4 +71,4 @@ class INaturalist (Input):
 		else:
 			photo_details = photo_details_empty
 
-		return photo_details
+		return [photo_details]
