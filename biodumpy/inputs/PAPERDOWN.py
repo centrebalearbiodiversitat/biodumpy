@@ -14,8 +14,12 @@ class PAPERDOWN(Input):
 			raise ValueError('output_format must be json.')
 
 	def download(self, query, **kwargs) -> list:
-		# create webdriver object
-		driver = webdriver.Firefox()
+		# geckodriver_path = "/usr/bin/firefox"
+		# driver_service = webdriver.FirefoxService(executable_path=geckodriver_path)
+		op = webdriver.ChromeOptions()
+		op.add_argument('--headless')
+
+		driver = webdriver.Chrome(options=op)
 		driver.set_page_load_timeout(20)
 
 		try:

@@ -1,14 +1,15 @@
 from biodumpy import Biodumpy
-from biodumpy.inputs import NCBI, INaturalist, BOLD
+from biodumpy.inputs import PAPERDOWN
+import pandas as pd
+
+df = pd.read_csv('Martes_martes.csv')
+
+taxa = list(df['DOI'].dropna())
 
 bdp = Biodumpy([
-	NCBI(mail="hola_ncbi@quetal.com"),
-	BOLD(),
-	INaturalist(bulk=True)
+	PAPERDOWN(bulk=True),
 ])
 bdp.start(
-	[
-		{"name": 'Mus musculus', "query": "Mus musculus[Organism]"}
-	],
-	output_path="downloads2/{date}/{module}/{name}.json"
+	taxa,
+	output_path="downloads/{date}/{module}/{name}"
 )

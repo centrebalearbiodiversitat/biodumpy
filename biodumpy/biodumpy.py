@@ -13,35 +13,38 @@ class Biodumpy:
 	def start(self, elements: list, output_path="downloads/{date}/{module}/{name}"):
 		current_date = datetime.now().strftime('%Y-%m-%d')
 		bulk_input = {}
+		with tqdm(total=len(elements), desc="Biodumpy list", unit=" elements") as pbar:
+			for el in elements:
+				if not el:
+					continue
 
-		for el in elements:
-			if not el:
-				continue
+				if isinstance(el, str):
+					el = {"query": el}
 
-			if isinstance(el, str):
-				el = {"query": el}
+				if "query" not in el:
+					raise ValueError(f"Missing 'name' key for {el}")
 
-			if "query" not in el:
-				raise ValueError(f"Missing 'name' key for {el}")
+				name = el['query']
+				clean_name = name.replace("/", "_")
+				# print(f'Downloading {name}...')
 
-			name = el['query']
-			clean_name = name.replace("/", "_")
-			print(f'Downloading {name}...')
+				for inp in self.inputs:
+					module_name = type(inp).__name__
+					# print(f'\t{module_name}')
+					payload = inp.download(**el)
 
-			for inp in self.inputs:
-				module_name = type(inp).__name__
-				print(f'\t{module_name}')
-				payload = inp.download(**el)
+					if inp.bulk:
+						if inp not in bulk_input:
+							bulk_input[inp] = []
+						bulk_input[inp].extend(payload)
 
-				if inp.bulk:
-					if inp not in bulk_input:
-						bulk_input[inp] = []
-					bulk_input[inp].extend(payload)
+					else:
+						dump(file_name=f'{output_path.format(date=current_date, module=module_name, name=clean_name)}',
+							 obj_list=payload, output_format=inp.output_format
+							 )
 
-				else:
-					dump(file_name=f'{output_path.format(date=current_date, module=module_name, name=clean_name)}',
-					     obj_list=payload, output_format=inp.output_format
-					     )
+				pbar.update(1)
+
 
 		for inp, payload in bulk_input.items():
 			dump(file_name=output_path.format(date=current_date, module=type(inp).__name__, name='bulk'),
