@@ -2,4 +2,7 @@
 .idea
 /[Dd]ownload*/
 
-main.py
+main*
+biodumpy/inputs/ZOOBANK.py
+*.json
+*.log

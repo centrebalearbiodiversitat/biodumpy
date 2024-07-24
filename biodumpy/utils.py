@@ -3,7 +3,8 @@ import json
 import os
 from Bio import Entrez
 
-def dump_to_json(file_name, obj_list):
+
+def dump(file_name, obj_list, output_format='json'):
     """
     Dump a list of objects to JSON files. Optionally split into multiple files for bulk processing.
 
@@ -17,8 +18,12 @@ def dump_to_json(file_name, obj_list):
     if not os.path.exists(directory):
         os.makedirs(directory)
 
-    with open(file_name, 'w+') as f:
-        json.dump(obj_list, f, indent=4)
+    with open (f'{file_name}.{output_format}', 'w+') as output_file:
+        if output_format == 'fasta':
+            for line in obj_list:
+                output_file.write(f"{line}\n")
+        else:
+            json.dump(obj_list, output_file, indent=4)
 
 
 def dump_to_csv(file_name, obj_list):
@@ -60,19 +65,6 @@ def dump_to_csv(file_name, obj_list):
                     row[field] = None
 
             writer.writerow(row)
-
-
-def bulk_files(file_name, bulk_folder):
-    merged_data = []
-    for filename in os.listdir(bulk_folder):
-        if filename.endswith('.json'):
-            file_path = os.path.join(bulk_folder, filename)
-            with open(file_path, 'r') as json_file:
-                data = json.load(json_file)
-                merged_data.append(data)
-
-    with open (file_name, 'w+') as f:
-        json.dump(merged_data, f, indent=4)
 
 
 def split_to_batches(input_list, batch_size: int):

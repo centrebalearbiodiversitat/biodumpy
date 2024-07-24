@@ -7,11 +7,10 @@ class INaturalist (Input):
 
 	TAXA_URL = "https://api.inaturalist.org/v1/taxa"
 
-	def download(self, name, **kwargs):
-		query = name
+	def download(self, query, **kwargs):
 
 		params = {'q': query, 'order': 'desc', 'order_by': 'observations_count'}
-		response = requests.get (INaturalist.TAXA_URL, params=params)
+		response = requests.get(INaturalist.TAXA_URL, params=params)
 
 		photo_details_empty = {'taxon': query, 'image_id': None, 'license_code': None, 'attribution': None}
 

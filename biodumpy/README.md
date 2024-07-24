@@ -29,16 +29,14 @@ pip install biodumpy
 from biodumpy import Biodumpy
 from biodumpy.inputs import NCBI
 
-bdp = Biodumpy([
-	NCBI(mail="hola_ncbi@quetal.com", step=100, max_bp=5000)
-])
+bdp = Biodumpy([NCBI(mail="hola_ncbi@quetal.com", step=100, max_bp=1000, rettype='gb', output_format='json', bulk=False)])
 
 # List of taxa
 taxa = ['Alytes muletensis', 'Anax imperator']
 ```
 
 
-### Download NCBI metadata by Taxon Name.
+### Download NCBI metadata by Taxon name.
 Before running the function to download the data, we need to prepare the data by creating a list of dictionaries. 
 Each dictionary should contain the indices **name** and **query**, indicating the species name and the corresponding 
 NCBI query, respectively.
@@ -53,27 +51,27 @@ NCBI query, respectively.
      }
      result_list.append(element_dict)
 
- bdp.start(result_list, output_path="downloads2/{date}/{name}_{module}.json")
+ bdp.start(result_list, output_path="downloads/{date}/{name}_{module}")
 ```
 
 
-### Download NCBI metadata by taxon ID Name.
+### Download NCBI metadata by taxon ID.
 ```bash
-a=[]
+taxon_ids = []
 for taxon in taxa:
-    a.append(NCBI.taxonomy_id(taxon, lineage=False))
-    print(a[-1])
+	taxon_ids.append(NCBI.taxonomy_id(taxon, lineage=False))
+	print(taxon_ids[-1])
 
 result_list = []
-for aa in a:
-    element_dict = {
-        'name': aa['ScientificName'],
-        'query': f'txid{aa["TaxId"]}[Organism]'
-    }
-    # Append the dictionary to the result_list
-    result_list.append(element_dict)
+for taxon_id in taxon_ids:
+	element_dict = {
+		'name': taxon_id['ScientificName'],
+		'query': f'txid{taxon_id["TaxId"]}[Organism]'
+	}
+	# Append the dictionary to the result_list
+	result_list.append(element_dict)
     
-bdp.start(result_list, output_path="downloads2/{date}/{name}_{module}.json")
+bdp.start(result_list, output_path="downloads/{date}/{name}_{module}")
 ```
 
 
@@ -90,6 +88,53 @@ for i in range(len(data)):
 
 print(accession_number)
 ```
+
+
+### Download NCBI fasta by Taxon Name.
+To download a FASTA file from NCBI, we need to change the parameter *rettype* in the Biopython function. 
+Additionally, it is useful to change the name of the module to {module}_fasta.
+```bash
+bdp = Biodumpy([NCBI(mail="hola_ncbi@quetal.com", step=100, max_bp=1000, rettype='fasta', output_format='fasta', bulk=False)])
+
+result_list = []
+
+# Create a dictionary with 'name' and 'query' from corresponding indices
+for taxon in taxa:
+	element_dict = {
+		'name': taxon,
+		'query': f'{taxon}[Organism]'
+	}
+	result_list.append (element_dict)
+
+bdp.start (result_list, output_path="downloads/{date}/{module}_fasta/{name}")
+```
+
+
+### Download "bulk" output.
+"Bulk download" refers to the process of downloading a large volume of data files in a single operation, consolidating 
+them together. This is often done to facilitate data analysis and to have a single file containing broad information. 
+However, this process can create a massive resulting file. Therefore, we suggest using this function carefully.
+```bash
+bdp = Biodumpy ([NCBI(mail="hola_ncbi@quetal.com", step=100, max_bp=1000, rettype='gb', output_format='json', bulk=True)])
+
+# List of taxa
+taxa = ['Alytes muletensis', 'Anax imperator']
+
+result_list = []
+# Create a dictionary with 'name' and 'query' from corresponding indices
+for taxon in taxa:
+	element_dict = {
+		'name': taxon,
+		'query': f'{taxon}[Organism]'
+	}
+	result_list.append (element_dict)
+
+bdp.start (result_list, output_path="downloads/{date}/{module}/{name}")
+```
+
+
+
+
 
 
 ## Documentation and Support

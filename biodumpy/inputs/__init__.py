@@ -2,3 +2,8 @@ from .COL import COL
 from .NCBI import NCBI
 from .BOLD import BOLD
 from .iNaturalist import INaturalist
+from .COL import COL
+from .ZOOBANK import ZOOBANK
+from .IUCN import IUCN
+from .SCOPUS import SCOPUS
+from .PAPERDOWN import PAPERDOWN
