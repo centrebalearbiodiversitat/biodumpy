@@ -3,30 +3,26 @@ import requests
 
 
 class SCOPUS(Input):
-
-	def __init__(self, api_key, download_type='doi', output_format='json', bulk=False):
+	def __init__(self, api_key, download_type="doi", output_format="json", bulk=False):
 		super().__init__(output_format, bulk)
 		self.api_key = api_key
 		self.download_type = download_type
 
-		if output_format != 'json':
-			raise ValueError('output_format must be json.')
+		if output_format != "json":
+			raise ValueError("output_format must be json.")
 
 	def download(self, query, **kwargs) -> list:
-
-		response = requests.get(
-			f'https://api.elsevier.com/content/abstract/doi/{query}?&httpaccept=application/json&apiKey={self.api_key}')
+		response = requests.get(f"https://api.elsevier.com/content/abstract/doi/{query}?&httpaccept=application/json&apiKey={self.api_key}")
 
 		if response.status_code != 200:
-			payload = ({'doi': query,
-			            'info': None})
+			payload = {"doi": query, "info": None}
 		else:
 			if response.content:
 				payload = response.json()
-				payload = {'doi': query,
-				           'info': payload['abstracts-retrieval-response']}
+				payload = {"doi": query, "info": payload["abstracts-retrieval-response"]}
 
 		return payload
+
 
 # with open('/Users/tcanc/PycharmProjects/biodumpy/Odonata_Poloni.json', 'r') as f:
 # 	data = json.load(f)

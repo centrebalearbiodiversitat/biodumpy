@@ -13,7 +13,7 @@ class Biodumpy:
 
 	# elements must be a flat list of strings
 	def start(self, elements, output_path="downloads/{date}/{module}/{name}"):
-		current_date = datetime.now().strftime('%Y-%m-%d')
+		current_date = datetime.now().strftime("%Y-%m-%d")
 		bulk_input = {}
 		try:
 			for el in tqdm(elements, desc="Biodumpy list", unit=" elements", disable=not self.loading_bar, smoothing=0):
@@ -26,15 +26,15 @@ class Biodumpy:
 				if "query" not in el:
 					raise ValueError(f"Missing 'name' key for {el}")
 
-				name = el['query']
+				name = el["query"]
 				clean_name = name.replace("/", "_")
 				if self.debug:
-					print(f'Downloading {name}...')
+					print(f"Downloading {name}...")
 
 				for inp in self.inputs:
 					module_name = type(inp).__name__
 					if self.debug:
-						print(f'\t{module_name}')
+						print(f"\t{module_name}")
 					payload = inp.download(**el)
 
 					if inp.bulk:
@@ -44,14 +44,14 @@ class Biodumpy:
 
 					else:
 						dump(
-							file_name=f'{output_path.format(date=current_date, module=module_name, name=clean_name)}',
+							file_name=f"{output_path.format(date=current_date, module=module_name, name=clean_name)}",
 							obj_list=payload,
-							output_format=inp.output_format
+							output_format=inp.output_format,
 						)
 		finally:
 			for inp, payload in bulk_input.items():
 				dump(
-					file_name=output_path.format(date=current_date, module=type(inp).__name__, name='bulk'),
+					file_name=output_path.format(date=current_date, module=type(inp).__name__, name="bulk"),
 					obj_list=payload,
-					output_format=inp.output_format
+					output_format=inp.output_format,
 				)
