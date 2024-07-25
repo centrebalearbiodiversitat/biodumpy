@@ -5,16 +5,18 @@ from tqdm import tqdm
 
 
 class Biodumpy:
-	def __init__(self, inputs: list[Input]) -> None:
+	def __init__(self, inputs: list[Input], loading_bar: bool = False, debug: bool = True) -> None:
 		super().__init__()
 		self.inputs = inputs
+		self.debug = debug
+		self.loading_bar = loading_bar
 
-	# elements must be a flat list of strings or dictionaries with "name" key
-	def start(self, elements: list, output_path="downloads/{date}/{module}/{name}"):
+	# elements must be a flat list of strings
+	def start(self, elements, output_path="downloads/{date}/{module}/{name}"):
 		current_date = datetime.now().strftime('%Y-%m-%d')
 		bulk_input = {}
-		with tqdm(total=len(elements), desc="Biodumpy list", unit=" elements") as pbar:
-			for el in elements:
+		try:
+			for el in tqdm(elements, desc="Biodumpy list", unit=" elements", disable=not self.loading_bar, smoothing=0):
 				if not el:
 					continue
 
@@ -26,11 +28,13 @@ class Biodumpy:
 
 				name = el['query']
 				clean_name = name.replace("/", "_")
-				# print(f'Downloading {name}...')
+				if self.debug:
+					print(f'Downloading {name}...')
 
 				for inp in self.inputs:
 					module_name = type(inp).__name__
-					# print(f'\t{module_name}')
+					if self.debug:
+						print(f'\t{module_name}')
 					payload = inp.download(**el)
 
 					if inp.bulk:
@@ -39,14 +43,15 @@ class Biodumpy:
 						bulk_input[inp].extend(payload)
 
 					else:
-						dump(file_name=f'{output_path.format(date=current_date, module=module_name, name=clean_name)}',
-							 obj_list=payload, output_format=inp.output_format
-							 )
-
-				pbar.update(1)
-
-
-		for inp, payload in bulk_input.items():
-			dump(file_name=output_path.format(date=current_date, module=type(inp).__name__, name='bulk'),
-			     obj_list=payload, output_format=inp.output_format
-			     )
+						dump(
+							file_name=f'{output_path.format(date=current_date, module=module_name, name=clean_name)}',
+							obj_list=payload,
+							output_format=inp.output_format
+						)
+		finally:
+			for inp, payload in bulk_input.items():
+				dump(
+					file_name=output_path.format(date=current_date, module=type(inp).__name__, name='bulk'),
+					obj_list=payload,
+					output_format=inp.output_format
+				)

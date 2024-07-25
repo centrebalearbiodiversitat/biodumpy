@@ -5,17 +5,8 @@ from urllib.parse import urlparse
 from selenium import webdriver
 
 
-class PAPERDOWN(Input):
-
-	def __init__(self, output_format='json', bulk=False):
-		super().__init__(output_format, bulk)
-
-		if output_format != 'json':
-			raise ValueError('output_format must be json.')
-
+class PaperDown(Input):
 	def download(self, query, **kwargs) -> list:
-		# geckodriver_path = "/usr/bin/firefox"
-		# driver_service = webdriver.FirefoxService(executable_path=geckodriver_path)
 		op = webdriver.ChromeOptions()
 		op.add_argument('--headless')
 
@@ -37,8 +28,11 @@ class PAPERDOWN(Input):
 
 			# driver.quit()
 
-			return list(map(lambda x: {'query': query,
-			                           'url': f'{domain}/{x[1:]}' if x.startswith('/') else x}, list(pdf_url)))
+			return list(
+				map(
+					lambda x: {'query': query, 'url': f'{domain}/{x[1:]}' if x.startswith('/') else x},
+					list(pdf_url))
+			)
 
 		except:
 			return [{'query': query,

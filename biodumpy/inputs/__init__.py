@@ -6,4 +6,5 @@ from .COL import COL
 from .ZOOBANK import ZOOBANK
 from .IUCN import IUCN
 from .SCOPUS import SCOPUS
-from .PAPERDOWN import PAPERDOWN
+from .PaperDown import PaperDown
+from .FileDownloader import FileDownloader
