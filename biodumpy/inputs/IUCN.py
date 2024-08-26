@@ -4,44 +4,43 @@ import requests
 
 class IUCN(Input):
 	"""
-    Query the IUCN Red List API for information about a specific species in a given region.
+	Query the IUCN Red List API for information about a specific species in a given region.
 
-    Parameters
-    ----------
-    query : list
-        The list of taxa to query.
-    api_key : str
-        Your IUCN API key.
-    habitat : str
-        The name of an IUCN habitat.
-    historical : bool, optional
-        If True, the function returns also the historical threats of a taxon. Default is False.
-    threats : bool, optional
-        If True, the function returns also the threats list of a taxon. Default is False.
-    region : list, optional
-        The list of names of specific IUCN regions. For further information, see the IUCN API documentation. Default is an empty list.
-    output_format : str, optional
-        The format of the output. Default is 'json'.
-    bulk : bool, optional
-        If True, the function creates a bulk file. For further information, see the documentation of the Biodumpy package. Default is False.
+	Parameters
+	----------
+	query : list
+	    The list of taxa to query.
+	api_key : str
+	    Your IUCN API key.
+	habitat : str
+	    The name of an IUCN habitat.
+	historical : bool, optional
+	    If True, the function returns also the historical threats of a taxon. Default is False.
+	threats : bool, optional
+	    If True, the function returns also the threats list of a taxon. Default is False.
+	region : list, optional
+	    The list of names of specific IUCN regions. For further information, see the IUCN API documentation. Default is an empty list.
+	output_format : str, optional
+	    The format of the output. Default is 'json'.
+	bulk : bool, optional
+	    If True, the function creates a bulk file. For further information, see the documentation of the Biodumpy package. Default is False.
 
 
-    Example
-    -------
-    >>> from biodumpy import Biodumpy
-    >>> from biodumpy.inputs import IUCN
-    # Insert your API key
-    >>> api_key = 'YOUR_API_KEY'
-    # Taxa list
-    >>> taxa = ['Alytes muletensis', 'Bufotes viridis', 'Hyla meridionalis']
-    # Select your output path
-    >>> output_path = 'YOUR_OUTPUT_PATH'
-    # Select the regions
-    >>> regions = ['global', 'europe']
-    >>> bdp = Biodumpy([IUCN(api_key=api_key, bulk=True, region=regions)])
-    >>> bdp.start(taxa, output_path=output_path)
-    """
-
+	Example
+	-------
+	>>> from biodumpy import Biodumpy
+	>>> from biodumpy.inputs import IUCN
+	# Insert your API key
+	>>> api_key = 'YOUR_API_KEY'
+	# Taxa list
+	>>> taxa = ['Alytes muletensis', 'Bufotes viridis', 'Hyla meridionalis']
+	# Select your output path
+	>>> output_path = 'YOUR_OUTPUT_PATH'
+	# Select the regions
+	>>> regions = ['global', 'europe']
+	>>> bdp = Biodumpy([IUCN(api_key=api_key, bulk=True, region=regions)])
+	>>> bdp.start(taxa, output_path=output_path)
+	"""
 
 	def __init__(
 		self,

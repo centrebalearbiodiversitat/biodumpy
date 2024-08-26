@@ -6,7 +6,7 @@ import os
 import sys
 
 # Add the root directory of your project to the Python path
-sys.path.insert(0, os.path.abspath('../../'))
+sys.path.insert(0, os.path.abspath("../../"))
 
 # -- Project information
 

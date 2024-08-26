@@ -27,8 +27,7 @@ class CustomEncoder(json.JSONEncoder):
 
 
 class NCBI(Input):
-	def __init__(self, mail, output_format="json", bulk=False, db="nucleotide", rettype="gb", step=100,
-	             max_bp=None, summary=False):
+	def __init__(self, mail, output_format="json", bulk=False, db="nucleotide", rettype="gb", step=100, max_bp=None, summary=False):
 		super().__init__(output_format, bulk)
 		self.max_bp = max_bp
 		self.db = db
@@ -48,7 +47,7 @@ class NCBI(Input):
 			with tqdm(total=len(ids_list), desc="NCBI summary retrieve", unit=" Summary") as pbar:
 				for seq_id in split_to_batches(list(ids_list), self.step):
 					for sumr in self.download_summary(seq_id):
-						sumr['query'] = query
+						sumr["query"] = query
 						payload.append(json.loads(json.dumps(sumr, cls=CustomEncoder)))
 					pbar.update(len(seq_id))
 
@@ -113,7 +112,6 @@ class NCBI(Input):
 		return id_bp_list
 
 	def download_summary(self, seq_id):
-
 		"""
 		Downloads summery of sequences records.
 
@@ -124,7 +122,7 @@ class NCBI(Input):
 
 		"""
 
-		keys_to_keep = ['Id', 'Caption', 'Title']
+		keys_to_keep = ["Id", "Caption", "Title"]
 		summary_list = list()
 		try:
 			summary_handle = Entrez.esummary(db=self.db, id=seq_id)
