@@ -27,26 +27,37 @@ class CustomEncoder(json.JSONEncoder):
 
 
 class NCBI(Input):
-	def __init__(self, mail, output_format="json", bulk=False, db="nucleotide", rettype="gb", step=100, max_bp=None):
+	def __init__(self, mail, output_format="json", bulk=False, db="nucleotide", rettype="gb", step=100,
+	             max_bp=None, summary=False):
 		super().__init__(output_format, bulk)
 		self.max_bp = max_bp
 		self.db = db
 		self.step = step
 		self.rettype = rettype
+		self.summary = summary
 		Entrez.email = mail
 
 		if output_format == "fasta" and rettype != "fasta":
 			raise ValueError("rettype must be fasta.")
 
-	def download(self, query, **kwargs) -> list:
+	def _download(self, query, **kwargs) -> list:
 		ids_list = self.download_ids(term=f"{query}[Organism]", step=self.step)
 
 		payload = []
-		with tqdm(total=len(ids_list), desc="NCBI sequences retrieve", unit=" Sequences") as pbar:
-			for seq_id in split_to_batches(list(ids_list), self.step):
-				for seq in self.download_seq(seq_id, rettype=self.rettype):
-					payload.append(json.loads(json.dumps(seq, cls=CustomEncoder)))
-				pbar.update(len(seq_id))
+		if self.summary:
+			with tqdm(total=len(ids_list), desc="NCBI summary retrieve", unit=" Summary") as pbar:
+				for seq_id in split_to_batches(list(ids_list), self.step):
+					for sumr in self.download_summary(seq_id):
+						sumr['query'] = query
+						payload.append(json.loads(json.dumps(sumr, cls=CustomEncoder)))
+					pbar.update(len(seq_id))
+
+		else:
+			with tqdm(total=len(ids_list), desc="NCBI sequences retrieve", unit=" Sequences") as pbar:
+				for seq_id in split_to_batches(list(ids_list), self.step):
+					for seq in self.download_seq(seq_id, rettype=self.rettype):
+						payload.append(json.loads(json.dumps(seq, cls=CustomEncoder)))
+					pbar.update(len(seq_id))
 		return payload
 
 	def download_ids(self, term, step):
@@ -100,6 +111,31 @@ class NCBI(Input):
 					break
 
 		return id_bp_list
+
+	def download_summary(self, seq_id):
+
+		"""
+		Downloads summery of sequences records.
+
+		Args:
+
+
+		Returns:
+
+		"""
+
+		keys_to_keep = ['Id', 'Caption', 'Title']
+		summary_list = list()
+		try:
+			summary_handle = Entrez.esummary(db=self.db, id=seq_id)
+			summaries = Entrez.read(summary_handle)
+			summary_handle.close()
+			for summary in summaries:
+				summary_list.append({key: summary[key] for key in keys_to_keep})
+		except Exception as e:
+			print(f"Error retrieving IDs or summaries: {e}")
+
+		return summary_list
 
 	def download_seq(self, seq_id, rettype="gb", retmode="text", retries=3, webenv=None, query_key=None, history="y"):
 		"""

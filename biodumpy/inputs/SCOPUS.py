@@ -11,7 +11,7 @@ class SCOPUS(Input):
 		if output_format != "json":
 			raise ValueError("output_format must be json.")
 
-	def download(self, query, **kwargs) -> list:
+	def _download(self, query, **kwargs) -> list:
 		response = requests.get(f"https://api.elsevier.com/content/abstract/doi/{query}?&httpaccept=application/json&apiKey={self.api_key}")
 
 		if response.status_code != 200:

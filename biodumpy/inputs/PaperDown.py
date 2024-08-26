@@ -6,7 +6,7 @@ from selenium import webdriver
 
 
 class PaperDown(Input):
-	def download(self, query, **kwargs) -> list:
+	def _download(self, query, **kwargs) -> list:
 		op = webdriver.ChromeOptions()
 		op.add_argument("--headless")
 

@@ -4,5 +4,5 @@ class Input:
 		self.output_format = output_format
 		self.bulk = bulk
 
-	def download(self, **kwargs) -> list:
+	def _download(self, **kwargs) -> list:
 		raise NotImplementedError()

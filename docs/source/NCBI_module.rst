@@ -3,8 +3,6 @@ NCBI Module
 
 .. _NCBI_module:
 
-
-
 .. code-block:: python
 
     from biodumpy import Biodumpy
@@ -17,13 +15,14 @@ NCBI Module
 
 
 Download NCBI metadata by Taxon name
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+------------------------------------
 
 Before running the function to download the data, we need to prepare the data by creating a list of dictionaries. 
 Each dictionary should contain the indices ``name`` and ``query``, indicating the species name and the corresponding 
 NCBI query, respectively.
 
 .. code-block:: python
+
     result_list = []
 
     # Create a dictionary with 'name' and 'query' from corresponding indices
@@ -38,7 +37,7 @@ NCBI query, respectively.
 
 
 Download NCBI metadata by taxon ID
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+----------------------------------
 
 .. code-block:: python
     
@@ -61,9 +60,10 @@ Download NCBI metadata by taxon ID
 
 
 Retrieve NCBI accession number from NCBI json file
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+--------------------------------------------------
 
 .. code-block:: python
+
     import json
 
     with open('YOUR_PATH/.json', 'r') as f:
@@ -77,12 +77,13 @@ Retrieve NCBI accession number from NCBI json file
 
 
 Download NCBI fasta by Taxon Name
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+---------------------------------
 
 To download a FASTA file from NCBI, we need to change the parameter *rettype* in the Biopython function. 
 Additionally, it is useful to change the name of the module to {module}_fasta.
 
 .. code-block:: python
+
     bdp = Biodumpy([NCBI(mail="hola_ncbi@quetal.com", step=100, max_bp=1000, rettype='fasta', output_format='fasta', bulk=False)])
 
     result_list = []
@@ -99,13 +100,14 @@ Additionally, it is useful to change the name of the module to {module}_fasta.
 
 
 Download "bulk" output
-^^^^^^^^^^^^^^^^^^^^^^
+----------------------
 
 "Bulk download" refers to the process of downloading a large volume of data files in a single operation, consolidating 
 them together. This is often done to facilitate data analysis and to have a single file containing broad information. 
 However, this process can create a massive resulting file. Therefore, we suggest using this function carefully.
 
 .. code-block:: python
+
     bdp = Biodumpy ([NCBI(mail="hola_ncbi@quetal.com", step=100, max_bp=1000, rettype='gb', output_format='json', bulk=True)])
 
     # List of taxa
@@ -122,3 +124,10 @@ However, this process can create a massive resulting file. Therefore, we suggest
 
     bdp.start (result_list, output_path="downloads/{date}/{module}/{name}")
 
+
+Reference link
+--------------
+
+`National Center for Biotechnology Information`_
+
+.. _National Center for Biotechnology Information: https://www.ncbi.nlm.nih.gov

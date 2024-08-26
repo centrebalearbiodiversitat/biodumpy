@@ -35,7 +35,7 @@ class Biodumpy:
 					module_name = type(inp).__name__
 					if self.debug:
 						print(f"\t{module_name}")
-					payload = inp.download(**el)
+					payload = inp._download(**el)
 
 					if inp.bulk:
 						if inp not in bulk_input:

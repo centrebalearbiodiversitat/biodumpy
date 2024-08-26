@@ -13,8 +13,22 @@ class ZOOBANK(Input):
 		if self.dataset_size not in ['small', 'large']:
 			raise ValueError("Invalid dataset size parameter. Expected 'small' or 'large'.")
 
-	def download(self, query, **kwargs) -> list:
+	def _download(self, query, **kwargs) -> list:
 		payload = []
+
+		if self.dataset_size == 'small':
+
+			PUB_URL = 'https://zoobank.org/References.json?'
+
+			params_pub = {'search_term': query}
+			response_pub = requests.get(PUB_URL, params=params_pub)
+
+			if response_pub.status_code != 200:
+				print(response_pub.text)
+			else:
+				payload = response_pub.json()
+
+			return payload
 
 		if self.dataset_size == 'large':
 			print('Searching in ZOOBANK...')
@@ -44,19 +58,6 @@ class ZOOBANK(Input):
 
 			return payload
 
-		if self.dataset_size == 'small':
-
-			PUB_URL = 'https://zoobank.org/References.json?'
-
-			params_pub = {'search_term': query}
-			response_pub = requests.get(PUB_URL, params=params_pub)
-
-			if response_pub.status_code != 200:
-				print(response_pub.text)
-			else:
-				payload = response_pub.json()
-
-			return payload
 
 	@staticmethod
 	def zoobank_info(referenceuuid: str):
