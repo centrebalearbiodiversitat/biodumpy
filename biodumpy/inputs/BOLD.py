@@ -1,6 +1,7 @@
 from biodumpy import Input
 import requests
 
+
 class BOLD(Input):
 	"""
 	Query the Barcode of Life Data System (BOLD) database to retrieve taxon genetic or occurrence data.
@@ -53,13 +54,7 @@ class BOLD(Input):
 	>>> bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}')
 	"""
 
-	def __init__(
-			self,
-			summary=False,
-			fasta=False,
-			output_format='json',
-			bulk=False):
-
+	def __init__(self, summary=False, fasta=False, output_format="json", bulk=False):
 		super().__init__(output_format, bulk)
 		self.summary = summary
 		self.fasta = fasta
@@ -67,9 +62,7 @@ class BOLD(Input):
 		if self.fasta is True and output_format != "fasta":
 			raise ValueError("output_format must be fasta.")
 
-
 	def _download(self, query, **kwargs) -> list:
-
 		if self.fasta:
 			response = requests.get(f"http://v4.boldsystems.org/index.php/API_Public/sequence?taxon={query}")
 			response = response.content
@@ -78,28 +71,25 @@ class BOLD(Input):
 			data_str = response.decode()
 
 			# Split the data by '>'
-			fasta_entries = [f'>{entry}' for entry in data_str.split('>') if entry]
+			fasta_entries = [f">{entry}" for entry in data_str.split(">") if entry]
 
 			return fasta_entries
 
 		else:
-
 			response = requests.get(f"http://v4.boldsystems.org/index.php/API_Public/combined?taxon={query}&format=json")
 
 			payload = []
 
 			if response.status_code != 200:
-				return [f'Error: {response.status_code}']
+				return [f"Error: {response.status_code}"]
 
 			if response.content:
-
 				results = response.json()
 
 				if self.summary:
 					results_summary = results.get("bold_records", {}).get("records", [])
 
 					for entry in results_summary:
-
 						entry_summary = results_summary[entry]
 
 						# Extract the necessary fields with default None values if keys are missing.
@@ -119,22 +109,23 @@ class BOLD(Input):
 
 						payload.append(
 							{
-								'record_id': entry_summary.get('record_id'),
-								'processid': entry_summary.get('processid'),
-								'bin_uri': entry_summary.get('bin_uri'),
-								'taxon': taxon_name,
-								'country': collection_event.get('country'),
-								'province_state': collection_event.get('province_state'),
-								'region': collection_event.get('region'),
-								'lat': coordinates.get("lat") if coordinates else None,
-								'lon': coordinates.get("lon") if coordinates else None,
-								'markercode': '/'.join(markercodes) if markercodes else None,
-								'genbank_accession': genbank_accession[0] if genbank_accession else None
+								"record_id": entry_summary.get("record_id"),
+								"processid": entry_summary.get("processid"),
+								"bin_uri": entry_summary.get("bin_uri"),
+								"taxon": taxon_name,
+								"country": collection_event.get("country"),
+								"province_state": collection_event.get("province_state"),
+								"region": collection_event.get("region"),
+								"lat": coordinates.get("lat") if coordinates else None,
+								"lon": coordinates.get("lon") if coordinates else None,
+								"markercode": "/".join(markercodes) if markercodes else None,
+								"genbank_accession": genbank_accession[0] if genbank_accession else None,
 							}
 						)
 				else:
-					payload.append(results["bold_records"]["records"] if "bold_records" in results and "records" in results[
-						"bold_records"] else [])
+					payload.append(
+						results["bold_records"]["records"] if "bold_records" in results and "records" in results["bold_records"] else []
+					)
 
 				return payload
 			else:

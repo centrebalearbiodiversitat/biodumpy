@@ -3,7 +3,6 @@ import requests
 
 
 class IUCN(Input):
-
 	"""
 	Query the IUCN Red List API for information about a specific species in a given region.
 
