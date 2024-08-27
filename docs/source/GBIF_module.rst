@@ -153,3 +153,10 @@ result. Here we provide an example to download and extract the main information 
                               'locality': entry.get('locality', None),
                               'year': entry.get('year', None)
                               })
+
+
+Reference link/s
+----------------
+
+`Global Biodiversity Information Facility`_
+.. _Global Biodiversity Information Facility: https://www.gbif.org/

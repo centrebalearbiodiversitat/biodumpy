@@ -3,6 +3,7 @@ import requests
 
 
 class IUCN(Input):
+
 	"""
 	Query the IUCN Red List API for information about a specific species in a given region.
 
@@ -17,14 +18,13 @@ class IUCN(Input):
 	historical : bool, optional
 	    If True, the function returns also the historical threats of a taxon. Default is False.
 	threats : bool, optional
-	    If True, the function returns also the threats list of a taxon. Default is False.
+	    If True, the function returns also the threat list of a taxon. Default is False.
 	region : list, optional
-	    The list of names of specific IUCN regions. For further information, see the IUCN API documentation. Default is an empty list.
-	output_format : str, optional
-	    The format of the output. Default is 'json'.
+	    The list of specific IUCN regions. For further information, see the IUCN API documentation. Default is an empty list.
 	bulk : bool, optional
-	    If True, the function creates a bulk file. For further information, see the documentation of the Biodumpy package. Default is False.
-
+		If True, the function creates a bulk file. For further information, see the documentation of the Biodumpy package. Default is False.
+	output_format : string, optional
+		The format of the output file. The options available are: 'json', 'fasta', 'pdf'. Default is 'json'.
 
 	Example
 	-------
@@ -107,8 +107,10 @@ class IUCN(Input):
 		Query the IUCN Red List API for information about a specific species in a given region.
 
 		Parameters:
-			query (str): The name of the species to query.
-			region (str): The name of a specific region.
+			query : list
+			The name of the species to query.
+			region : string
+			The name of a specific region.
 
 		Returns:
 			dict: A dictionary containing information about the species in the specified region if found.
@@ -136,8 +138,10 @@ class IUCN(Input):
 		Query the IUCN Red List API for habitat information about a specific species in a given region.
 
 		Parameters:
-			query (str): The taxon id of the species to query.
-			region (str): The name of a specific region.
+			query : list
+			The name of the species to query.
+			region : string
+			The name of a specific region.
 
 		Returns:
 		    dict: A dictionary containing information about the habitat of the species in the specified region if found.
@@ -164,8 +168,10 @@ class IUCN(Input):
 		Query the IUCN Red List API for historical assessment information about a specific species in a given region.
 
 		Parameters:
-			query (str): The taxon id of the species to query.
-			region (str): The name of a specific region.
+			query : list
+			The name of the species to query.
+			region : string
+			The name of a specific region.
 
 		Returns:
 		    dict: A dictionary containing information about the historical assessment of the species in the specified region if found.
@@ -192,8 +198,10 @@ class IUCN(Input):
 		Query the IUCN Red List API for threat information about a specific species in a given region.
 
 		Parameters:
-			query (str): The taxon id of the species to query.
-			region (str): The name of a specific region.
+			query : list
+			The name of the species to query.
+			region : string
+			The name of a specific region.
 
 		Returns:
 			dict: A dictionary containing information about threats of the species in the specified region if found.

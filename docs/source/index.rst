@@ -46,6 +46,7 @@ repository.
 
 License
 -------
+
 ``biodumpy`` is licensed under the GNU GENERAL PUBLIC LICENSE. See the LICENSE file for more details.
 
 

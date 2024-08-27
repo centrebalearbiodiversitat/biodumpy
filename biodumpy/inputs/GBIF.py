@@ -13,13 +13,18 @@ class GBIF(Input):
 	dataset_key : str
 	    GBIF dataset key. The default is set to the GBIF Backbone Taxonomy dataset key.
 	limit : int
-	    The maximum number of names to retrieve from the taxonomy backbone for a taxon.
+	    The maximum number of names to retrieve from the taxonomy backbone for a taxon. Default is 20.
 	accepted_only : bool, optional
 	    If True, the function returns only the accepted name. Default is True.
 	occ : bool, optional
 	    If True, the function also returns the occurrences of a taxon. Default is False.
 	geometry : str, optional
 	    A spatial polygon to filter occurrences within a specified area. Default is an empty string.
+	bulk : bool, optional
+		If True, the function creates a bulk file. For further information, see the documentation of the Biodumpy package.
+		Default is False.
+	output_format : string, optional
+		The format of the output file. The options available are: 'json', 'fasta', 'pdf'. Default is 'json'.
 
 	Example
 	-------
@@ -69,7 +74,7 @@ class GBIF(Input):
 				payload = response.json()
 				data = payload["results"]
 
-				# We keep the record only if the query correspond to the scientific name in the data downloaded.
+				# We keep the record only if the query corresponds to the scientific name in the data downloaded.
 				payload = list(
 					filter(lambda x: x.get("taxonomicStatus") == "ACCEPTED" and str(query[0]) in x.get("scientificName", ""), data)
 				)
