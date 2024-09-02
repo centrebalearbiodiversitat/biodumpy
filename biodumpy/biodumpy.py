@@ -13,9 +13,8 @@ class Biodumpy:
 
 	# elements must be a flat list of strings
 	def start(self, elements, output_path="downloads/{date}/{module}/{name}"):
-
 		if not isinstance(elements, list):
-			raise ValueError('Invalid query. Expected a list of taxa to query.')
+			raise ValueError("Invalid query. Expected a list of taxa to query.")
 
 		current_date = datetime.now().strftime("%Y-%m-%d")
 		bulk_input = {}
@@ -59,4 +58,3 @@ class Biodumpy:
 					obj_list=payload,
 					output_format=inp.output_format,
 				)
-
