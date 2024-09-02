@@ -11,4 +11,4 @@ list*
 biodumpy/inputs/ZOOBANK.py
 *.json
 *.log
-/test.py
+/proof.py

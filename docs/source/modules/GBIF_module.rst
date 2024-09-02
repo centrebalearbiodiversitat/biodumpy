@@ -24,8 +24,9 @@ Key Features
 Retrieve nomenclature information and associated metadata from GBIF
 -------------------------------------------------------------------
 
-In this example, we set the ``dataset_key`` to correspond with the GBIF Backbone Taxonomy and specify a ``limit`` of 20
-results per page. Moreover, we extract only the accepted name using the parameter ``accepted_only`` to *True*.
+In this example we demonstrated how download taxonomic nomenclature for a list of taxa from GBIF.
+We set the ``dataset_key`` to correspond with the GBIF Backbone Taxonomy and specify a ``limit`` of 20 results per page.
+Moreover, we extract only the accepted name using the parameter ``accepted_only`` to *True*.
 This function utilizes the GBIF API's endpoint `species/search`_.
 
 .. _species/search: https://techdocs.gbif.org/en/openapi/v1/species#/
@@ -39,7 +40,7 @@ This function utilizes the GBIF API's endpoint `species/search`_.
     If the parameter ``accepted_only`` is set to *False*, the search results may include taxa that do not match the intended search.
     For example, when searching for `Anax imperator Leach, 1815`_ with this parameter set to *False*, the results may include
     unrelated taxa, such as the second record in the example, which is an Ephemeroptera rather than an Odonate.
-    Please review the results carefully.
+    **Please review the results carefully.**
 
 .. _Anax imperator Leach, 1815: https://api.gbif.org/v1/species/search?datasetKey=d7dddbf4-2cf0-4f39-9b2a-bb099caae36c&q=Anax%20imperator%20Leach,%201815&limit=20
 
@@ -159,4 +160,5 @@ Reference link/s
 ----------------
 
 `Global Biodiversity Information Facility`_
+
 .. _Global Biodiversity Information Facility: https://www.gbif.org/

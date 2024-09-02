@@ -3,7 +3,12 @@ Function
 
 .. _functions:
 
-.. automodule:: biodumpy.inputs.IUCN
+.. automodule:: biodumpy.inputs.BOLD
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+.. automodule:: biodumpy.inputs.COL
    :members:
    :undoc-members:
    :show-inheritance:
@@ -12,4 +17,18 @@ Function
    :members:
    :undoc-members:
    :show-inheritance:
+
+.. automodule:: biodumpy.inputs.IUCN
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+.. automodule:: biodumpy.inputs.ZOOBANK
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+
+
 

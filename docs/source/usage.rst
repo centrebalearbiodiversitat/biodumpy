@@ -13,19 +13,18 @@ Before using ``biodumpy``, users need to install the package in their Python env
 Usage
 -----
 
-To simplify the use of ``biodumpy``, we create a general structure common among the modules:
+To simplify the use of ``biodumpy``, we create a general structure common among all the modules:
 
-1) Load the package: Import ``biodumpy`` into your Python environment.
-2) Load the desired module: Import one or more specific modules needed to retrieve the data.
-3) Set up the configuration of one or more modules: Configure the ``biodumpy`` function/s with the required parameters.
-4) Start the download: Execute the function to begin retrieving the data.
+1) **Load the package.** Import ``biodumpy`` into your Python environment.
+2) **Load the desired modules.** Import one or more specific modules needed to retrieve the data.
+3) **Set up the configuration of one or more modules.** Configure the ``biodumpy`` function/s with the required parameters.
+4) **Start the download.** Execute the function to begin retrieving the data.
 
-Here are two examples demonstrating the general structure:
+Here, we provide two examples illustrating the general structure of a ``biodumpy`` script:
 
-- Single Module Example: This example uses only one ``biodumpy`` module (GBIF).
-- Multiple Modules Example: This example utilizes two ``biodumpy`` modules (GBIF and IUCN).
-
-Users can load more than two modules simultaneously if needed.
+In detail, we described:
+- **Single Module Example**: This example demonstrates how to use a single ``biodumpy`` module (e.g., GBIF).
+- **Multiple Modules Example**: This example shows how to use multiple ``biodumpy`` modules (e.g., GBIF and IUCN).
 
 **Example N.1**
 
@@ -81,7 +80,7 @@ saved thus users can customize how the data is organized according to their need
   This option may be useful if the amount of the total data is limited and for consolidating data and simplifying file management.
 
 - If ``bulk`` is set to *False*, the information for each taxon is saved in a separate file. 
-  This option is beneficial for detailed analysis, when individual taxon files are required or when the amount of data for
+  This option is useful for detailed analysis, when individual taxon files are required or when the amount of data for
   each taxon is large.
 
 Save result location

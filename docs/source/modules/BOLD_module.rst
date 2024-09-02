@@ -28,6 +28,7 @@ This function is based on the BOLD v4 API's endpoints `API_Public/combined`_ and
 .. _API_Public/sequence: http://v4.boldsystems.org/index.php/API_Public/sequence?
 
 .. note::
+
     The taxonomy list should be compiled using only the taxon names, excluding any authorship information.
 
 
@@ -41,7 +42,7 @@ This function is based on the BOLD v4 API's endpoints `API_Public/combined`_ and
 
     # Set the module and start the download
     bdp = Biodumpy([BOLD(bulk=True, summary=False)])
-    bdp.start(taxa, output_path='/Users/tcanc/PycharmProjects/biodumpy/downloads/{date}/{module}/{name}')
+    bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}')
 
 
 The previous method downloads the entire set of data for each record from BOLD. However, users can also download a
@@ -65,6 +66,7 @@ Following the general structure of the ``biodumpy`` package, sequences can be do
 bulk. Below is an example demonstrating how to download FASTA files.
 
 .. note::
+
     Be sure to set the parameters ``fasta=True`` and ``output_format='fasta'``. Otherwise, the function will be blocked.
 
 .. code-block:: python
