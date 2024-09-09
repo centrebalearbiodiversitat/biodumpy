@@ -14,6 +14,7 @@ The current modules are dedicated for the following databases:
 - :doc:`modules/COL_module`
 - :doc:`modules/GBIF_module`
 - :doc:`modules/IUCN_module`
+- :doc:`modules/OBIS_module`
 - :doc:`modules/ZOOBANK_module`
 
 - NCBI

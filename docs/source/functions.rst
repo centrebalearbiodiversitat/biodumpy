@@ -23,6 +23,11 @@ Function
    :undoc-members:
    :show-inheritance:
 
+.. automodule:: biodumpy.inputs.OBIS
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 .. automodule:: biodumpy.inputs.ZOOBANK
    :members:
    :undoc-members:

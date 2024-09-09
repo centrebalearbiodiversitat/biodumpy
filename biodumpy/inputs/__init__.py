@@ -9,3 +9,4 @@ from .SCOPUS import SCOPUS
 from .PaperDown import PaperDown
 from .FileDownloader import FileDownloader
 from .GBIF import GBIF
+from .OBIS import OBIS
