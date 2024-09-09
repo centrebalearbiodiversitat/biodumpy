@@ -7,7 +7,7 @@ import requests
 class INaturalist(Input):
 	TAXA_URL = "https://api.inaturalist.org/v1/taxa"
 
-	def download(self, query, **kwargs):
+	def _download(self, query, **kwargs):
 		params = {"q": query, "order": "desc", "order_by": "observations_count"}
 		response = requests.get(INaturalist.TAXA_URL, params=params)
 

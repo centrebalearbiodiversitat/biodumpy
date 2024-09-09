@@ -1,8 +1,13 @@
 /venv/
 .idea
 /[Dd]ownload*/
+/Poloni
+/Enrique_Arboleda
+/IUCN
+/html
 
 main*
-biodumpy/inputs/ZOOBANK.py
+list*
 *.json
 *.log
+/proof.py

@@ -11,7 +11,7 @@ def dump(file_name, obj_list, output_format="json"):
 	Parameters:
 	    file_name (str): Base name of the output JSON file.
 	    obj_list (list): List of objects to be written to JSON.
-	    bulk_folder (bool): Output folder for bulk processing.
+	    output_format: output format. Default is "json". Other formats can be "fasta", "pdf".
 	"""
 
 	directory = os.path.dirname(file_name)
@@ -26,6 +26,19 @@ def dump(file_name, obj_list, output_format="json"):
 			output_file.write(obj_list)
 		else:
 			json.dump(obj_list, output_file, indent=4)
+
+
+def clean_nones(value):
+	"""
+	Recursively remove all None values from dictionaries and lists, and returns
+	the result as a new dictionary or list.
+	"""
+	if isinstance(value, list):
+		return [clean_nones(x) for x in value if x is not None]
+	elif isinstance(value, dict):
+		return {key: clean_nones(val) for key, val in value.items() if val is not None}
+	else:
+		return value
 
 
 def dump_to_csv(file_name, obj_list):

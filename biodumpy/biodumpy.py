@@ -13,6 +13,9 @@ class Biodumpy:
 
 	# elements must be a flat list of strings
 	def start(self, elements, output_path="downloads/{date}/{module}/{name}"):
+		if not isinstance(elements, list):
+			raise ValueError("Invalid query. Expected a list of taxa to query.")
+
 		current_date = datetime.now().strftime("%Y-%m-%d")
 		bulk_input = {}
 		try:
@@ -35,7 +38,7 @@ class Biodumpy:
 					module_name = type(inp).__name__
 					if self.debug:
 						print(f"\t{module_name}")
-					payload = inp.download(**el)
+					payload = inp._download(**el)
 
 					if inp.bulk:
 						if inp not in bulk_input:

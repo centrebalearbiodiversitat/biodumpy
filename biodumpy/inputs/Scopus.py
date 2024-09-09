@@ -2,7 +2,7 @@ from biodumpy import Input
 import requests
 
 
-class SCOPUS(Input):
+class Scopus(Input):
 	def __init__(self, api_key, download_type="doi", output_format="json", bulk=False):
 		super().__init__(output_format, bulk)
 		self.api_key = api_key
@@ -11,17 +11,14 @@ class SCOPUS(Input):
 		if output_format != "json":
 			raise ValueError("output_format must be json.")
 
-	def download(self, query, **kwargs) -> list:
+	def _download(self, query, **kwargs) -> list:
 		response = requests.get(f"https://api.elsevier.com/content/abstract/doi/{query}?&httpaccept=application/json&apiKey={self.api_key}")
 
-		if response.status_code != 200:
-			payload = {"doi": query, "info": None}
+		if response.status_code == 200:
+			payload = response.json()
+			return [{"doi": query, "info": payload["abstracts-retrieval-response"]}]
 		else:
-			if response.content:
-				payload = response.json()
-				payload = {"doi": query, "info": payload["abstracts-retrieval-response"]}
-
-		return payload
+			return [{"doi": query, "info": None}]
 
 
 # with open('/Users/tcanc/PycharmProjects/biodumpy/Odonata_Poloni.json', 'r') as f:

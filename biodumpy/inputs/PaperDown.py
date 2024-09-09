@@ -6,7 +6,7 @@ from selenium import webdriver
 
 
 class PaperDown(Input):
-	def download(self, query, **kwargs) -> list:
+	def _download(self, query, **kwargs) -> list:
 		op = webdriver.ChromeOptions()
 		op.add_argument("--headless")
 
@@ -23,12 +23,8 @@ class PaperDown(Input):
 			dom = etree.HTML(str(driver.page_source))
 			pdf_url = set([x for x in dom.xpath("//*/@href") if ".pdf" in x])
 			parsed_url = urlparse(driver.current_url)
-			domain = parsed_url.netloc
 
-			# driver.quit()
-
-			return list(map(lambda x: {"query": query, "url": f"{domain}/{x[1:]}" if x.startswith("/") else x}, list(pdf_url)))
-
+			return list(map(lambda x: {"query": query, "url": f"{parsed_url.netloc}/{x[1:]}" if x.startswith("/") else x}, list(pdf_url)))
 		except:
 			return [{"query": query, "url": "Error"}]
 		finally:
