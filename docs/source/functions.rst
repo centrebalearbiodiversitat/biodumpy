@@ -23,7 +23,7 @@ Function
    :undoc-members:
    :show-inheritance:
 
-.. automodule:: biodumpy.inputs.ZOOBANK
+.. automodule:: biodumpy.inputs.ZooBank
    :members:
    :undoc-members:
    :show-inheritance:

@@ -7,7 +7,7 @@ import io
 from contextlib import redirect_stdout
 
 from biodumpy import Biodumpy
-from biodumpy.inputs import ZOOBANK
+from biodumpy.inputs import ZooBank
 
 # set a trap and redirect stdout. Remove the print of the function. In this wat the test output is cleanest.
 trap = io.StringIO()
@@ -23,7 +23,7 @@ def zoobank_query(info):
 		dynamic_path = os.path.join(temp_dir)
 
 	# Start biodumpy function
-	bdp = Biodumpy([ZOOBANK(bulk=False, dataset_size="small", info=info)])
+	bdp = Biodumpy([ZooBank(bulk=False, dataset_size="small", info=info)])
 	bdp.start(query, output_path=f"{dynamic_path}/downloads/{{date}}/{{module}}/{{name}}")
 
 	# Retrieve a file path
@@ -41,7 +41,7 @@ def zoobank_query(info):
 
 def test_zoobank_initialization():
 	# Test default initialization
-	zoobank = ZOOBANK()
+	zoobank = ZooBank()
 
 	# Objective: Verify that when a ZOOBANK object is created without passing any arguments, it initializes with the
 	# correct default values.
@@ -52,12 +52,12 @@ def test_zoobank_initialization():
 	# Objective: Verify that the class correctly raises a ValueError when an invalid value is provided for the
 	# dataset_size parameter.
 	with pytest.raises(ValueError, match="Invalid dataset_size. Expected 'small' or 'large'."):
-		ZOOBANK(dataset_size="invalid")
+		ZooBank(dataset_size="invalid")
 
 	# Objective: Verify that the class raises a ValueError when an invalid value is provided for the
 	# output_format parameter.
 	with pytest.raises(ValueError, match="Invalid output_format. Expected 'json'."):
-		ZOOBANK(output_format="xml")
+		ZooBank(output_format="xml")
 
 
 @pytest.mark.parametrize(

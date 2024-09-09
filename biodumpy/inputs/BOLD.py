@@ -88,16 +88,13 @@ class BOLD(Input):
 
 			if response.content:
 				results = response.json()
-
 				if self.summary:
 					results_summary = results.get("bold_records", {}).get("records", [])
-
 					for entry in results_summary:
 						entry_summary = results_summary[entry]
 
 						# Extract the necessary fields with default None values if keys are missing.
 						# Sequence could contain more than one marker code.
-
 						sequences = entry_summary.get("sequences", {}).get("sequence", [])
 						markercodes = [seq.get("markercode") for seq in sequences if "markercode" in seq]
 						genbank_accession = [seq.get("genbank_accession") for seq in sequences if "genbank_accession" in seq]
@@ -130,6 +127,4 @@ class BOLD(Input):
 						results["bold_records"]["records"] if "bold_records" in results and "records" in results["bold_records"] else []
 					)
 
-				return payload
-			else:
-				return payload
+			return payload

@@ -1,7 +1,7 @@
 IUCN Module
 ===========
 
-.. _IUCN_module:
+.. _IUCN:
 
 
 Overview

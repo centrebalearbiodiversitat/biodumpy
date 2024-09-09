@@ -10,11 +10,11 @@ Modules
 
 The current modules are dedicated for the following databases:
 
-- :doc:`modules/BOLD_module`
-- :doc:`modules/COL_module`
-- :doc:`modules/GBIF_module`
-- :doc:`modules/IUCN_module`
-- :doc:`modules/ZOOBANK_module`
+- :doc:`modules/BOLD`
+- :doc:`modules/COL`
+- :doc:`modules/GBIF`
+- :doc:`modules/IUCN`
+- :doc:`modules/ZooBank`
 
 - NCBI
 – WORMS

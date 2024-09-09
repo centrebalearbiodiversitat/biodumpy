@@ -7,7 +7,6 @@ from tqdm import tqdm
 import time
 from Bio import Entrez, SeqIO
 from http.client import IncompleteRead
-import logging
 
 
 class CustomEncoder(json.JSONEncoder):
@@ -57,6 +56,7 @@ class NCBI(Input):
 					for seq in self.download_seq(seq_id, rettype=self.rettype):
 						payload.append(json.loads(json.dumps(seq, cls=CustomEncoder)))
 					pbar.update(len(seq_id))
+
 		return payload
 
 	def download_ids(self, term, step):
@@ -100,7 +100,6 @@ class NCBI(Input):
 							bp = int(summary["Length"])
 							if bp <= self.max_bp and summary["Id"] not in id_bp_list:  # Ensure unique entries
 								id_bp_list.add(summary["Id"])
-
 					else:
 						id_bp_list.update(record["IdList"])
 
@@ -224,10 +223,17 @@ class NCBI(Input):
 					lin.append(taxonomy_dict)
 
 				lin.append(
-					{"TaxId": records[0]["TaxId"], "ScientificName": records[0]["ScientificName"].split()[-1], "Rank": records[0]["Rank"]}
+					{
+						"TaxId": records[0]["TaxId"],
+						"ScientificName": records[0]["ScientificName"].split()[-1],
+						"Rank": records[0]["Rank"]
+					}
 				)
-
 			else:
-				lin = {"TaxId": records[0]["TaxId"], "ScientificName": records[0]["ScientificName"], "Rank": records[0]["Rank"]}
+				lin = {
+					"TaxId": records[0]["TaxId"],
+					"ScientificName": records[0]["ScientificName"],
+					"Rank": records[0]["Rank"]
+				}
 
 		return lin

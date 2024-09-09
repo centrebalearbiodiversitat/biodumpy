@@ -33,7 +33,7 @@ class COL(Input):
 	Example
 	-------
 	>>> from biodumpy import Biodumpy
-	>>>from biodumpy.inputs import COL
+	>>> from biodumpy.inputs import COL
 	# List oF taxa
 	>>> taxa = ['Alytes muletensis', 'Bufotes viridis', 'Hyla meridionalis', 'Anax imperator', 'Bufo roseus', 'Stollia betae']
 	# Start the download
@@ -62,7 +62,6 @@ class COL(Input):
 
 		if payload["empty"]:
 			payload = [{"origin_taxon": query, "taxon_id": None, "status": None, "usage": None, "classification": None}]
-
 		else:
 			result = response.json()["result"]
 
@@ -81,13 +80,19 @@ class COL(Input):
 			usage = result[0].get("usage")
 			status = usage.get("status") if usage else None
 
+			classification = result[0].get("classification")
 			if self.check_syn and status not in COL.ACCEPTED_TERMS:
 				synonym_id = usage.get("id") if usage else None
-				classification = result[0].get("classification")
 				classification = [item for item in classification if item["id"] != synonym_id] if classification else None
-			else:
-				classification = result[0].get("classification")
 
-			payload = [{"origin_taxon": query, "taxon_id": id, "status": status, "usage": usage, "classification": classification}]
+			payload = [
+				{
+					"origin_taxon": query,
+					"taxon_id": id,
+					"status": status,
+					"usage": usage,
+					"classification": classification
+				}
+			]
 
 		return payload
