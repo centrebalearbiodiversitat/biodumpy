@@ -223,17 +223,9 @@ class NCBI(Input):
 					lin.append(taxonomy_dict)
 
 				lin.append(
-					{
-						"TaxId": records[0]["TaxId"],
-						"ScientificName": records[0]["ScientificName"].split()[-1],
-						"Rank": records[0]["Rank"]
-					}
+					{"TaxId": records[0]["TaxId"], "ScientificName": records[0]["ScientificName"].split()[-1], "Rank": records[0]["Rank"]}
 				)
 			else:
-				lin = {
-					"TaxId": records[0]["TaxId"],
-					"ScientificName": records[0]["ScientificName"],
-					"Rank": records[0]["Rank"]
-				}
+				lin = {"TaxId": records[0]["TaxId"], "ScientificName": records[0]["ScientificName"], "Rank": records[0]["Rank"]}
 
 		return lin

@@ -85,14 +85,6 @@ class COL(Input):
 				synonym_id = usage.get("id") if usage else None
 				classification = [item for item in classification if item["id"] != synonym_id] if classification else None
 
-			payload = [
-				{
-					"origin_taxon": query,
-					"taxon_id": id,
-					"status": status,
-					"usage": usage,
-					"classification": classification
-				}
-			]
+			payload = [{"origin_taxon": query, "taxon_id": id, "status": status, "usage": usage, "classification": classification}]
 
 		return payload
