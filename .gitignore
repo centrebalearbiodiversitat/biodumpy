@@ -8,7 +8,6 @@
 
 main*
 list*
-biodumpy/inputs/ZOOBANK.py
 *.json
 *.log
 /proof.py

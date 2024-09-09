@@ -3,9 +3,9 @@ from .NCBI import NCBI
 from .BOLD import BOLD
 from .iNaturalist import INaturalist
 from .COL import COL
-from .ZOOBANK import ZOOBANK
+from .ZooBank import ZooBank
 from .IUCN import IUCN
-from .SCOPUS import SCOPUS
+from .Scopus import Scopus
 from .PaperDown import PaperDown
 from .FileDownloader import FileDownloader
 from .GBIF import GBIF

@@ -1,5 +1,5 @@
 from biodumpy import Biodumpy
-from biodumpy.inputs import PAPERDOWN
+from biodumpy.inputs import PaperDown
 import pandas as pd
 
 df = pd.read_csv('Martes_martes.csv')
@@ -7,7 +7,7 @@ df = pd.read_csv('Martes_martes.csv')
 taxa = list(df['DOI'].dropna())
 
 bdp = Biodumpy([
-	PAPERDOWN(bulk=True),
+	PaperDown(bulk=True),
 ])
 bdp.start(
 	taxa,
