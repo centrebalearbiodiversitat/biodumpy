@@ -1,6 +1,7 @@
 from biodumpy import Input
 import requests
 
+
 class COL(Input):
 	"""
 	Query the Catalogue of Life (COL) database to retrieve nomenclature information of a list of taxa.
@@ -40,65 +41,53 @@ class COL(Input):
 	>>> bdp.start(taxa, output_path='./biodumpy/downloads/{date}/{module}/{name}')
 	"""
 
-	ACCEPTED_TERMS = ['accepted', 'provisionally accepted']
+	ACCEPTED_TERMS = ["accepted", "provisionally accepted"]
 
-	def __init__(self, output_format: str = 'json', bulk: bool = False, check_syn: bool = False):
-
+	def __init__(self, output_format: str = "json", bulk: bool = False, check_syn: bool = False):
 		super().__init__(output_format, bulk)
 		self.check_syn = check_syn
 
-		if output_format != 'json':
+		if output_format != "json":
 			raise ValueError("Invalid output_format. Expected 'json'.")
 
 	def _download(self, query, **kwargs) -> list:
-
 		response = requests.get(
-			f'https://api.checklistbank.org/dataset/9923/nameusage/search?q={query}&content=SCIENTIFIC_NAME&type=EXACT&offset=0&limit=10')
+			f"https://api.checklistbank.org/dataset/9923/nameusage/search?q={query}&content=SCIENTIFIC_NAME&type=EXACT&offset=0&limit=10"
+		)
 
 		if response.status_code != 200:
-			return [f'Error: {response.status_code}']
+			return [f"Error: {response.status_code}"]
 
 		payload = response.json()
 
-		if payload['empty']:
-			payload = [{'origin_taxon': query, 'taxon_id': None, 'status': None, 'usage': None, 'classification': None}]
+		if payload["empty"]:
+			payload = [{"origin_taxon": query, "taxon_id": None, "status": None, "usage": None, "classification": None}]
 
 		else:
-			result = response.json()['result']
+			result = response.json()["result"]
 
 			# Multiple IDs
 			if len(result) > 1:
-				ids = [item.get('id') for item in result if 'id' in item]
-				ids = ', '.join(ids)
-				id_input = input(
-					f'Please enter the correct taxon ID of {query} \n ID: {ids}; Skip \n' f'Insert the ID:')
+				ids = [item.get("id") for item in result if "id" in item]
+				ids = ", ".join(ids)
+				id_input = input(f"Please enter the correct taxon ID of {query} \n ID: {ids}; Skip \n" f"Insert the ID:")
 
-				if id_input == 'Skip':
-					result = [{'id': None, 'usage': None, 'status': None, 'classification': None}]
+				if id_input == "Skip":
+					result = [{"id": None, "usage": None, "status": None, "classification": None}]
 				else:
-					result = [item for item in result if item['id'] == id_input]
+					result = [item for item in result if item["id"] == id_input]
 
-
-			id = result[0].get('id')
-			usage = result[0].get('usage')
-			status = usage.get('status') if usage else None
+			id = result[0].get("id")
+			usage = result[0].get("usage")
+			status = usage.get("status") if usage else None
 
 			if self.check_syn and status not in COL.ACCEPTED_TERMS:
-				synonym_id = usage.get('id') if usage else None
-				classification = result[0].get('classification')
-				classification = [item for item in classification if item['id'] != synonym_id] if classification else None
+				synonym_id = usage.get("id") if usage else None
+				classification = result[0].get("classification")
+				classification = [item for item in classification if item["id"] != synonym_id] if classification else None
 			else:
-				classification = result[0].get('classification')
+				classification = result[0].get("classification")
 
-			payload = [
-				{
-					'origin_taxon': query,
-					'taxon_id': id,
-					'status': status,
-					'usage': usage,
-					'classification': classification
-				}
-			]
+			payload = [{"origin_taxon": query, "taxon_id": id, "status": status, "usage": usage, "classification": classification}]
 
 		return payload
-

@@ -34,21 +34,13 @@ class OBIS(Input):
 	>>> bdp.start(taxa, output_path='./downloads/{date}/{module}_occ/{name}')
 	"""
 
-	def __init__(
-			self,
-			occ: bool = False,
-			geometry: str = None,
-			areaid: int = None,
-			output_format: str = 'json',
-			bulk: bool = False
-	):
-
+	def __init__(self, occ: bool = False, geometry: str = None, areaid: int = None, output_format: str = "json", bulk: bool = False):
 		super().__init__(output_format, bulk)
 		self.occ = occ
 		self.geometry = geometry
 		self.areaid = areaid
 
-		if output_format != 'json':
+		if output_format != "json":
 			raise ValueError('Invalid output_format. Expected "json".')
 
 		# if occ is False, areaid and pylogon cannot both be True
@@ -56,18 +48,17 @@ class OBIS(Input):
 			raise ValueError('"If "occ" is False, "areaid" and "geometry" cannot be set."')
 
 	def _download(self, query, **kwargs) -> list:
-
 		payload = []
-		response = requests.get(f'https://api.obis.org/v3/taxon/{query}')
+		response = requests.get(f"https://api.obis.org/v3/taxon/{query}")
 
 		if response.status_code != 200:
-			return [f'Error: {response.status_code}']
+			return [f"Error: {response.status_code}"]
 
 		if response.content:
-			payload = response.json()['results']
+			payload = response.json()["results"]
 
 			if self.occ and len(payload) > 0:
-				tax_key = payload[0]['taxonID']
+				tax_key = payload[0]["taxonID"]
 				payload = self._download_obis_occ(taxon_key=tax_key, geometry=self.geometry, areaid=self.areaid)
 
 		return payload
@@ -77,29 +68,29 @@ class OBIS(Input):
 		payload_occ = []
 
 		params = {
-			'taxonid': taxon_key,
-			'size': 10000,  # Max size in OBIS is 10000
-			'after': None,
-			'geometry': geometry,
-			'areaid': areaid
+			"taxonid": taxon_key,
+			"size": 10000,  # Max size in OBIS is 10000
+			"after": None,
+			"geometry": geometry,
+			"areaid": areaid,
 		}
 
 		try:
 			while True:
-				response = requests.get('https://api.obis.org/v3/occurrence', params=params)
+				response = requests.get("https://api.obis.org/v3/occurrence", params=params)
 
 				if response.status_code != 200:
-					raise Exception(f'Error: {response.status_code}')
+					raise Exception(f"Error: {response.status_code}")
 
 				response_json = response.json()
-				data = response_json['results']
+				data = response_json["results"]
 
 				if not data:  # If the data list is empty, break the loop
 					break
 
 				# Initialize the progress bar on the first request
 				if total_records is None:
-					total_records = response_json['total']
+					total_records = response_json["total"]
 					pbar = tqdm(total=total_records, desc="Downloading")
 
 				# Update the progress bar
@@ -113,7 +104,7 @@ class OBIS(Input):
 					break
 
 				# Update the 'after' parameter with the last id
-				params['after'] = data[-1]['id']
+				params["after"] = data[-1]["id"]
 
 		finally:
 			# Ensure the progress bar is closed properly even if an error occurs
@@ -121,4 +112,3 @@ class OBIS(Input):
 				pbar.close()
 
 		return payload_occ
-
