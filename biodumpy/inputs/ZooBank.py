@@ -3,6 +3,7 @@ import requests
 from bs4 import BeautifulSoup
 from tqdm import tqdm
 
+
 class ZOOBANK(Input):
 	"""
 	Query the Official Registry of Zoological Nomenclature (ZooBank) database to retrieve scientific bibliographic
@@ -37,52 +38,45 @@ class ZOOBANK(Input):
 	>>> bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}')
 	"""
 
-	def __init__(self,
-	             dataset_size: str = 'small',
-	             output_format: str = 'json',
-	             info: bool = False,
-	             bulk: bool = False):
-
+	def __init__(self, dataset_size: str = "small", output_format: str = "json", info: bool = False, bulk: bool = False):
 		super().__init__(output_format, bulk)
 		self.dataset_size = dataset_size
 		self.info = info
 
-		if self.dataset_size not in ['small', 'large']:
+		if self.dataset_size not in ["small", "large"]:
 			raise ValueError("Invalid dataset_size. Expected 'small' or 'large'.")
 
-		if output_format != 'json':
+		if output_format != "json":
 			raise ValueError("Invalid output_format. Expected 'json'.")
 
 	def _download(self, query, **kwargs) -> list:
-
 		payload = []
 
-		if self.dataset_size == 'small':
-
-			response = requests.get(f'https://zoobank.org/References.json?search_term={query}')
+		if self.dataset_size == "small":
+			response = requests.get(f"https://zoobank.org/References.json?search_term={query}")
 
 			if response.status_code != 200:
-				return [f'Error: {response.status_code}']
+				return [f"Error: {response.status_code}"]
 
 			payload = response.json()
 
-		if self.dataset_size == 'large':
-
-			print('Searching in ZOOBANK...')
-			response_pub = requests.get(f'https://zoobank.org/Search?search_term={query}')
+		if self.dataset_size == "large":
+			print("Searching in ZOOBANK...")
+			response_pub = requests.get(f"https://zoobank.org/Search?search_term={query}")
 
 			if response_pub.status_code != 200:
-				return [f'Error: {response_pub.status_code}']
+				return [f"Error: {response_pub.status_code}"]
 
 			html_content = response_pub.text
 
 			# Parsing the HTML content with BeautifulSoup
-			soup = BeautifulSoup(html_content, 'html.parser')
-			referenceuuid = [entry['href'].replace('/References/', '')
-			                 for entry in soup.find_all(class_='biblio-entry') if 'href' in entry.attrs]
+			soup = BeautifulSoup(html_content, "html.parser")
+			referenceuuid = [
+				entry["href"].replace("/References/", "") for entry in soup.find_all(class_="biblio-entry") if "href" in entry.attrs
+			]
 
-			for ref in tqdm(referenceuuid, desc='Fetching paper info'):
-				response_pub = requests.get(f'https://zoobank.org/References.json/{ref}')
+			for ref in tqdm(referenceuuid, desc="Fetching paper info"):
+				response_pub = requests.get(f"https://zoobank.org/References.json/{ref}")
 
 				if response_pub.status_code == 200:  # Check if the request was successful
 					try:
@@ -94,23 +88,22 @@ class ZOOBANK(Input):
 					print(f"Failed to retrieve data for {ref}")
 
 		if self.info:
-			referenceuuid = [item['referenceuuid'] for item in payload]
+			referenceuuid = [item["referenceuuid"] for item in payload]
 
 			referenceuuid_data = []
 			if referenceuuid != [""]:
 				for refuid in referenceuuid:
-					response_id = requests.get(f'http://zoobank.org/Identifiers.json/{refuid}')
+					response_id = requests.get(f"http://zoobank.org/Identifiers.json/{refuid}")
 
 					if response_id.status_code != 200:
-						return [f'Error: {response_id.status_code}']
+						return [f"Error: {response_id.status_code}"]
 
 					referenceuuid_data.append(response_id.json())
 
 			else:
-				print('No referenceuuid found.')
+				print("No referenceuuid found.")
 
 			return referenceuuid_data
 
 		else:
 			return payload
-
