@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 from tqdm import tqdm
 
 
-class ZOOBANK(Input):
+class ZooBank(Input):
 	"""
 	Query the Official Registry of Zoological Nomenclature (ZooBank) database to retrieve scientific bibliographic
 	information.
@@ -30,11 +30,11 @@ class ZOOBANK(Input):
 	Example
 	-------
 	>>> from biodumpy import Biodumpy
-	>>> from biodumpy.inputs import ZOOBANK
+	>>> from biodumpy.inputs import ZooBank
 	# Taxa list
 	>>> taxa = ['Alytes muletensis', 'Bufotes viridis', 'Hyla meridionalis', 'Anax imperator']
 	# Set the module and start the download
-	>>> bdp = Biodumpy([ZOOBANK(bulk=True, dataset_size='small', info=False)])
+	>>> bdp = Biodumpy([ZooBank(bulk=True, dataset_size='small', info=False)])
 	>>> bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}')
 	"""
 
@@ -59,9 +59,8 @@ class ZOOBANK(Input):
 				return [f"Error: {response.status_code}"]
 
 			payload = response.json()
-
-		if self.dataset_size == "large":
-			print("Searching in ZOOBANK...")
+		else:  # self.dataset_size == 'large'
+			print("Searching in ZooBank...")
 			response_pub = requests.get(f"https://zoobank.org/Search?search_term={query}")
 
 			if response_pub.status_code != 200:
@@ -77,7 +76,6 @@ class ZOOBANK(Input):
 
 			for ref in tqdm(referenceuuid, desc="Fetching paper info"):
 				response_pub = requests.get(f"https://zoobank.org/References.json/{ref}")
-
 				if response_pub.status_code == 200:  # Check if the request was successful
 					try:
 						json_content = response_pub.json()[0]
@@ -87,23 +85,21 @@ class ZOOBANK(Input):
 				else:
 					print(f"Failed to retrieve data for {ref}")
 
-		if self.info:
-			referenceuuid = [item["referenceuuid"] for item in payload]
-
-			referenceuuid_data = []
-			if referenceuuid != [""]:
-				for refuid in referenceuuid:
-					response_id = requests.get(f"http://zoobank.org/Identifiers.json/{refuid}")
-
-					if response_id.status_code != 200:
-						return [f"Error: {response_id.status_code}"]
-
-					referenceuuid_data.append(response_id.json())
-
-			else:
-				print("No referenceuuid found.")
-
-			return referenceuuid_data
-
-		else:
+		if not self.info:
 			return payload
+
+		referenceuuid = [item["referenceuuid"] for item in payload]
+
+		payload = []
+		if referenceuuid != [""]:
+			for refuid in referenceuuid:
+				response_id = requests.get(f"http://zoobank.org/Identifiers.json/{refuid}")
+
+				if response_id.status_code != 200:
+					return [f"Error: {response_id.status_code}"]
+
+				payload.append(response_id.json())
+		else:
+			print("No referenceuuid found.")
+
+		return payload

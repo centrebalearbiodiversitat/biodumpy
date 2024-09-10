@@ -59,7 +59,7 @@ class GBIF(Input):
 		if output_format != "json":
 			raise ValueError('Invalid output_format. Expected "json".')
 
-		if occ is True and accepted_only is False:
+		if occ and not accepted_only:
 			raise ValueError("Invalid accepted_only. Expected True.")
 
 	def _download(self, query, **kwargs) -> list:
@@ -70,20 +70,14 @@ class GBIF(Input):
 			return [f"Error: {response.status_code}"]
 
 		if response.content:
+			payload = response.json()["results"]
 			if self.accepted:
-				payload = response.json()
-				data = payload["results"]
-
 				# We keep the record only if the query corresponds to the scientific name in the data downloaded.
 				payload = list(
-					filter(lambda x: x.get("taxonomicStatus") == "ACCEPTED" and str(query[0]) in x.get("scientificName", ""), data)
+					filter(lambda x: x.get("taxonomicStatus") == "ACCEPTED" and str(query[0]) in x.get("scientificName", ""), payload)
 				)
 
-			else:
-				payload = response.json()["results"]
-
 			if self.occ and len(payload) > 0:
-				# print(len(payload))
 				tax_key = payload[0]["nubKey"]
 				payload = self._download_gbif_occ(taxon_key=tax_key, geometry=self.geometry)
 
@@ -104,11 +98,9 @@ class GBIF(Input):
 
 		if response_occ.content:
 			payload_occ = response_occ.json()
-
 			if payload_occ["endOfRecords"] and payload_occ["count"] > 0:
 				return payload_occ["results"]
-
-			elif payload_occ["endOfRecords"] is not True:
+			elif not payload_occ["endOfRecords"]:
 				total_records = payload_occ["count"]
 
 				# Initialize variables
