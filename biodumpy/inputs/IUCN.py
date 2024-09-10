@@ -49,7 +49,7 @@ class IUCN(Input):
 		threats: bool = False,
 		regions: list = None,
 		output_format: str = "json",
-		bulk: bool = False,
+		bulk: bool = False
 	):
 		super().__init__(output_format, bulk)
 		if regions is None:
