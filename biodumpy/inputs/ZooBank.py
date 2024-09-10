@@ -38,7 +38,7 @@ class ZooBank(Input):
 	>>> bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}')
 	"""
 
-	def __init__(self, output_format: str = "json", bulk: bool = False, dataset_size: str = "small", info: bool = False):
+	def __init__(self, dataset_size: str = "small", output_format: str = "json", info: bool = False, bulk: bool = False):
 		super().__init__(output_format, bulk)
 		self.dataset_size = dataset_size
 		self.info = info

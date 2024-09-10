@@ -41,13 +41,13 @@ class GBIF(Input):
 
 	def __init__(
 		self,
-		dataset_key="d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
-		limit=20,
-		accepted_only=True,
-		occ=False,
-		geometry=None,
-		output_format="json",
-		bulk=False,
+		dataset_key: str = "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
+		limit: int = 20,
+		accepted_only: bool = True,
+		occ: bool = False,
+		geometry: str = None,
+		output_format: str = "json",
+		bulk: bool = False,
 	):
 		super().__init__(output_format, bulk)
 		self.dataset_key = dataset_key

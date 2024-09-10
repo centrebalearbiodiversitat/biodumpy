@@ -1,6 +1,7 @@
 from biodumpy import Input
 import requests
 
+
 # Try if I can use summary=True and fasta=True
 
 
@@ -54,7 +55,7 @@ class BOLD(Input):
 	>>> bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}')
 	"""
 
-	def __init__(self, summary=False, fasta=False, output_format="json", bulk=False):
+	def __init__(self, summary: bool = False, fasta: bool = False, output_format: str = "json", bulk: bool = False):
 		super().__init__(output_format, bulk)
 		self.summary = summary
 		self.fasta = fasta
