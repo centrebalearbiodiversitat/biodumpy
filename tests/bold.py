@@ -100,16 +100,3 @@ def test_download(query, summary, fasta, output_format):
 	if summary is False and fasta is True:
 		# Check if the fasta file starts with >
 		assert data.startswith(">")
-
-
-#     # Check the main info in a BOLD JSON file
-#     if occ is False:
-#         assert 'key' in data[0], 'key is not in data'
-#         assert 'scientificName' in data[0], 'scientificName is not in data'
-#     else:
-#         assert 'key' in data[0], 'key is not in data'
-#         assert 'scientificName' in data[0], 'scientificName is not in data'
-#         assert 'gadm' in data[0], 'gadm is not in data'
-#         assert 'year' in data[0], 'year is not in data'
-#         assert 'month' in data[0], 'month is not in data'
-#         assert 'day' in data[0], 'day is not in data'
