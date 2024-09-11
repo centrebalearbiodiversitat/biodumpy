@@ -74,7 +74,7 @@ class IUCN(Input):
 		]
 
 		if output_format != "json":
-			raise ValueError("output_format must be json.")
+			raise ValueError("Invalid output_format. Expected 'json'.")
 
 		for regions in self.regions:
 			if regions not in iucn_regions:

@@ -64,8 +64,12 @@ In detail, we described:
     from biodumpy.inputs import GBIF
 
     # Create a list of taxa
-    taxa = ['Alytes muletensis (Sanchíz & Adrover, 1979)', 'Bufotes viridis (Laurenti, 1768)',
-            'Hyla meridionalis Boettger, 1874', 'Anax imperator Leach, 1815']
+    taxa = [
+        'Alytes muletensis (Sanchíz & Adrover, 1979)', 
+        'Bufotes viridis (Laurenti, 1768)',
+        'Hyla meridionalis Boettger, 1874', 
+        'Anax imperator Leach, 1815'
+    ]
 
     # Set the Biodumpy function with the specific parameters
     bdp = Biodumpy([GBIF(bulk=False, accepted_only=True)])
@@ -87,7 +91,12 @@ In detail, we described:
     api_key = 'YOUR_IUCN_API_KEY'
 
     # Create a list of taxa
-    taxa = ['Alytes muletensis', 'Bufotes viridis', 'Hyla meridionalis', 'Anax imperator']
+    taxa = [
+        'Alytes muletensis', 
+        'Bufotes viridis', 
+        'Hyla meridionalis', 
+        'Anax imperator'
+    ]
 
     # Set the Biodumpy functions with the specific parameters
     bdp = Biodumpy([GBIF(bulk=False, accepted_only=True),
@@ -115,9 +124,12 @@ repository or contact with the support team at [t.cancellario@uib.eu](mailto:t.c
 The project was supported by MCIN with funding from the European Union—NextGenerationEU (PRTR-C17.I1) and 
 the Government of the Balearic Islands.
 
+
+<!-- This is a comment in Markdown 
 <hr>
 <div style="display: flex; justify-content: center">
 <img src='/www/logo_cbb.png' alt='logo_cbb' width='200'>
 </div>
+-->
 
 
