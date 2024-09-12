@@ -13,18 +13,15 @@ from biodumpy.inputs import ZooBank
 trap = io.StringIO()
 
 
-def zoobank_query(info):
-	# Use a real search query. Replace this with a valid taxon name.
-	query = ["Bufotes viridis"]
-
+def zoobank_query(query, info, dataset_size):
 	# Create temporary directory
 	with tempfile.TemporaryDirectory() as temp_dir:
 		# Construct the dynamic path using formatted strings
 		dynamic_path = os.path.join(temp_dir)
 
 	# Start biodumpy function
-	bdp = Biodumpy([ZooBank(bulk=False, dataset_size="small", info=info)])
-	bdp.start(query, output_path=f"{dynamic_path}/downloads/{{date}}/{{module}}/{{name}}")
+	bdp = Biodumpy([ZooBank(bulk=False, dataset_size=dataset_size, info=info)])
+	bdp.start(elements=query, output_path=f"{dynamic_path}/downloads/{{date}}/{{module}}/{{name}}")
 
 	# Retrieve a file path
 	dir_date = os.listdir(f"{dynamic_path}/downloads/")[0]
@@ -61,15 +58,17 @@ def test_zoobank_initialization():
 
 
 @pytest.mark.parametrize(
-	"info",
+	"query, info, dataset_size",
 	[
-		True,  # True: info=True
-		False,  # False: info=False
+		(["Bufotes viridis"], False, "small"),
+		(["Bufotes viridis"], False, "large"),
+		(["Bufotes viridis"], True, "small"),
+		(["Bufotes viridis"], True, "large"),
 	],
 )
-def test_download_syn(info):
+def test_download_syn(query, info, dataset_size):
 	with redirect_stdout(trap):
-		data = zoobank_query(info=info)
+		data = zoobank_query(query=query, info=info, dataset_size=dataset_size)
 
 	# Check if data is not empty
 	assert len(data) > 0, "data length is 0"
@@ -85,23 +84,3 @@ def test_download_syn(info):
 		assert "label" in data[0], "label is not in the data"
 		assert "year" in data[0], "year is not in the data"
 		assert "title" in data[0], "title is not in the data"
-
-
-# def test_download_info_true():
-#
-#     with redirect_stdout(trap):
-#         data = zoobank_query(info=True)[0]
-#
-#     assert 'Abbreviation' in data[0], 'Abbreviation is not in the data'
-#     assert 'Identifier' in data[0], 'Identifier is not in the data'
-#     assert 'IdentifierUUID' in data[0], 'IdentifierUUID is not in the data'
-#
-# def test_download_info_false():
-#
-#     with redirect_stdout(trap):
-#         data = zoobank_query(info=False)
-#
-#     assert 'referenceuuid' in data[0], 'referenceuuid is not in the data'
-#     assert 'label' in data[0], 'label is not in the data'
-#     assert 'year' in data[0], 'year is not in the data'
-#     assert 'title' in data[0], 'title is not in the data'
