@@ -63,7 +63,7 @@ def test_zoobank_initialization():
 		(["Bufotes viridis"], False, "small"),
 		(["Bufotes viridis"], False, "large"),
 		(["Bufotes viridis"], True, "small"),
-		(["Bufotes viridis"], True, "large")
+		(["Bufotes viridis"], True, "large"),
 	],
 )
 def test_download_syn(query, info, dataset_size):
