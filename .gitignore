@@ -11,3 +11,8 @@ list*
 *.json
 *.log
 /proof.py
+
+/.idea
+/biodumpy.egg-info/
+/build/
+/dist/
