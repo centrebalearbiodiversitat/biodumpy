@@ -63,7 +63,7 @@ def test_zoobank_initialization():
 		(["Bufotes viridis"], False, "small"),
 		(["Bufotes viridis"], False, "large"),
 		(["Bufotes viridis"], True, "small"),
-		(["Bufotes viridis"], True, "large"),
+		(["Bufotes viridis"], True, "large")
 	],
 )
 def test_download_syn(query, info, dataset_size):
@@ -80,14 +80,7 @@ def test_download_syn(query, info, dataset_size):
 		assert "IdentifierUUID" in data[0], "IdentifierUUID is not in the data"
 
 	else:
-		if dataset_size == "small":
-			assert "referenceuuid" in data[0], "referenceuuid is not in the data"
-			assert "label" in data[0], "label is not in the data"
-			assert "year" in data[0], "year is not in the data"
-			assert "title" in data[0], "title is not in the data"
-
-		if dataset_size == "large":
-			assert "referenceuuid" in data[0], "referenceuuid is not in the data"
-			assert "label" in data[0], "label is not in the data"
-			assert "year" in data[0], "year is not in the data"
-			assert "title" in data[0], "title is not in the data"
+		assert "referenceuuid" in data[0], "referenceuuid is not in the data"
+		assert "label" in data[0], "label is not in the data"
+		assert "year" in data[0], "year is not in the data"
+		assert "title" in data[0], "title is not in the data"
