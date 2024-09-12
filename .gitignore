@@ -11,3 +11,5 @@ list*
 *.json
 *.log
 /proof.py
+
+/.idea
