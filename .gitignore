@@ -13,3 +13,6 @@ list*
 /proof.py
 
 /.idea
+/biodumpy.egg-info/
+/build/
+/dist/
