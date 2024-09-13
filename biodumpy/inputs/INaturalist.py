@@ -55,7 +55,6 @@ class INaturalist(Input):
 			raise ValueError('Invalid output_format. Expected "json".')
 
 	def _download(self, query, **kwargs) -> list:
-
 		# API request
 		response = requests.get(f"https://api.inaturalist.org/v1/taxa?q={query}&order=desc&order_by=observations_count")
 
@@ -66,7 +65,6 @@ class INaturalist(Input):
 		photo_license = ["cc0", "cc-by", "cc-by-nc", "cc-by-nc-nd", "cc-by-sa", "cc-by-nd", "cc-by-nc-sa"]
 
 		if response.status_code == 200:
-
 			results = response.json()["results"]
 			results_filtered = next(filter(lambda x: x["name"] == query, results), None)
 

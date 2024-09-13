@@ -38,7 +38,6 @@ class GBIF(Input):
 	>>> bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}')
 	"""
 
-
 	def __init__(
 		self,
 		dataset_key: str = "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
