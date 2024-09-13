@@ -1,9 +1,8 @@
-<!-- This is a comment in Markdown 
+
 <h1 style="display: flex; justify-content: space-between; align-items: center;">
   <span>biodumpy: A Comprehensive Biological Data Downloader</span>
-  <img src="www/biodumpy.png" alt="Project Logo" width="200">
+  <img src="./docs/source/Biodumpy_logo.png" alt="Project Logo" width="200">
 </h1>
--->
 
 # biodumpy: A Comprehensive Biological Data Downloader
 
@@ -24,6 +23,7 @@ designed for retrieving information from its respective source. The modules impl
 - BOLD
 - COL
 - GBIF
+- iNaturalist
 - IUCN
 - NCBI
 - OBIS

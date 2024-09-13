@@ -21,10 +21,9 @@ class GBIF(Input):
 	geometry : str, optional
 	    A spatial polygon to filter occurrences within a specified area. Default is an empty string.
 	bulk : bool, optional
-		If True, the function creates a bulk file. For further information, see the documentation of the Biodumpy package.
-		Default is False.
-	output_format : string, optional
-		The format of the output file. The options available are: 'json', 'fasta', 'pdf'. Default is 'json'.
+	    If True, the function creates a bulk file. For further information, see the documentation of the Biodumpy package. Default is False.
+	output_format : str, optional
+	    The format of the output file. The options available are: 'json', 'fasta', 'pdf'. Default is 'json'.
 
 	Example
 	-------
@@ -33,11 +32,12 @@ class GBIF(Input):
 	# GBIF dataset key
 	>>> gbif_backbone = 'd7dddbf4-2cf0-4f39-9b2a-bb099caae36c'
 	# Taxa list
-	>>> taxa = ['Alytes muletensis (Sanchíz & Adrover, 1979)', 'Bufotes viridis (Laurenti, 1768)', 'Hyla meridionalis Boettger, 1874', 'Anax imperator Leach, 1815']
+	>>> taxa = ['Alytes muletensis (Sanchíz & Adrover, 1979)', 'Bufotes viridis (Laurenti, 1768)']
 	# Set the module and start the download
-	>>> bdp = Biodumpy([GBIF(dataset_key=gbif_backbone, limit=20, bulk=False, accepted=True, occ=False)])
+	>>> bdp = Biodumpy([GBIF(dataset_key=gbif_backbone, limit=20, accepted_only=True, occ=False, bulk=False, output_format='json')])
 	>>> bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}')
 	"""
+
 
 	def __init__(
 		self,

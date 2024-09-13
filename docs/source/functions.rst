@@ -18,6 +18,11 @@ Function
    :undoc-members:
    :show-inheritance:
 
+.. automodule:: biodumpy.inputs.INaturalist
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 .. automodule:: biodumpy.inputs.IUCN
    :members:
    :undoc-members:

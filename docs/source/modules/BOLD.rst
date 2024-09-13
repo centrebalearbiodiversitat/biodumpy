@@ -1,7 +1,7 @@
 BOLD Module
 ===========
 
-.. _BOLD:
+.. _BOLD_module:
 
 
 Overview
@@ -38,7 +38,10 @@ This function is based on the BOLD v4 API's endpoints `API_Public/combined`_ and
     from biodumpy.inputs import BOLD
 
     # Taxa list
-    taxa = ['Alytes muletensis', 'Bufotes viridis', 'Hyla meridionalis', 'Anax imperator']
+    taxa = [
+    	'Alytes muletensis', 'Bufotes viridis',
+    	'Hyla meridionalis', 'Anax imperator'
+    ]
 
     # Set the module and start the download
     bdp = Biodumpy([BOLD(bulk=True, summary=False)])
@@ -49,17 +52,17 @@ The previous method downloads the entire set of data for each record from BOLD. 
 summarized version by setting the ``summary`` parameter to *True*. This option provides a more concise and manageable
 set of information. The fields of the result file are described below:
 
-- record_id: The unique identifier for the BOLD record.
-- processid: The process ID associated with the BOLD record.
-- bin_uri: The BIN (Barcode Index Number) URI.
-- taxon: The name of the lower taxon extracted from the taxonomy information.
-- country: The country where the collection event took place.
-- province_state: The province or state of the collection event.
-- region: The region of the collection event.
-- lat: The latitude of the collection event.
-- lon: The longitude of the collection event.
-- markercode: The marker code from the sequences data.
-- genbank_accession: The GenBank accession number from the sequences data.
+- **record_id**: The unique identifier for the BOLD record.
+- **processid**: The process ID associated with the BOLD record.
+- **bin_uri**: The BIN (Barcode Index Number) URI.
+- **taxon**: The name of the lower taxon extracted from the taxonomy information.
+- **country**: The country where the collection event took place.
+- **province_state**: The province or state of the collection event.
+- **region**: The region of the collection event.
+- **lat**: The latitude of the collection event.
+- **lon**: The longitude of the collection event.
+- **markercode**: The marker code from the sequences data.
+- **genbank_accession**: The GenBank accession number from the sequences data.
 
 This function also provides a boolean ``fasta`` parameter to download the file in FASTA format.
 Following the general structure of the ``biodumpy`` package, sequences can be downloaded for individual organisms or in
@@ -75,7 +78,10 @@ bulk. Below is an example demonstrating how to download FASTA files.
     from biodumpy.inputs import BOLD
 
     # Taxa list
-    taxa = ['Alytes muletensis', 'Bufotes viridis', 'Hyla meridionalis', 'Anax imperator']
+    taxa = [
+    	'Alytes muletensis', 'Bufotes viridis',
+    	'Hyla meridionalis', 'Anax imperator'
+    ]
     # Set the module and start the download
     bdp = Biodumpy([BOLD(bulk=True, fasta=True, output_format='fasta')])
     bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}')
