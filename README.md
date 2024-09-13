@@ -1,11 +1,8 @@
 
-<h1 style="display: flex; justify-content: space-between; align-items: center;">
+<h1 style="display: flex; flex-direction: row; justify-content: space-between; align-items: center;">
   <span>biodumpy: A Comprehensive Biological Data Downloader</span>
   <img src="./docs/source/Biodumpy_logo.png" alt="Project Logo" width="200">
 </h1>
-
-# biodumpy: A Comprehensive Biological Data Downloader
-
 
 ## Overview
 ``biodumpy`` is a powerful and versatile Python package designed to simplify the process of retrieving biological information 
