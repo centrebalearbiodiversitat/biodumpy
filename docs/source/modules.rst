@@ -15,5 +15,6 @@ The current modules are dedicated for the following databases:
 - :doc:`modules/GBIF`
 - :doc:`modules/iNaturalist`
 - :doc:`modules/IUCN`
+- :doc:`modules/NCBI`
 - :doc:`modules/OBIS`
 - :doc:`modules/ZOOBANK`

@@ -1,8 +1,6 @@
+<img src="./docs/source/Biodumpy_logo.png" alt="Project Logo" width="200">
 
-<h1 style="display: flex; flex-direction: row; justify-content: space-between; align-items: center;">
-  <span>biodumpy: A Comprehensive Biological Data Downloader</span>
-  <img src="./docs/source/Biodumpy_logo.png" alt="Project Logo" width="200">
-</h1>
+# biodumpy: A Comprehensive Biological Data Downloader
 
 ## Overview
 ``biodumpy`` is a powerful and versatile Python package designed to simplify the process of retrieving biological information 
@@ -117,16 +115,13 @@ repository or contact with the support team at [t.cancellario@uib.eu](mailto:t.c
 ``biodumpy`` is licensed under the GNU GENERAL PUBLIC LICENSE. See the LICENSE file for more details.
 
 
-## Acknowlegments
+## Acknowledgments
 The project was supported by MCIN with funding from the European Union—NextGenerationEU (PRTR-C17.I1) and 
 the Government of the Balearic Islands.
 
 
-<!-- This is a comment in Markdown 
+
 <hr>
 <div style="display: flex; justify-content: center">
-<img src='/www/logo_cbb.png' alt='logo_cbb' width='200'>
+<img src='./docs/source/logo_cbb.png' alt='logo_cbb' width='200'>
 </div>
--->
-
-

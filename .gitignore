@@ -11,3 +11,4 @@ list*
 *.json
 *.log
 /proof.py
+/biodumpy/inputs/NCBI_taxonomy.py

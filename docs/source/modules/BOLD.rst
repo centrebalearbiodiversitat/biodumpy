@@ -8,7 +8,7 @@ Overview
 --------
 
 The ``BOLD`` module allows users to easily retrieve data information from the Barcode of Life Data System (`BOLD`_)
-database. The information is downloaded in JSON or FASTA format.
+database. The information can be downloaded in JSON or FASTA format.
 
 .. _BOLD: https://www.boldsystems.org/
 
@@ -63,6 +63,9 @@ set of information. The fields of the result file are described below:
 - **lon**: The longitude of the collection event.
 - **markercode**: The marker code from the sequences data.
 - **genbank_accession**: The GenBank accession number from the sequences data.
+
+Downloading data in FASTA format
+--------------------------------
 
 This function also provides a boolean ``fasta`` parameter to download the file in FASTA format.
 Following the general structure of the ``biodumpy`` package, sequences can be downloaded for individual organisms or in

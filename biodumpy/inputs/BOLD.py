@@ -14,9 +14,8 @@ class BOLD(Input):
 	query : list
 	    The list of taxa to query.
 	summary : bool, optional
-	    If True, the function returns only a summary of a metadata informatio.
-	    See Detail section for further information.
-	    Default is False.
+	    If True, the function returns a summary of the downloaded metadata instead of the full records.
+		Default is False.
 	fasta : bool, optional
 		If True, the function downloads the FASTA file.
 		Default is False.
