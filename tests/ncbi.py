@@ -13,15 +13,29 @@ from biodumpy.inputs import NCBI
 trap = io.StringIO()
 
 
-def ncbi_query(query, summary,  output_format, max_bp, db, step, rettype, query_type, by_id, mail):
+def ncbi_query(query, summary, output_format, max_bp, db, step, rettype, query_type, by_id, mail):
 	# Create temporary directory
 	with tempfile.TemporaryDirectory() as temp_dir:
 		# Construct the dynamic path using formatted strings
 		dynamic_path = os.path.join(temp_dir)
 
 	# Start biodumpy function
-	bdp = Biodumpy([NCBI(bulk=True, summary=summary, output_format=output_format, max_bp=max_bp,
-	                     db=db, step=step, rettype=rettype, query_type=query_type, by_id=by_id, mail=mail)])
+	bdp = Biodumpy(
+		[
+			NCBI(
+				bulk=True,
+				summary=summary,
+				output_format=output_format,
+				max_bp=max_bp,
+				db=db,
+				step=step,
+				rettype=rettype,
+				query_type=query_type,
+				by_id=by_id,
+				mail=mail,
+			)
+		]
+	)
 	bdp.start(elements=query, output_path=f"{dynamic_path}/downloads/{{date}}/{{module}}/{{name}}")
 
 	# Retrieve a file path
@@ -75,14 +89,23 @@ def test_ncbi_initialization():
 		(["Anax imperator"], False, "json", 5000, "nucleotide", 100, "gb", "[Organism] AND COX1[Gene]", False, "hola@quetal.com"),
 		(["OQ507551"], False, "json", 5000, "nucleotide", 100, "gb", None, True, "hola@quetal.com"),
 		(["Anax imperator"], True, "json", 5000, "nucleotide", 100, "gb", "[Organism]", False, "hola@quetal.com"),
-		(["Anax imperator"], False, "fasta", 5000, "nucleotide", 100, "fasta", "[Organism]", False, "hola@quetal.com")
+		(["Anax imperator"], False, "fasta", 5000, "nucleotide", 100, "fasta", "[Organism]", False, "hola@quetal.com"),
 	],
 )
 def test_download(query, summary, output_format, max_bp, db, step, rettype, query_type, by_id, mail):
 	with redirect_stdout(trap):
-		data = ncbi_query(query=query, summary=summary, output_format=output_format,
-		                  max_bp=max_bp, db=db, step=step, rettype=rettype,
-		                  query_type=query_type, by_id=by_id, mail=mail)
+		data = ncbi_query(
+			query=query,
+			summary=summary,
+			output_format=output_format,
+			max_bp=max_bp,
+			db=db,
+			step=step,
+			rettype=rettype,
+			query_type=query_type,
+			by_id=by_id,
+			mail=mail,
+		)
 
 	# Check if data is not empty
 	assert len(data) > 0, "data length is 0"

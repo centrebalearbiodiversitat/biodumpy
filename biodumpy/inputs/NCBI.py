@@ -89,20 +89,19 @@ class NCBI(Input):
 	>>> bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}')
 	"""
 
-
 	def __init__(
-			self,
-			mail: str = None,
-			db: str = "nucleotide",
-			rettype: str = "gb",
-			query_type: str = "[Organism]",
-			step: int = 100,
-			max_bp: int = None,
-			summary: bool = False,
-			by_id: bool = False,
-			output_format: str = "json",
-			bulk: bool = False):
-
+		self,
+		mail: str = None,
+		db: str = "nucleotide",
+		rettype: str = "gb",
+		query_type: str = "[Organism]",
+		step: int = 100,
+		max_bp: int = None,
+		summary: bool = False,
+		by_id: bool = False,
+		output_format: str = "json",
+		bulk: bool = False,
+	):
 		super().__init__(output_format, bulk)
 		self.max_bp = max_bp
 		self.db = db
@@ -126,7 +125,6 @@ class NCBI(Input):
 			raise ValueError('Invalid output_format. Expected "json" or "fasta".')
 
 	def _download(self, query, **kwargs) -> list:
-
 		if self.by_id:
 			ids_list = {query}
 		else:
@@ -202,7 +200,6 @@ class NCBI(Input):
 		return id_bp_list
 
 	def _download_summary(self, seq_id):
-
 		keys_to_keep = ["Id", "Caption", "Title", "Length"]
 		summary_list = list()
 		try:
