@@ -1,6 +1,6 @@
 from biodumpy import Input
 import requests
-
+import logging
 
 class COL(Input):
 	"""
@@ -56,7 +56,12 @@ class COL(Input):
 		)
 
 		if response.status_code != 200:
-			return [f"Error: {response.status_code}"]
+			logging.error("COL response code: %s", response.status_code)
+		else:
+			pass
+
+		# if response.status_code != 200:
+		# 	return [f"Error: {response.status_code}"]
 
 		payload = response.json()
 

@@ -1,7 +1,7 @@
 COL Module
 ==========
 
-.. _COL:
+.. _COL_module:
 
 
 Overview

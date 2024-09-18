@@ -1,8 +1,6 @@
 from biodumpy import Input
 import requests
-
-
-# Try if I can use summary=True and fasta=True
+import logging
 
 
 class BOLD(Input):
@@ -68,15 +66,20 @@ class BOLD(Input):
 	def _download(self, query, **kwargs) -> list:
 		if self.fasta:
 			response = requests.get(f"http://v4.boldsystems.org/index.php/API_Public/sequence?taxon={query}")
-			response = response.content
 
-			# Decode bytes to string
-			data_str = response.decode()
+			if response.status_code != 200:
+				logging.error("BOLD fasta response code: %s", response.status_code)
+			else:
+				pass
 
-			# Split the data by '>'
-			fasta_entries = [f">{entry}" for entry in data_str.split(">") if entry]
+			if response.content:
+				response = response.content
+				data_str = response.decode()
 
-			return fasta_entries
+				# Split the data by '>'
+				fasta_entries = [f">{entry}" for entry in data_str.split(">") if entry]
+
+				return fasta_entries
 
 		else:
 			response = requests.get(f"http://v4.boldsystems.org/index.php/API_Public/combined?taxon={query}&format=json")
@@ -84,7 +87,12 @@ class BOLD(Input):
 			payload = []
 
 			if response.status_code != 200:
-				return [f"Error: {response.status_code}"]
+				logging.error("BOLD data response code: %s", response.status_code)
+			else:
+				pass
+
+			# if response.status_code != 200:
+			# 	return [f"Error: {response.status_code}"]
 
 			if response.content:
 				results = response.json()

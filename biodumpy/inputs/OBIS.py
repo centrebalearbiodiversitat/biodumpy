@@ -1,6 +1,7 @@
 from biodumpy import Input
 import requests
 from tqdm import tqdm
+import logging
 
 
 class OBIS(Input):
@@ -52,7 +53,12 @@ class OBIS(Input):
 		response = requests.get(f"https://api.obis.org/v3/taxon/{query}")
 
 		if response.status_code != 200:
-			return [f"Error: {response.status_code}"]
+			logging.error("OBIS response code: %s", response.status_code)
+		else:
+			pass
+
+		# if response.status_code != 200:
+		# 	return [f"Error: {response.status_code}"]
 
 		if response.content:
 			payload = response.json()["results"]

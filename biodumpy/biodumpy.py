@@ -2,9 +2,34 @@ from datetime import datetime
 from .input import Input
 from .utils import dump
 from tqdm import tqdm
+import logging
 
+
+# Setup logging configuration
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S',
+    filename='biodumpy_downloader.log',
+    filemode='a'  # is the appended mode
+)
 
 class Biodumpy:
+	"""
+	This class is designed to download biodiversity data from various sources using multiple input modules.
+
+	Parameters
+	----------
+	inputs : list
+	    A list of input modules that handle specific biodiversity data downloads.
+	loading_bar : bool
+	     If True, shows a progress bar when downloading data. If False, disable the progress bar.
+	     Default is False
+	debug : bool
+	    If True, enables printing of detailed information during execution.
+	    Default is True
+	"""
+
 	def __init__(self, inputs: list[Input], loading_bar: bool = False, debug: bool = True) -> None:
 		super().__init__()
 		self.inputs = inputs
@@ -13,6 +38,7 @@ class Biodumpy:
 
 	# elements must be a flat list of strings
 	def start(self, elements, output_path="downloads/{date}/{module}/{name}"):
+
 		if not isinstance(elements, list):
 			raise ValueError("Invalid query. Expected a list of taxa to query.")
 
@@ -27,6 +53,7 @@ class Biodumpy:
 					el = {"query": el}
 
 				if "query" not in el:
+					logging.error("Missing 'query' key for %s", el)
 					raise ValueError(f"Missing 'name' key for {el}")
 
 				name = el["query"]
@@ -36,9 +63,20 @@ class Biodumpy:
 
 				for inp in self.inputs:
 					module_name = type(inp).__name__
+					# Logging the module
+					logging.info("biodumpy initialized with %s inputs. Taxon: %s", module_name, name)
+
 					if self.debug:
-						print(f"\t{module_name}")
-					payload = inp._download(**el)
+						try:
+							payload = inp._download(**el)
+							logging.info("Download data for %s was successful.\n",  module_name)
+						except Exception as e:
+							logging.error("Failed to download data for %s using %s: %s", name, module_name, str(e))
+							continue
+
+					# 	print(f"\t{module_name}")
+					#
+					# payload = inp._download(**el)
 
 					if inp.bulk:
 						if inp not in bulk_input:

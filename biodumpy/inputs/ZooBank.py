@@ -2,6 +2,7 @@ from biodumpy import Input
 import requests
 from bs4 import BeautifulSoup
 from tqdm import tqdm
+import logging
 
 
 class ZooBank(Input):
@@ -56,7 +57,12 @@ class ZooBank(Input):
 			response = requests.get(f"https://zoobank.org/References.json?search_term={query}")
 
 			if response.status_code != 200:
-				return [f"Error: {response.status_code}"]
+				logging.error("OBIS response code: %s", response.status_code)
+			else:
+				pass
+
+			# if response.status_code != 200:
+			# 	return [f"Error: {response.status_code}"]
 
 			payload = response.json()
 		else:  # self.dataset_size == 'large'

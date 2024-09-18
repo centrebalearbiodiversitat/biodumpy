@@ -1,5 +1,6 @@
 from biodumpy import Input
 import requests
+import logging
 
 
 class GBIF(Input):
@@ -66,7 +67,10 @@ class GBIF(Input):
 		response = requests.get(f"https://api.gbif.org/v1/species/search?datasetKey={self.dataset_key}&q={query}&limit={self.limit}")
 
 		if response.status_code != 200:
-			return [f"Error: {response.status_code}"]
+			# return [f"Error: {response.status_code}"]
+			logging.error("GBIF taxonomy response code: %s", response.status_code)
+		else:
+			pass
 
 		if response.content:
 			payload = response.json()["results"]
@@ -80,20 +84,28 @@ class GBIF(Input):
 				tax_key = payload[0]["nubKey"]
 				payload = self._download_gbif_occ(taxon_key=tax_key, geometry=self.geometry)
 
-		# if self.occ:
-		# 	if len(payload) > 0:
-		# 		payload = self._download_gbif_occ(taxon_key=payload[0]['nubKey'], geometry=self.geometry)
-
 		return payload
 
 	def _download_gbif_occ(self, taxon_key: int, geometry: str):
+
 		response_occ = requests.get(
 			f"https://api.gbif.org/v1/occurrence/search",
-			params={"acceptedTaxonKey": taxon_key, "occurrenceStatus": "PRESENT", "geometry": geometry, "limit": 300},
+			params={
+				"acceptedTaxonKey": taxon_key,
+				"occurrenceStatus": "PRESENT",
+				"geometry": geometry,
+				"limit": 300
+			}
 		)
 
+		# if response_occ.status_code != 200:
+		# 	return [f"Error: {response_occ.status_code}"]
+
 		if response_occ.status_code != 200:
-			return [f"Error: {response_occ.status_code}"]
+			# return [f"Error: {response.status_code}"]
+			logging.error("GBIF occurrence response code: %s", response_occ.status_code)
+		else:
+			pass
 
 		if response_occ.content:
 			payload_occ = response_occ.json()
