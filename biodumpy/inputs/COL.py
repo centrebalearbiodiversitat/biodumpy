@@ -2,6 +2,7 @@ from biodumpy import Input
 import requests
 import logging
 
+
 class COL(Input):
 	"""
 	Query the Catalogue of Life (COL) database to retrieve nomenclature information of a list of taxa.

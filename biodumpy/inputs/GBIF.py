@@ -87,15 +87,9 @@ class GBIF(Input):
 		return payload
 
 	def _download_gbif_occ(self, taxon_key: int, geometry: str):
-
 		response_occ = requests.get(
 			f"https://api.gbif.org/v1/occurrence/search",
-			params={
-				"acceptedTaxonKey": taxon_key,
-				"occurrenceStatus": "PRESENT",
-				"geometry": geometry,
-				"limit": 300
-			}
+			params={"acceptedTaxonKey": taxon_key, "occurrenceStatus": "PRESENT", "geometry": geometry, "limit": 300},
 		)
 
 		# if response_occ.status_code != 200:

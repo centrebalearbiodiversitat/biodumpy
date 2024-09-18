@@ -7,12 +7,13 @@ import logging
 
 # Setup logging configuration
 logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s',
-    datefmt='%Y-%m-%d %H:%M:%S',
-    filename='biodumpy_downloader.log',
-    filemode='a'  # is the appended mode
+	level=logging.INFO,
+	format="%(asctime)s - %(levelname)s - %(message)s",
+	datefmt="%Y-%m-%d %H:%M:%S",
+	filename="biodumpy_downloader.log",
+	filemode="a",  # is the appended mode
 )
+
 
 class Biodumpy:
 	"""
@@ -38,7 +39,6 @@ class Biodumpy:
 
 	# elements must be a flat list of strings
 	def start(self, elements, output_path="downloads/{date}/{module}/{name}"):
-
 		if not isinstance(elements, list):
 			raise ValueError("Invalid query. Expected a list of taxa to query.")
 
@@ -69,7 +69,7 @@ class Biodumpy:
 					if self.debug:
 						try:
 							payload = inp._download(**el)
-							logging.info("Download data for %s was successful.\n",  module_name)
+							logging.info("Download data for %s was successful.\n", module_name)
 						except Exception as e:
 							logging.error("Failed to download data for %s using %s: %s", name, module_name, str(e))
 							continue
