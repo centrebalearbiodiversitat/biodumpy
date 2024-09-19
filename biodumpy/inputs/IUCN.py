@@ -1,6 +1,7 @@
 from biodumpy import Input
 import requests
-import logging
+
+from biodumpy.biodumpy import BiodumpyException
 
 
 class IUCN(Input):
@@ -130,12 +131,7 @@ class IUCN(Input):
 		response = requests.get(query_path)
 
 		if response.status_code != 200:
-			logging.error("IUCN response code: %s", response.status_code)
-		else:
-			pass
-
-		# if response.status_code != 200:
-		# 	print(f"Error ---- {query_path}: {response.status_code}")
+			raise BiodumpyException(f"[IUCN] - Response code: {response.status_code}")
 
 		if response.content:
 			response = response.json()

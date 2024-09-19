@@ -2,6 +2,13 @@
 
 # biodumpy: A Comprehensive Biological Data Downloader
 
+![PyPI - Version](https://img.shields.io/pypi/v/biodumpy)
+![PyPI - Status](https://img.shields.io/pypi/status/biodumpy)
+![PyPI - License](https://img.shields.io/pypi/l/biodumpy)
+![PyPI - Downloads](https://img.shields.io/pypi/dm/biodumpy)
+
+
+
 ## Overview
 ``biodumpy`` is a powerful and versatile Python package designed to simplify the process of retrieving biological information 
 from several public databases. 

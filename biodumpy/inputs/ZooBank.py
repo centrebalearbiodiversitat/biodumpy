@@ -2,7 +2,8 @@ from biodumpy import Input
 import requests
 from bs4 import BeautifulSoup
 from tqdm import tqdm
-import logging
+
+from biodumpy.biodumpy import BiodumpyException
 
 
 class ZooBank(Input):
@@ -57,12 +58,7 @@ class ZooBank(Input):
 			response = requests.get(f"https://zoobank.org/References.json?search_term={query}")
 
 			if response.status_code != 200:
-				logging.error("OBIS response code: %s", response.status_code)
-			else:
-				pass
-
-			# if response.status_code != 200:
-			# 	return [f"Error: {response.status_code}"]
+				raise BiodumpyException(f"[ZooBank] - Reference response code: {response.status_code}")
 
 			payload = response.json()
 		else:  # self.dataset_size == 'large'
@@ -70,7 +66,7 @@ class ZooBank(Input):
 			response_pub = requests.get(f"https://zoobank.org/Search?search_term={query}")
 
 			if response_pub.status_code != 200:
-				return [f"Error: {response_pub.status_code}"]
+				raise BiodumpyException(f"[ZooBank] - Search response code: {response_pub.status_code}")
 
 			html_content = response_pub.text
 
@@ -102,7 +98,7 @@ class ZooBank(Input):
 				response_id = requests.get(f"http://zoobank.org/Identifiers.json/{refuid}")
 
 				if response_id.status_code != 200:
-					return [f"Error: {response_id.status_code}"]
+					raise BiodumpyException(f"[ZooBank] - Referenceuuid response code: {response_id.status_code}")
 
 				payload.append(response_id.json())
 		else:

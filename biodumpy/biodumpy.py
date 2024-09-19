@@ -57,7 +57,7 @@ class Biodumpy:
 					el = {"query": el}
 
 				if "query" not in el:
-					logging.error("Missing 'query' key for %s", el)
+					logging.error(f"Missing 'query' key for {el}")
 					raise ValueError(f"Missing 'name' key for {el}")
 
 				name = el["query"]
@@ -68,18 +68,17 @@ class Biodumpy:
 				for inp in self.inputs:
 					module_name = type(inp).__name__
 					# Logging the module
-					logging.info("biodumpy initialized with %s inputs. Taxon: %s", module_name, name)
+					logging.info(f"biodumpy initialized with {module_name} inputs. Taxon: {name}")
 
 					if self.debug:
 						try:
 							payload = inp._download(**el)
-							logging.info("Download data for %s was successful.\n", module_name)
+							logging.info(f"Download data for {module_name} was successful.\n")
 						except Exception as e:
-							logging.error(f'[{module_name}] Failed to download data for "{name}": {str(e)}')
+							logging.error(f'[{module_name}] Failed to download data for "{name}": {str(e)} \n')
 							continue
 
 					# 	print(f"\t{module_name}")
-					#
 					# payload = inp._download(**el)
 
 					if inp.bulk:

@@ -1,6 +1,7 @@
 from biodumpy import Input
 import requests
-import logging
+
+from biodumpy.biodumpy import BiodumpyException
 
 
 class BOLD(Input):
@@ -68,9 +69,7 @@ class BOLD(Input):
 			response = requests.get(f"http://v4.boldsystems.org/index.php/API_Public/sequence?taxon={query}")
 
 			if response.status_code != 200:
-				logging.error("BOLD fasta response code: %s", response.status_code)
-			else:
-				pass
+				raise BiodumpyException(f"[BOLD] - Taxonomy response code: {response.status_code}")
 
 			if response.content:
 				response = response.content
@@ -87,12 +86,8 @@ class BOLD(Input):
 			payload = []
 
 			if response.status_code != 200:
-				logging.error("BOLD data response code: %s", response.status_code)
-			else:
-				pass
+				raise BiodumpyException(f"[BOLD] - Data response code: {response.status_code}")
 
-			# if response.status_code != 200:
-			# 	return [f"Error: {response.status_code}"]
 
 			if response.content:
 				results = response.json()

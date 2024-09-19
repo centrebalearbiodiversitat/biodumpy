@@ -1,6 +1,7 @@
 from biodumpy import Input
 import requests
-import logging
+
+from biodumpy.biodumpy import BiodumpyException
 
 
 class COL(Input):
@@ -57,12 +58,7 @@ class COL(Input):
 		)
 
 		if response.status_code != 200:
-			logging.error("COL response code: %s", response.status_code)
-		else:
-			pass
-
-		# if response.status_code != 200:
-		# 	return [f"Error: {response.status_code}"]
+			raise BiodumpyException(f"[COL] - Taxonomy response code: {response.status_code}")
 
 		payload = response.json()
 

@@ -1,7 +1,7 @@
 from biodumpy import Input
 import requests
-import logging
 
+from biodumpy.biodumpy import BiodumpyException
 
 class INaturalist(Input):
 	"""
@@ -60,9 +60,7 @@ class INaturalist(Input):
 		response = requests.get(f"https://api.inaturalist.org/v1/taxa?q={query}&order=desc&order_by=observations_count")
 
 		if response.status_code != 200:
-			logging.error("iNaturalist response code: %s", response.status_code)
-		else:
-			pass
+			raise BiodumpyException(f"[iNaturalist] - Response code: {response.status_code}")
 
 		# Dictionary for empty records
 		photo_details_empty = {"taxon": query, "image_id": None, "license_code": None, "attribution": None}

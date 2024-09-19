@@ -1,7 +1,8 @@
 from biodumpy import Input
 import requests
 from tqdm import tqdm
-import logging
+
+from biodumpy.biodumpy import BiodumpyException
 
 
 class OBIS(Input):
@@ -53,12 +54,7 @@ class OBIS(Input):
 		response = requests.get(f"https://api.obis.org/v3/taxon/{query}")
 
 		if response.status_code != 200:
-			logging.error("OBIS response code: %s", response.status_code)
-		else:
-			pass
-
-		# if response.status_code != 200:
-		# 	return [f"Error: {response.status_code}"]
+			raise BiodumpyException(f"[OBIS] - Taxonomy response code: {response.status_code}")
 
 		if response.content:
 			payload = response.json()["results"]
@@ -86,7 +82,7 @@ class OBIS(Input):
 				response = requests.get("https://api.obis.org/v3/occurrence", params=params)
 
 				if response.status_code != 200:
-					raise Exception(f"Error: {response.status_code}")
+					raise BiodumpyException(f"[OBIS] - Occurrences response code: {response.status_code}")
 
 				response_json = response.json()
 				data = response_json["results"]
