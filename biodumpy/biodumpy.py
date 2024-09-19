@@ -15,6 +15,10 @@ logging.basicConfig(
 )
 
 
+class BiodumpyException(Exception):
+	pass
+
+
 class Biodumpy:
 	"""
 	This class is designed to download biodiversity data from various sources using multiple input modules.
@@ -71,7 +75,7 @@ class Biodumpy:
 							payload = inp._download(**el)
 							logging.info("Download data for %s was successful.\n", module_name)
 						except Exception as e:
-							logging.error("Failed to download data for %s using %s: %s", name, module_name, str(e))
+							logging.error(f"[{module_name}] Failed to download data for \"{name}\": {str(e)}")
 							continue
 
 					# 	print(f"\t{module_name}")

@@ -1,6 +1,7 @@
 from biodumpy import Input
 import requests
-import logging
+
+from biodumpy.biodumpy import BiodumpyException
 
 
 class GBIF(Input):
@@ -68,9 +69,7 @@ class GBIF(Input):
 
 		if response.status_code != 200:
 			# return [f"Error: {response.status_code}"]
-			logging.error("GBIF taxonomy response code: %s", response.status_code)
-		else:
-			pass
+			raise BiodumpyException(f"GBIF taxonomy response code: {response.status_code}")
 
 		if response.content:
 			payload = response.json()["results"]
@@ -97,9 +96,8 @@ class GBIF(Input):
 
 		if response_occ.status_code != 200:
 			# return [f"Error: {response.status_code}"]
-			logging.error("GBIF occurrence response code: %s", response_occ.status_code)
-		else:
-			pass
+			# logging.error("GBIF occurrence response code: %s", response_occ.status_code)
+			raise BiodumpyException(f"GBIF occurrence response code: {response_occ.status_code}")
 
 		if response_occ.content:
 			payload_occ = response_occ.json()
