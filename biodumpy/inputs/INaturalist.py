@@ -1,7 +1,6 @@
-from biodumpy import Input
 import requests
 
-from biodumpy.biodumpy import BiodumpyException
+from biodumpy import Input, BiodumpyException
 
 
 class INaturalist(Input):
@@ -61,10 +60,11 @@ class INaturalist(Input):
 		response = requests.get(f"https://api.inaturalist.org/v1/taxa?q={query}&order=desc&order_by=observations_count")
 
 		if response.status_code != 200:
-			raise BiodumpyException(f"[iNaturalist] - Response code: {response.status_code}")
+			raise BiodumpyException(f"Observation request. Error {response.status_code}")
 
 		# Dictionary for empty records
 		photo_details_empty = {"taxon": query, "image_id": None, "license_code": None, "attribution": None}
+		photo_details = photo_details_empty
 
 		# Photo license values valid for the download
 		photo_license = ["cc0", "cc-by", "cc-by-nc", "cc-by-nc-nd", "cc-by-sa", "cc-by-nd", "cc-by-nc-sa"]
@@ -102,9 +102,6 @@ class INaturalist(Input):
 							}
 						else:
 							photo_details = photo_details_empty
-
-					else:
-						photo_details = photo_details_empty
 				else:
 					url_photo = photo_info["url"]
 					url_photo = url_photo.split("/")[-2] + "/" + url_photo.split("/")[-1]
@@ -114,11 +111,5 @@ class INaturalist(Input):
 						"license_code": photo_info["license_code"],
 						"attribution": photo_info["attribution"],
 					}
-
-			else:
-				photo_details = photo_details_empty
-
-		else:
-			photo_details = photo_details_empty
 
 		return [photo_details]

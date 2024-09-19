@@ -1,7 +1,6 @@
-from biodumpy import Input
 import requests
 
-from biodumpy.biodumpy import BiodumpyException
+from biodumpy import Input, BiodumpyException
 
 
 class BOLD(Input):
@@ -69,7 +68,7 @@ class BOLD(Input):
 			response = requests.get(f"http://v4.boldsystems.org/index.php/API_Public/sequence?taxon={query}")
 
 			if response.status_code != 200:
-				raise BiodumpyException(f"[BOLD] - Taxonomy response code: {response.status_code}")
+				raise BiodumpyException(f"Fasta sequence request. Error {response.status_code}")
 
 			if response.content:
 				response = response.content
@@ -86,7 +85,7 @@ class BOLD(Input):
 			payload = []
 
 			if response.status_code != 200:
-				raise BiodumpyException(f"[BOLD] - Data response code: {response.status_code}")
+				raise BiodumpyException(f"Combined data request. Error {response.status_code}")
 
 			if response.content:
 				results = response.json()

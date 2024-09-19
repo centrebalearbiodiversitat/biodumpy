@@ -26,13 +26,13 @@ class Biodumpy:
 	Parameters
 	----------
 	inputs : list
-	    A list of input modules that handle specific biodiversity data downloads.
+		A list of input modules that handle specific biodiversity data downloads.
 	loading_bar : bool
-	     If True, shows a progress bar when downloading data. If False, disable the progress bar.
-	     Default is False
+		 If True, shows a progress bar when downloading data. If False, disable the progress bar.
+		 Default is False
 	debug : bool
-	    If True, enables printing of detailed information during execution.
-	    Default is True
+		If True, enables printing of detailed information during execution.
+		Default is True
 	"""
 
 	def __init__(self, inputs: list[Input], loading_bar: bool = False, debug: bool = True) -> None:
@@ -67,19 +67,14 @@ class Biodumpy:
 
 				for inp in self.inputs:
 					module_name = type(inp).__name__
-					# Logging the module
 					logging.info(f"biodumpy initialized with {module_name} inputs. Taxon: {name}")
 
-					if self.debug:
-						try:
-							payload = inp._download(**el)
-							logging.info(f"Download data for {module_name} was successful.\n")
-						except Exception as e:
-							logging.error(f'[{module_name}] Failed to download data for "{name}": {str(e)} \n')
-							continue
-
-					# 	print(f"\t{module_name}")
-					# payload = inp._download(**el)
+					try:
+						payload = inp._download(**el)
+						logging.info(f"Download data for {module_name} was successful.\n")
+					except Exception as e:
+						logging.error(f'[{module_name}] Failed to download data for "{name}": {str(e)} \n')
+						continue
 
 					if inp.bulk:
 						if inp not in bulk_input:

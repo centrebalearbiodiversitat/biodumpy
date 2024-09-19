@@ -1,7 +1,6 @@
-from biodumpy import Input
 import requests
 
-from biodumpy.biodumpy import BiodumpyException
+from biodumpy import Input, BiodumpyException
 
 
 class GBIF(Input):
@@ -68,7 +67,7 @@ class GBIF(Input):
 		response = requests.get(f"https://api.gbif.org/v1/species/search?datasetKey={self.dataset_key}&q={query}&limit={self.limit}")
 
 		if response.status_code != 200:
-			raise BiodumpyException(f"[GBIF] - Taxonomy response code: {response.status_code}")
+			raise BiodumpyException(f"Taxonomy request. Error {response.status_code}")
 
 		if response.content:
 			payload = response.json()["results"]
@@ -91,7 +90,7 @@ class GBIF(Input):
 		)
 
 		if response_occ.status_code != 200:
-			raise BiodumpyException(f"[GBIF] - Occurrence response code: {response_occ.status_code}")
+			raise BiodumpyException(f"Occurrence request. Error {response_occ.status_code}")
 
 		if response_occ.content:
 			payload_occ = response_occ.json()
