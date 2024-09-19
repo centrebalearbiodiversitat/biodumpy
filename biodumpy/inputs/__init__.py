@@ -5,8 +5,5 @@ from .INaturalist import INaturalist
 from .COL import COL
 from .ZooBank import ZooBank
 from .IUCN import IUCN
-from .Scopus import Scopus
-from .PaperDown import PaperDown
-from .FileDownloader import FileDownloader
 from .GBIF import GBIF
 from .OBIS import OBIS
