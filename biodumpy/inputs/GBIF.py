@@ -1,5 +1,6 @@
-from biodumpy import Input
 import requests
+
+from biodumpy import Input, BiodumpyException
 
 
 class GBIF(Input):
@@ -21,10 +22,9 @@ class GBIF(Input):
 	geometry : str, optional
 	    A spatial polygon to filter occurrences within a specified area. Default is an empty string.
 	bulk : bool, optional
-		If True, the function creates a bulk file. For further information, see the documentation of the Biodumpy package.
-		Default is False.
-	output_format : string, optional
-		The format of the output file. The options available are: 'json', 'fasta', 'pdf'. Default is 'json'.
+	    If True, the function creates a bulk file. For further information, see the documentation of the Biodumpy package. Default is False.
+	output_format : str, optional
+	    The format of the output file. The options available are: 'json', 'fasta', 'pdf'. Default is 'json'.
 
 	Example
 	-------
@@ -33,9 +33,9 @@ class GBIF(Input):
 	# GBIF dataset key
 	>>> gbif_backbone = 'd7dddbf4-2cf0-4f39-9b2a-bb099caae36c'
 	# Taxa list
-	>>> taxa = ['Alytes muletensis (Sanchíz & Adrover, 1979)', 'Bufotes viridis (Laurenti, 1768)', 'Hyla meridionalis Boettger, 1874', 'Anax imperator Leach, 1815']
+	>>> taxa = ['Alytes muletensis (Sanchíz & Adrover, 1979)', 'Bufotes viridis (Laurenti, 1768)']
 	# Set the module and start the download
-	>>> bdp = Biodumpy([GBIF(dataset_key=gbif_backbone, limit=20, bulk=False, accepted=True, occ=False)])
+	>>> bdp = Biodumpy([GBIF(dataset_key=gbif_backbone, limit=20, accepted_only=True, occ=False, bulk=False, output_format='json')])
 	>>> bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}')
 	"""
 
@@ -67,7 +67,7 @@ class GBIF(Input):
 		response = requests.get(f"https://api.gbif.org/v1/species/search?datasetKey={self.dataset_key}&q={query}&limit={self.limit}")
 
 		if response.status_code != 200:
-			return [f"Error: {response.status_code}"]
+			raise BiodumpyException(f"Taxonomy request. Error {response.status_code}")
 
 		if response.content:
 			payload = response.json()["results"]
@@ -81,10 +81,6 @@ class GBIF(Input):
 				tax_key = payload[0]["nubKey"]
 				payload = self._download_gbif_occ(taxon_key=tax_key, geometry=self.geometry)
 
-		# if self.occ:
-		# 	if len(payload) > 0:
-		# 		payload = self._download_gbif_occ(taxon_key=payload[0]['nubKey'], geometry=self.geometry)
-
 		return payload
 
 	def _download_gbif_occ(self, taxon_key: int, geometry: str):
@@ -94,7 +90,7 @@ class GBIF(Input):
 		)
 
 		if response_occ.status_code != 200:
-			return [f"Error: {response_occ.status_code}"]
+			raise BiodumpyException(f"Occurrence request. Error {response_occ.status_code}")
 
 		if response_occ.content:
 			payload_occ = response_occ.json()

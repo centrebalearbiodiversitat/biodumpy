@@ -1,8 +1,6 @@
-from biodumpy import Input
 import requests
 
-
-# Try if I can use summary=True and fasta=True
+from biodumpy import Input, BiodumpyException
 
 
 class BOLD(Input):
@@ -14,9 +12,8 @@ class BOLD(Input):
 	query : list
 	    The list of taxa to query.
 	summary : bool, optional
-	    If True, the function returns only a summary of a metadata informatio.
-	    See Detail section for further information.
-	    Default is False.
+	    If True, the function returns a summary of the downloaded metadata instead of the full records.
+		Default is False.
 	fasta : bool, optional
 		If True, the function downloads the FASTA file.
 		Default is False.
@@ -69,15 +66,18 @@ class BOLD(Input):
 	def _download(self, query, **kwargs) -> list:
 		if self.fasta:
 			response = requests.get(f"http://v4.boldsystems.org/index.php/API_Public/sequence?taxon={query}")
-			response = response.content
 
-			# Decode bytes to string
-			data_str = response.decode()
+			if response.status_code != 200:
+				raise BiodumpyException(f"Fasta sequence request. Error {response.status_code}")
 
-			# Split the data by '>'
-			fasta_entries = [f">{entry}" for entry in data_str.split(">") if entry]
+			if response.content:
+				response = response.content
+				data_str = response.decode()
 
-			return fasta_entries
+				# Split the data by '>'
+				fasta_entries = [f">{entry}" for entry in data_str.split(">") if entry]
+
+				return fasta_entries
 
 		else:
 			response = requests.get(f"http://v4.boldsystems.org/index.php/API_Public/combined?taxon={query}&format=json")
@@ -85,7 +85,7 @@ class BOLD(Input):
 			payload = []
 
 			if response.status_code != 200:
-				return [f"Error: {response.status_code}"]
+				raise BiodumpyException(f"Combined data request. Error {response.status_code}")
 
 			if response.content:
 				results = response.json()

@@ -23,7 +23,9 @@ To simplify the use of ``biodumpy``, we create a general structure common among 
 Here, we provide two examples illustrating the general structure of a ``biodumpy`` script:
 
 In detail, we described:
+
 - **Single Module Example**: This example demonstrates how to use a single ``biodumpy`` module (e.g., GBIF).
+
 - **Multiple Modules Example**: This example shows how to use multiple ``biodumpy`` modules (e.g., GBIF and IUCN).
 
 **Example N.1**

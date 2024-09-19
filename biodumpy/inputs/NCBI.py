@@ -26,40 +26,129 @@ class CustomEncoder(json.JSONEncoder):
 
 
 class NCBI(Input):
-	def __init__(self, mail, output_format="json", bulk=False, db="nucleotide", rettype="gb", step=100, max_bp=None, summary=False):
+	"""
+	Query the National Center for Biotechnology Information (NCBI) database to retrieve taxon retlated data.
+
+	Parameters
+	----------
+	query : list
+	    A list of taxa to query in the BOLD database.
+	mail : str, optional
+	    Email address used with Entrez functions to identify the user.
+	    This is required by NCBI to track usage and report problems.
+	    Default is None.
+	db : str, optional
+	    NCBI database to search and download data from. Options include "nucleotide", "protein", "gene", and others.
+	    Default is "nucleotide".
+	rettype : str, optional
+	    The format for data retrieval from NCBI. Common formats include 'gb' (GenBank), 'fasta', 'xml', etc.
+	    Default is 'gb'.
+	query_type : str, optional
+	    Defines the type of query search, such as "[Organism]" or "[Gene]".
+	    This determines how the query is interpreted by NCBI.
+	    Default is "[Organism]".
+	step : int, optional
+	    Number of records to download per chunk. For example, if the total data to download is 10,000 and the step is set to 100,
+	    the function will download in chunks of 100 records per request.
+	    Default is 100.
+	max_bp : int, optional
+	    Maximum number of base pairs allowed for each sequence. Records with more base pairs than this value will be excluded.
+	    If None, all records will be downloaded regardless of size.
+	    Default is None.
+	summary : bool, optional
+	    If True, the function returns a summary of the downloaded metadata instead of the full records.
+	    Default is False.
+	by_id : bool, optional
+		If True, the function downloads the data using NCBI accession numbers as inputs.
+		Default is False.
+	bulk : bool, optional
+	    If True, the function creates a bulk file for large downloads.
+	    For more information, refer to the Biodumpy package documentation.
+	    Default is False.
+	output_format : str, optional
+	    The format of the output file. Available options are: 'json', 'fasta', 'pdf'.
+	    Default is 'json'.
+
+	Details
+	-------
+	When `summary` is True, the resulting JSON will include the following information:
+	- `Id`: A numerical identifier (GI Number) that used to be assigned to each sequence version (e.g., "345678912").
+	- `Caption`: A unique identifier (accession number) assigned to a sequence when it is submitted to GenBank (e.g., "NM_001256789").
+	- `Title`: A short description or title of the sequence, often including information about the gene, organism, and type of sequence.
+	- `Length`: The length of the sequence in base pairs (for nucleotide sequences) or amino acids (for protein sequences).
+	- `query`: The original search term or query string used to retrieve this result.
+
+	Example
+	-------
+	>>> from biodumpy import Biodumpy
+	>>> from biodumpy.inputs import NCBI
+	# List of taxa
+	>>> taxa = ['Alytes muletensis', 'Hyla meridionalis', 'Anax imperator', 'Bufo roseus', 'Stollia betae']
+	# Set the module and start the download
+	>>> bdp = Biodumpy([NCBI(bulk=False, mail="hola@quetal.com", db="nucleotide", rettype="gb", query_type='[Organism]')])
+	>>> bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}')
+	"""
+
+	def __init__(
+		self,
+		mail: str = None,
+		db: str = "nucleotide",
+		rettype: str = "gb",
+		query_type: str = "[Organism]",
+		step: int = 100,
+		max_bp: int = None,
+		summary: bool = False,
+		by_id: bool = False,
+		output_format: str = "json",
+		bulk: bool = False,
+	):
 		super().__init__(output_format, bulk)
 		self.max_bp = max_bp
 		self.db = db
 		self.step = step
 		self.rettype = rettype
+		self.query_type = query_type
 		self.summary = summary
+		self.by_id = by_id
 		Entrez.email = mail
 
-		if output_format == "fasta" and rettype != "fasta":
-			raise ValueError("rettype must be fasta.")
+		if self.output_format == "fasta" and self.rettype != "fasta":
+			raise ValueError("Invalid output_format. Expected fasta.")
+
+		if self.by_id and self.query_type is not None:
+			raise ValueError("Invalid parameters: 'by_id' is True, so 'query_type' must be None.")
+
+		if self.summary and self.output_format == "fasta" and self.rettype == "fasta":
+			raise ValueError("Invalid parameters: 'summary' is True, so 'output_format' cannot be 'fasta'.")
+
+		if output_format not in {"json", "fasta"}:
+			raise ValueError('Invalid output_format. Expected "json" or "fasta".')
 
 	def _download(self, query, **kwargs) -> list:
-		ids_list = self.download_ids(term=f"{query}[Organism]", step=self.step)
+		if self.by_id:
+			ids_list = {query}
+		else:
+			ids_list = self._download_ids(term=f"{query}{self.query_type}", step=self.step)
 
 		payload = []
 		if self.summary:
 			with tqdm(total=len(ids_list), desc="NCBI summary retrieve", unit=" Summary") as pbar:
 				for seq_id in split_to_batches(list(ids_list), self.step):
-					for sumr in self.download_summary(seq_id):
-						sumr["query"] = query
+					for sumr in self._download_summary(seq_id):
+						sumr["query"] = f"{query}{self.query_type}"
 						payload.append(json.loads(json.dumps(sumr, cls=CustomEncoder)))
 					pbar.update(len(seq_id))
 
 		else:
 			with tqdm(total=len(ids_list), desc="NCBI sequences retrieve", unit=" Sequences") as pbar:
 				for seq_id in split_to_batches(list(ids_list), self.step):
-					for seq in self.download_seq(seq_id, rettype=self.rettype):
+					for seq in self._download_seq(seq_id, rettype=self.rettype, db=self.db):
 						payload.append(json.loads(json.dumps(seq, cls=CustomEncoder)))
 					pbar.update(len(seq_id))
 
 		return payload
 
-	def download_ids(self, term, step):
+	def _download_ids(self, term, step):
 		"""
 		Downloads NCBI IDs based on a search term and counts the total base pairs (bp) for the retrieved sequences.
 
@@ -110,18 +199,8 @@ class NCBI(Input):
 
 		return id_bp_list
 
-	def download_summary(self, seq_id):
-		"""
-		Downloads summery of sequences records.
-
-		Args:
-
-
-		Returns:
-
-		"""
-
-		keys_to_keep = ["Id", "Caption", "Title"]
+	def _download_summary(self, seq_id):
+		keys_to_keep = ["Id", "Caption", "Title", "Length"]
 		summary_list = list()
 		try:
 			summary_handle = Entrez.esummary(db=self.db, id=seq_id)
@@ -134,7 +213,7 @@ class NCBI(Input):
 
 		return summary_list
 
-	def download_seq(self, seq_id, rettype="gb", retmode="text", retries=3, webenv=None, query_key=None, history="y"):
+	def _download_seq(self, seq_id, db=None, rettype=None, retmode="text", retries=3, webenv=None, query_key=None, history="y"):
 		"""
 		Downloads a full Entrez record, saves it to a file, parses it, and updates the result.
 
@@ -154,7 +233,7 @@ class NCBI(Input):
 		while attempt < retries:
 			try:
 				handle = Entrez.efetch(
-					db="nucleotide", id=seq_id, rettype=rettype, retmode=retmode, usehistory=history, WebEnv=webenv, query_key=query_key
+					db=db, id=seq_id, rettype=rettype, retmode=retmode, usehistory=history, WebEnv=webenv, query_key=query_key
 				)
 
 				if self.rettype == "fasta":
@@ -176,56 +255,3 @@ class NCBI(Input):
 		if attempt == retries:
 			# logging.error(f"Failed to download record {seq_id} after {retries} attempts.")
 			print(f"Failed to download record {seq_id} after {retries} attempts.")
-
-	@staticmethod
-	def taxonomy_id(taxon: str, lineage=False, mail="A.N.Other@example.com"):
-		"""
-		Download taxonomy of a taxon from NCBI Taxonomy database.
-
-		Args:
-			taxon: String containing taxon name.
-			lineage: If False retrieve only the ID of the specific taxon. If True, retrieve the IDs also for the superior taxonomic levels.
-			mail: NCBI requires you to specify your email address with each request.
-
-		Returns:
-			List of elements.
-
-		Example:
-		x = download_taxonomy('Alytes muletensis')
-		"""
-
-		Entrez.email = mail
-
-		# Retrieve taxonomy ID by taxon name
-		handle = Entrez.esearch(db="Taxonomy", term=f"{taxon}[All Names]", retmode="xml")
-		taxon_id = Entrez.read(handle)  # retrieve taxon ID
-		handle.close()
-
-		lin = []
-
-		if int(taxon_id["Count"]) > 0:
-			# Retrieve taxonomy by taxon ID
-			handle = Entrez.efetch(db="Taxonomy", id=taxon_id["IdList"], retmode="xml")
-			records = Entrez.read(handle)
-			handle.close()
-
-			if lineage is True:
-				# Iterate through each dictionary in the list
-				for taxonomy_info in records[0]["LineageEx"]:
-					# Create a dictionary for the current taxonomy info
-					taxonomy_dict = {
-						"TaxId": taxonomy_info.get("TaxId", ""),
-						"ScientificName": taxonomy_info.get("ScientificName", ""),
-						"Rank": taxonomy_info.get("Rank", ""),
-					}
-
-					# Append the current taxonomy dictionary to lin list
-					lin.append(taxonomy_dict)
-
-				lin.append(
-					{"TaxId": records[0]["TaxId"], "ScientificName": records[0]["ScientificName"].split()[-1], "Rank": records[0]["Rank"]}
-				)
-			else:
-				lin = {"TaxId": records[0]["TaxId"], "ScientificName": records[0]["ScientificName"], "Rank": records[0]["Rank"]}
-
-		return lin

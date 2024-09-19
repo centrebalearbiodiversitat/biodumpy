@@ -12,7 +12,7 @@ sys.path.insert(0, os.path.abspath("../../"))
 
 project = "biodumpy"
 copyright = "2024, CBB Data Team"
-author = "Cancellario, T.; Golomb, T.; Roldán, A.; Far, T."
+author = "Cancellario, T.; Golomb, T.; Roldán, A.; Far, A."
 
 release = "0.0"
 version = "0.0.1"

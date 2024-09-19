@@ -1,3 +1,10 @@
+.. image:: Biodumpy_logo.png
+   :alt: biodumpy logo
+   :width: 300px
+   :height: 300px
+   :align: center
+
+
 Welcome to biodumpy: A Comprehensive Biological Data Downloader
 ===============================================================
 
@@ -58,11 +65,8 @@ or potential consequences arising from the use of the data.
 If you encounter any bugs or issues with the package, please contact the developers for support.
 
 
-Acknowlegments
---------------
+Acknowledgments
+---------------
 
 The project was supported by MCIN with funding from European Union—NextGenerationEU (PRTR-C17.I1) and the Government of
 the Balearic Islands.
-
-
-

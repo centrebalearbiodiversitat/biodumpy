@@ -1,11 +1,12 @@
-<!-- This is a comment in Markdown 
-<h1 style="display: flex; justify-content: space-between; align-items: center;">
-  <span>biodumpy: A Comprehensive Biological Data Downloader</span>
-  <img src="www/biodumpy.png" alt="Project Logo" width="200">
-</h1>
--->
+<img src="./docs/source/Biodumpy_logo.png" alt="Project Logo" width="200">
 
 # biodumpy: A Comprehensive Biological Data Downloader
+
+![PyPI - Version](https://img.shields.io/pypi/v/biodumpy)
+![PyPI - Status](https://img.shields.io/pypi/status/biodumpy)
+![PyPI - License](https://img.shields.io/pypi/l/biodumpy)
+![PyPI - Downloads](https://img.shields.io/pypi/dm/biodumpy)
+
 
 
 ## Overview
@@ -24,6 +25,7 @@ designed for retrieving information from its respective source. The modules impl
 - BOLD
 - COL
 - GBIF
+- iNaturalist
 - IUCN
 - NCBI
 - OBIS
@@ -120,16 +122,13 @@ repository or contact with the support team at [t.cancellario@uib.eu](mailto:t.c
 ``biodumpy`` is licensed under the GNU GENERAL PUBLIC LICENSE. See the LICENSE file for more details.
 
 
-## Acknowlegments
+## Acknowledgments
 The project was supported by MCIN with funding from the European Union—NextGenerationEU (PRTR-C17.I1) and 
 the Government of the Balearic Islands.
 
 
-<!-- This is a comment in Markdown 
+
 <hr>
 <div style="display: flex; justify-content: center">
-<img src='/www/logo_cbb.png' alt='logo_cbb' width='200'>
+<img src='./docs/source/logo_cbb.png' alt='logo_cbb' width='200'>
 </div>
--->
-
-

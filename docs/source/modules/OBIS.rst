@@ -1,4 +1,4 @@
-GBIF Module
+OBIS Module
 ===========
 
 .. _OBIS_module:

@@ -13,11 +13,8 @@ The current modules are dedicated for the following databases:
 - :doc:`modules/BOLD`
 - :doc:`modules/COL`
 - :doc:`modules/GBIF`
+- :doc:`modules/iNaturalist`
 - :doc:`modules/IUCN`
+- :doc:`modules/NCBI`
 - :doc:`modules/OBIS`
-- :doc:`modules/ZooBank`
-
-- NCBI
-– WORMS
-– CROSSREF
-- OBIS
+- :doc:`modules/ZOOBANK`

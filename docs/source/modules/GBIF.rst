@@ -1,7 +1,7 @@
 GBIF Module
 ===========
 
-.. _GBIF:
+.. _GBIF_module:
 
 
 Overview

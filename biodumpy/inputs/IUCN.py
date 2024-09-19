@@ -1,5 +1,6 @@
-from biodumpy import Input
 import requests
+
+from biodumpy import Input, BiodumpyException
 
 
 class IUCN(Input):
@@ -85,6 +86,10 @@ class IUCN(Input):
 
 		for region in self.regions:
 			taxon_info = self._icun_request(f"https://apiv3.iucnredlist.org/api/v3/species/{query}/region/{region}?token={self.api_key}")
+
+			if not taxon_info or taxon_info.get("taxonid") is None:
+				continue
+
 			payload.append(taxon_info)
 			taxon_id = taxon_info["taxonid"]
 
@@ -125,7 +130,7 @@ class IUCN(Input):
 		response = requests.get(query_path)
 
 		if response.status_code != 200:
-			print(f"Error ---- {query_path}: {response.status_code}")
+			raise BiodumpyException(f"Error {response.status_code}")
 
 		if response.content:
 			response = response.json()

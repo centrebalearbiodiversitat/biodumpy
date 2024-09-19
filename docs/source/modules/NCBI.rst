@@ -1,133 +1,133 @@
 NCBI Module
 ===========
 
-.. _NCBI:
+.. _NCBI_module:
+
+Overview
+--------
+
+The ``NCBI`` module allows users to easily retrieve data information from the the National Center for Biotechnology
+Information (`NCBI`_) database. The information can be downloaded in JSON or FASTA format.
+
+
+Key Features
+------------
+
+- **Retrieve information from NCBI database.** Users can download the information stored into the NCBI database.
+- **Retrieve genetic information from NCBI database.** Users can download the genetic information in FASTA format.
+
+
+Retrieve comprehensive metadata from NCBI
+-----------------------------------------
+
+In this example, we download the information from NCBI setting the parameter ``bulk`` to *True*. We download the data
+from the "nucleotide" database in GeneBank format. Do not underestimate the parameter ``query_type`` since it defines
+the type of query search. This function is based on biopython `Entrez`_ module.
+
+.. _Entrez: https://biopython.org/docs/1.75/api/Bio.Entrez.html
+
+.. note::
+
+    The taxonomy list should be compiled using only the taxon names, excluding any authorship information.
+
 
 .. code-block:: python
 
     from biodumpy import Biodumpy
     from biodumpy.inputs import NCBI
 
-    bdp = Biodumpy([NCBI(mail="hola_ncbi@quetal.com", step=100, max_bp=1000, rettype='gb', output_format='json', bulk=False)])
+    taxa = ['Alytes muletensis', 'Hyla meridionalis', 'Anax imperator', 'Bufo roseus', 'Stollia betae']
 
-    # List of taxa
-    taxa = ['Alytes muletensis', 'Anax imperator']
+    # Start the download
+    bdp = Biodumpy([NCBI(bulk=False, mail="hola@quetal.com", db="nucleotide", rettype="gb", query_type='[Organism]')])
+    bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}')
 
 
-Download NCBI metadata by Taxon name
-------------------------------------
-
-Before running the function to download the data, we need to prepare the data by creating a list of dictionaries. 
-Each dictionary should contain the indices ``name`` and ``query``, indicating the species name and the corresponding 
-NCBI query, respectively.
+Users can refine their search by adjusting the ``query_type`` parameter. For instance, if you want to download sequences
+related to the cytochrome c oxidase marker (COI), you can set the ``query_type`` to '[Organism] AND "COI" [Gene]'.
+This allows you to combine multiple search criteria to better target the specific data you need.
 
 .. code-block:: python
 
-    result_list = []
+    from biodumpy import Biodumpy
+    from biodumpy.inputs import NCBI
 
-    # Create a dictionary with 'name' and 'query' from corresponding indices
-    for taxon in taxa:
-        element_dict = {
-            'name': taxon,
-            'query': f'{taxon}[Organism]'
-        }
-        result_list.append(element_dict)
+    taxa = ['Anax imperator']
 
-    bdp.start(result_list, output_path="downloads/{date}/{name}_{module}")
+    # Start the download
+    bdp = Biodumpy([NCBI(bulk=False, mail="hola@quetal.com", db="nucleotide",
+        rettype="gb", query_type='[Organism] AND "COI" [Gene]')])
+    bdp.start(taxa, output_path='./downloads/{date}/{module}_gene/{name}')
 
 
-Download NCBI metadata by taxon ID
-----------------------------------
+Download NCBI a summary of metadata
+-----------------------------------
 
-.. code-block:: python
-    
-    taxon_ids = []
-    for taxon in taxa:
-        taxon_ids.append(NCBI.taxonomy_id(taxon, lineage=False))
-        print(taxon_ids[-1])
+Users can also obtain a summary of metadata by setting the ``summary`` parameter to *True*.
+When enabled, the resulting JSON will include the following details:
 
-    result_list = []
-    for taxon_id in taxon_ids:
-        element_dict = {
-            'name': taxon_id['ScientificName'],
-            'query': f'txid{taxon_id["TaxId"]}[Organism]'
-        }
-        # Append the dictionary to the result_list
-        result_list.append(element_dict)
-        
-    bdp.start(result_list, output_path="downloads/{date}/{name}_{module}")
-
-
-
-Retrieve NCBI accession number from NCBI json file
---------------------------------------------------
+- **Id**: A numerical identifier (GI Number) that used to be assigned to each sequence version (e.g., "345678912").
+- **Caption**: A unique identifier (accession number) assigned to a sequence when it is submitted to GenBank (e.g., "NM_001256789").
+- **Title**: A short description or title of the sequence, often including information about the gene, organism, and type of sequence.
+- **Length**: The length of the sequence in base pairs (for nucleotide sequences) or amino acids (for protein sequences).
+- **query**: The original search term or query string used to retrieve this result.
 
 .. code-block:: python
 
-    import json
+    from biodumpy import Biodumpy
+    from biodumpy.inputs import NCBI
 
-    with open('YOUR_PATH/.json', 'r') as f:
-        data = json.load(f)
+    taxa = ['Alytes muletensis', 'Hyla meridionalis', 'Anax imperator', 'Bufo roseus', 'Stollia betae']
 
-    accession_number = []
-    for i in range(len(data)):
-        accession_number.append(data[i].get('name', ''))
-
-    print(accession_number)
-
-
-Download NCBI fasta by Taxon Name
----------------------------------
-
-To download a FASTA file from NCBI, we need to change the parameter *rettype* in the Biopython function. 
-Additionally, it is useful to change the name of the module to {module}_fasta.
-
-.. code-block:: python
-
-    bdp = Biodumpy([NCBI(mail="hola_ncbi@quetal.com", step=100, max_bp=1000, rettype='fasta', output_format='fasta', bulk=False)])
-
-    result_list = []
-
-    # Create a dictionary with 'name' and 'query' from corresponding indices
-    for taxon in taxa:
-        element_dict = {
-            'name': taxon,
-            'query': f'{taxon}[Organism]'
-        }
-        result_list.append (element_dict)
-
-    bdp.start (result_list, output_path="downloads/{date}/{module}_fasta/{name}")
+    # Start the download
+    bdp = Biodumpy([NCBI(bulk=False, mail="hola@quetal.com", db="nucleotide",
+        rettype="gb", query_type='[Organism]', summary=True)])
+    bdp.start(taxa, output_path='./downloads/{date}/{module}_summary/{name}')
 
 
-Download "bulk" output
-----------------------
+Downloading data in FASTA format
+--------------------------------
 
-"Bulk download" refers to the process of downloading a large volume of data files in a single operation, consolidating 
-them together. This is often done to facilitate data analysis and to have a single file containing broad information. 
-However, this process can create a massive resulting file. Therefore, we suggest using this function carefully.
+This function also provides a boolean ``fasta`` parameter to download the file in FASTA format. Following the general
+structure of the ``biodumpy`` package, sequences can be downloaded for individual organisms or in bulk. Below is an
+example demonstrating how to download FASTA files.
 
 .. code-block:: python
 
-    bdp = Biodumpy ([NCBI(mail="hola_ncbi@quetal.com", step=100, max_bp=1000, rettype='gb', output_format='json', bulk=True)])
+    from biodumpy import Biodumpy
+    from biodumpy.inputs import NCBI
 
-    # List of taxa
-    taxa = ['Alytes muletensis', 'Anax imperator']
+    taxa = ['Alytes muletensis', 'Hyla meridionalis', 'Anax imperator', 'Bufo roseus', 'Stollia betae']
 
-    result_list = []
-    # Create a dictionary with 'name' and 'query' from corresponding indices
-    for taxon in taxa:
-        element_dict = {
-            'name': taxon,
-            'query': f'{taxon}[Organism]'
-        }
-        result_list.append (element_dict)
+    # Start the download
+    bdp = Biodumpy([NCBI(bulk=False, mail="hola@quetal.com", db="nucleotide", rettype="fasta",
+        query_type='[Organism]', summary=True, output_format='fasta')])
+    bdp.start(taxa, output_path='./downloads/{date}/{module}_fasta/{name}')
 
-    bdp.start (result_list, output_path="downloads/{date}/{module}/{name}")
+
+
+Downloading using the NCBI accession number
+-------------------------------------------
+
+If needed, users can download data using a list of NCBI accession numbers as input by setting the ``by_id`` parameter to
+*True*. In this case, the ``query_type`` parameter must be set to ``None`` or an empty string (``""``).
+It is possible combine this approach also to download summary JSON or FASTA files.
+
+.. code-block:: python
+
+    from biodumpy import Biodumpy
+    from biodumpy.inputs import NCBI
+
+    acc_numb = ["OQ507551", "OQ507547", "OQ507535", "OQ507524", "MW490509"]
+
+    # Start the download
+    bdp = Biodumpy([NCBI(bulk=True, mail="hola@quetal.com", db="nucleotide", rettype="gb", query_type = None, by_id=True)])
+    bdp.start(acc_numb, output_path='./downloads/{date}/{module}_acc_num/{name}')
 
 
 Reference link
 --------------
 
-`National Center for Biotechnology Information`_
+`NCBI`_
 
-.. _National Center for Biotechnology Information: https://www.ncbi.nlm.nih.gov
+.. _NCBI: https://www.ncbi.nlm.nih.gov

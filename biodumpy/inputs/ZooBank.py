@@ -1,7 +1,8 @@
-from biodumpy import Input
 import requests
+
 from bs4 import BeautifulSoup
 from tqdm import tqdm
+from biodumpy import Input, BiodumpyException
 
 
 class ZooBank(Input):
@@ -56,7 +57,7 @@ class ZooBank(Input):
 			response = requests.get(f"https://zoobank.org/References.json?search_term={query}")
 
 			if response.status_code != 200:
-				return [f"Error: {response.status_code}"]
+				raise BiodumpyException(f"Reference request. Error {response.status_code}")
 
 			payload = response.json()
 		else:
@@ -64,7 +65,7 @@ class ZooBank(Input):
 			response_pub = requests.get(f"https://zoobank.org/Search?search_term={query}")
 
 			if response_pub.status_code != 200:
-				return [f"Error: {response_pub.status_code}"]
+				raise BiodumpyException(f"Term search request. Error {response_pub.status_code}")
 
 			html_content = response_pub.text
 
@@ -96,7 +97,7 @@ class ZooBank(Input):
 				response_id = requests.get(f"https://zoobank.org/Identifiers.json/{refuid}")
 
 				if response_id.status_code != 200:
-					return [f"Error: {response_id.status_code}"]
+					raise BiodumpyException(f"Referenceuuid request. Error {response_id.status_code}")
 
 				payload.append(response_id.json())
 		else:
