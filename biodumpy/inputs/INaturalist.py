@@ -3,6 +3,7 @@ import requests
 
 from biodumpy.biodumpy import BiodumpyException
 
+
 class INaturalist(Input):
 	"""
 	Query the iNaturalist database to retrieve photo links of a list of taxa.

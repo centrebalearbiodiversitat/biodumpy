@@ -88,7 +88,6 @@ class BOLD(Input):
 			if response.status_code != 200:
 				raise BiodumpyException(f"[BOLD] - Data response code: {response.status_code}")
 
-
 			if response.content:
 				results = response.json()
 				if self.summary:
