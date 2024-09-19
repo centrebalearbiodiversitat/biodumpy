@@ -1,4 +1,4 @@
-.. image:: Biodumpy_logo.png
+.. image:: static/Biodumpy_logo.png
    :alt: biodumpy logo
    :width: 300px
    :height: 300px
