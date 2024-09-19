@@ -1,10 +1,3 @@
 [build-system]
-requires = ["flit_core >=3.2,<4"]
-build-backend = "flit_core.buildapi"
-
-[project]
-name = "biodumpy"
-authors = [{name = "Cancellario, T.; Golomb, T.; Roldán, A; Far, T.", email = "XXX@biodumpy.com"}]
-dynamic = ["version", "description"]
-keywords = ["biodiversity", "data", "ecology", "science"]
-license = { text = "GNU GENERAL PUBLIC LICENSE" }
+requires = ["setuptools>=61.0.0", "wheel"]
+build-backend = "setuptools.build_meta"

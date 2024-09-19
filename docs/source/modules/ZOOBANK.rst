@@ -8,7 +8,7 @@ Overview
 --------
 
 The ``ZooBank`` module allows users to easily retrieve scientific bibliographic information about taxa from the Official
-Registry of Zoological Nomenclature (ZooBank) database. By providing a taxa name, users can access bibliographic data.
+Registry of Zoological Nomenclature (ZooBank) database. By providing a taxa name, users can access to bibliographic data.
 The information is downloaded in JSON format.
 
 Key Features
@@ -17,8 +17,8 @@ Key Features
 - **Retrieve scientific bibliographic information**. Access to bibliography stored in ZooBank of specific taxa.
 
 
-Retrieve comprehensive metadata from BOLD
------------------------------------------
+Retrieve comprehensive metadata from ZooBank
+--------------------------------------------
 
 This example demonstrates how users can download bibliographic information from ZooBank for a list of taxa.
 When the ``dataset_size`` parameter is set to *small*, the function relies on the ZooBank API's `References`_ endpoint.
@@ -39,7 +39,10 @@ dataset size is selected.
     from biodumpy.inputs import ZooBank
 
     # Taxa list
-    taxa = ['Alytes muletensis', 'Bufotes viridis', 'Hyla meridionalis', 'Anax imperator']
+    taxa = [
+    	'Alytes muletensis', 'Bufotes viridis',
+    	'Hyla meridionalis', 'Anax imperator'
+    ]
 
     # Set the module and start the download
     # Start the download
