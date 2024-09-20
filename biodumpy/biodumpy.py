@@ -25,9 +25,6 @@ class Biodumpy:
 	debug : bool
 		If True, enables printing of detailed information during execution.
 		Default is True
-	logs : bool
-        If True, enables logging of events during execution.
-        Default is False
 	"""
 
 	def __init__(self, inputs: list[Input], loading_bar: bool = False, debug: bool = True) -> None:
