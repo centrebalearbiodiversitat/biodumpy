@@ -8,8 +8,7 @@ import sys
 # Add the root directory of your project to the Python path
 sys.path.insert(0, os.path.abspath("../../"))
 
-
-from biodumpy import __version__ as version
+from biodumpy.version import __version__ as version
 
 # -- Project information
 
@@ -17,10 +16,6 @@ project = "biodumpy"
 copyright = "2024, CBB Data Team"
 author = "Cancellario, T.; Golomb, T.; Roldán, A.; Far, A."
 
-
-# # -- Version configuration
-#
-# version = vers
 
 # -- General configuration
 
