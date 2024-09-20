@@ -1,4 +1,4 @@
-<img src="https://raw.githubusercontent.com/centrebalearbiodiversitat/biodumpy/master/docs/source/Biodumpy_logo.png" alt="Project Logo" width="200">
+<img src="https://raw.githubusercontent.com/centrebalearbiodiversitat/biodumpy/refs/heads/master/docs/source/static/Biodumpy_logo.png" alt="Project Logo" width="200">
 
 # biodumpy: A Comprehensive Biological Data Downloader
 
@@ -130,5 +130,5 @@ the Government of the Balearic Islands.
 
 <hr>
 <div style="display: flex; justify-content: center">
-<img src='https://raw.githubusercontent.com/centrebalearbiodiversitat/biodumpy/master/docs/source/logo_cbb.png' alt='logo_cbb' width='200'>
+<img src='https://raw.githubusercontent.com/centrebalearbiodiversitat/biodumpy/refs/heads/master/docs/source/static/logo_cbb.png' alt='logo_cbb' width='200'>
 </div>
