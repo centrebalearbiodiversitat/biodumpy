@@ -43,10 +43,7 @@ class Biodumpy:
 		log_handler = MemoryHandler(capacity=1024)
 
 		logging.basicConfig(
-			level=logging.ERROR,
-			format="%(asctime)s - %(levelname)s - %(message)s",
-			datefmt="%Y-%m-%d %H:%M:%S",
-			handlers=[log_handler]
+			level=logging.ERROR, format="%(asctime)s - %(levelname)s - %(message)s", datefmt="%Y-%m-%d %H:%M:%S", handlers=[log_handler]
 		)
 
 		bulk_input = {}
@@ -100,12 +97,12 @@ class Biodumpy:
 			if log_handler.buffer:
 				down_path = str()
 				for folder in output_path.split("/"):
-					if '{' in folder:
+					if "{" in folder:
 						break
 					down_path = f"{down_path}{folder}/"
 
 				create_directory(down_path)
-				with open(f"{down_path}/dump.log", 'w') as f:
+				with open(f"{down_path}/dump.log", "w") as f:
 					for record in log_handler.buffer:
 						log_entry = f"{record.levelname}: {record.getMessage()}\n"
 						f.write(log_entry)
