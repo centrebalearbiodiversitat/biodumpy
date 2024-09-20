@@ -1,18 +1,10 @@
 from datetime import datetime
+from logging.handlers import MemoryHandler
+
 from .input import Input
-from .utils import dump
+from .utils import dump, create_directory
 from tqdm import tqdm
 import logging
-
-
-# Setup logging configuration
-logging.basicConfig(
-	level=logging.INFO,
-	format="%(asctime)s - %(levelname)s - %(message)s",
-	datefmt="%Y-%m-%d %H:%M:%S",
-	filename="biodumpy_downloader.log",
-	filemode="a",  # is the appended mode
-)
 
 
 class BiodumpyException(Exception):
@@ -33,6 +25,9 @@ class Biodumpy:
 	debug : bool
 		If True, enables printing of detailed information during execution.
 		Default is True
+	logs : bool
+        If True, enables logging of events during execution.
+        Default is False
 	"""
 
 	def __init__(self, inputs: list[Input], loading_bar: bool = False, debug: bool = True) -> None:
@@ -47,6 +42,18 @@ class Biodumpy:
 			raise ValueError("Invalid query. Expected a list of taxa to query.")
 
 		current_date = datetime.now().strftime("%Y-%m-%d")
+
+		log_handler = MemoryHandler(capacity=1024)
+
+		logging.basicConfig(
+			level=logging.ERROR,
+			format="%(asctime)s - %(levelname)s - %(message)s",
+			datefmt="%Y-%m-%d %H:%M:%S",
+			handlers=[log_handler]
+		)
+
+		logging.error(f"Missing 'query' key for")
+
 		bulk_input = {}
 		try:
 			for el in tqdm(elements, desc="Biodumpy list", unit=" elements", disable=not self.loading_bar, smoothing=0):
@@ -94,3 +101,16 @@ class Biodumpy:
 					obj_list=payload,
 					output_format=inp.output_format,
 				)
+
+			if log_handler.buffer:
+				down_path = str()
+				for folder in output_path.split("/"):
+					if '{' in folder:
+						break
+					down_path = f"{down_path}{folder}/"
+
+				create_directory(down_path)
+				with open(f"{down_path}/dump.log", 'w') as f:
+					for record in log_handler.buffer:
+						log_entry = f"{record.levelname}: {record.getMessage()}\n"
+						f.write(log_entry)
