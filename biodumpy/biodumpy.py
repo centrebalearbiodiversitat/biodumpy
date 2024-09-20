@@ -52,8 +52,6 @@ class Biodumpy:
 			handlers=[log_handler]
 		)
 
-		logging.error(f"Missing 'query' key for")
-
 		bulk_input = {}
 		try:
 			for el in tqdm(elements, desc="Biodumpy list", unit=" elements", disable=not self.loading_bar, smoothing=0):
