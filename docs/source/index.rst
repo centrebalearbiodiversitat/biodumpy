@@ -38,7 +38,7 @@ Documentation and Support
 -------------------------
 
 For detailed documentation, tutorials, and support, please visit the ``biodumpy`` GitHub section Tutorial or contact
-our support team at XXX@biodumpy.com.
+our support team at t.cancellario@uib.eu or tomas.golomb@uib.eu.
 
 
 Contribution
