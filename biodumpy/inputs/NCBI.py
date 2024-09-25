@@ -1,28 +1,28 @@
 import json
+import time
 
 from biodumpy import Input
-from biodumpy.utils import split_to_batches
+from biodumpy.utils import split_to_batches, CustomEncoder
 
 from tqdm import tqdm
-import time
 from Bio import Entrez, SeqIO
 from http.client import IncompleteRead
 
 
-class CustomEncoder(json.JSONEncoder):
-	def default(self, obj):
-		if hasattr(obj, "to_dict"):
-			return obj.to_dict()
-		elif hasattr(obj, "__dict__"):
-			if obj.__dict__:
-				return obj.__dict__
-			else:
-				try:
-					return str(obj) if obj else None
-				except Exception as e:
-					return str(e)
-		else:
-			return super().default(obj)
+# class CustomEncoder(json.JSONEncoder):
+# 	def default(self, obj):
+# 		if hasattr(obj, "to_dict"):
+# 			return obj.to_dict()
+# 		elif hasattr(obj, "__dict__"):
+# 			if obj.__dict__:
+# 				return obj.__dict__
+# 			else:
+# 				try:
+# 					return str(obj) if obj else None
+# 				except Exception as e:
+# 					return str(e)
+# 		else:
+# 			return super().default(obj)
 
 
 class NCBI(Input):

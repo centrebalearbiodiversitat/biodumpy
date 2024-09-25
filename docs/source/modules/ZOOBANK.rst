@@ -1,7 +1,7 @@
 ZooBank Module
 ==============
 
-.. _ZooBank:
+.. _ZooBank_module:
 
 
 Overview

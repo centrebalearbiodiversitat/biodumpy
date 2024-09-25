@@ -43,14 +43,14 @@ class IUCN(Input):
 	"""
 
 	def __init__(
-		self,
-		api_key: str,
-		habitat: bool = False,
-		historical: bool = False,
-		threats: bool = False,
-		regions: list = None,
-		output_format: str = "json",
-		bulk: bool = False,
+			self,
+			api_key: str,
+			habitat: bool = False,
+			historical: bool = False,
+			threats: bool = False,
+			regions: list = None,
+			output_format: str = "json",
+			bulk: bool = False,
 	):
 		super().__init__(output_format, bulk)
 		if regions is None:
@@ -71,7 +71,7 @@ class IUCN(Input):
 			"western_africa",
 			"southern_africa",
 			"mediterranean",
-			"europe",
+			"europe"
 		]
 
 		if output_format != "json":
@@ -85,11 +85,13 @@ class IUCN(Input):
 		payload = []
 
 		for region in self.regions:
-			taxon_info = self._icun_request(f"https://apiv3.iucnredlist.org/api/v3/species/{query}/region/{region}?token={self.api_key}")
+			taxon_info = self._icun_request(
+				f"https://apiv3.iucnredlist.org/api/v3/species/{query}/region/{region}?token={self.api_key}")
 
-			if not taxon_info or taxon_info.get("taxonid") is None:
+			if not taxon_info or taxon_info[0].get("taxonid") is None:
 				continue
 
+			taxon_info = taxon_info[0]
 			payload.append(taxon_info)
 			taxon_id = taxon_info["taxonid"]
 
@@ -136,8 +138,9 @@ class IUCN(Input):
 			response = response.json()
 
 			if not (len(response.get("result", [])) == 0 or (response.get("value") == "0")):
-				result = response.get("result", [])[0]
+				result = response.get("result", [])
 				if "region_identifier" in response:
-					result.update({"region": response["region_identifier"]})
+					for r in result:
+						r.update({"region": response["region_identifier"]})
 
 				return result

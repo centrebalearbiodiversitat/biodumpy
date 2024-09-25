@@ -12,6 +12,7 @@ The current modules are dedicated for the following databases:
 
 - :doc:`modules/BOLD`
 - :doc:`modules/COL`
+- :doc:`modules/Crossref`
 - :doc:`modules/GBIF`
 - :doc:`modules/iNaturalist`
 - :doc:`modules/IUCN`

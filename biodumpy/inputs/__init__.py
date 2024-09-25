@@ -7,3 +7,4 @@ from .ZooBank import ZooBank
 from .IUCN import IUCN
 from .GBIF import GBIF
 from .OBIS import OBIS
+from .Crossref import Crossref

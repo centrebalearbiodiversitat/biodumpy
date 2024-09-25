@@ -101,7 +101,7 @@ example demonstrating how to download FASTA files.
 
     # Start the download
     bdp = Biodumpy([NCBI(bulk=False, mail="hola@quetal.com", db="nucleotide", rettype="fasta",
-        query_type='[Organism]', summary=True, output_format='fasta')])
+        query_type='[Organism]', output_format='fasta')])
     bdp.start(taxa, output_path='./downloads/{date}/{module}_fasta/{name}')
 
 

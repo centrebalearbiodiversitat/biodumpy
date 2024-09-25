@@ -108,8 +108,8 @@ def test_validate_regions_invalid():
 		(["Alytes muletensis"], ["global"], False, False, False, "json"),
 		(["Alytes muletensis"], ["global"], True, False, False, "json"),
 		(["Alytes muletensis"], ["global"], False, True, False, "json"),
-		(["Alytes muletensis"], ["global"], False, False, True, "json"),
-	],
+		(["Alytes muletensis"], ["global"], False, False, True, "json")
+	]
 )
 def test_download(query, regions, habitat, historical, threats, output_format):
 	with redirect_stdout(trap):

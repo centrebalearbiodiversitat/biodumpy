@@ -89,8 +89,8 @@ def test_ncbi_initialization():
 		(["Anax imperator"], False, "json", 5000, "nucleotide", 100, "gb", "[Organism] AND COX1[Gene]", False, "hola@quetal.com"),
 		(["OQ507551"], False, "json", 5000, "nucleotide", 100, "gb", None, True, "hola@quetal.com"),
 		(["Anax imperator"], True, "json", 5000, "nucleotide", 100, "gb", "[Organism]", False, "hola@quetal.com"),
-		(["Anax imperator"], False, "fasta", 5000, "nucleotide", 100, "fasta", "[Organism]", False, "hola@quetal.com"),
-	],
+		(["Anax imperator"], False, "fasta", 5000, "nucleotide", 100, "fasta", "[Organism]", False, "hola@quetal.com")
+	]
 )
 def test_download(query, summary, output_format, max_bp, db, step, rettype, query_type, by_id, mail):
 	with redirect_stdout(trap):

@@ -7,19 +7,20 @@ import io
 from contextlib import redirect_stdout
 
 from biodumpy import Biodumpy
-from biodumpy.inputs import COL
+from biodumpy.inputs import Crossref
 
 # set a trap and redirect stdout. Remove the print of the function. In this wat the test output is cleanest.
 trap = io.StringIO()
 
-def col_query(query, syn):
+
+def crossref_query(query, summary):
 	# Create temporary directory
 	with tempfile.TemporaryDirectory() as temp_dir:
 		# Construct the dynamic path using formatted strings
 		dynamic_path = os.path.join(temp_dir)
 
 	# Start biodumpy function
-	bdp = Biodumpy([COL(bulk=True, check_syn=syn)])
+	bdp = Biodumpy([Crossref(bulk=False, summary=summary)])
 	bdp.start(elements=query, output_path=f"{dynamic_path}/downloads/{{date}}/{{module}}/{{name}}")
 
 	# Retrieve a file path
@@ -35,44 +36,44 @@ def col_query(query, syn):
 	return data
 
 
-def test_col_initialization():
+def test_crossref_initialization():
 	# Test default initialization
-	col = COL()
+	crossref = Crossref()
 
-	assert col.output_format == "json"
+	# Objective: Verify that when a Crossref object is created without passing any arguments, it initializes with the
+	# correct default values.
+	assert crossref.summary == False
+	assert crossref.output_format == "json"
 
 	# Objective: Verify that the class raises a ValueError when an invalid value is provided for the
 	# output_format parameter.
 	with pytest.raises(ValueError, match="Invalid output_format. Expected 'json'."):
-		COL(output_format="xml")
+		Crossref(output_format="xml")
 
 
-# Add query in pytest.mark.parametrize. We can create a different query for accepted and synonym taxa.
 @pytest.mark.parametrize(
-	"query, syn, expected_id",
+	"query, summary",
 	[
-		(["Bufo roseus"], True, False),
-		(["Bufo roseus"], False, True)
+		(["10.1038/s44185-022-00001-3"], False),
+		(["10.1038/s44185-022-00001-3"], True)
 	]
 )
-def test_download_syn(query, syn, expected_id):
+def test_download_syn(query, summary):
 	with redirect_stdout(trap):
-		data = col_query(query=query, syn=syn)
+		data = crossref_query(query=query, summary=summary)
 
 	# Check if data is not empty
 	assert len(data) > 0, "data length is 0"
 
-	# Check the main structure of the JSON file
-	assert "origin_taxon" in data[0], "origin_taxon is not in data"
-	assert "taxon_id" in data[0], "taxon_id is not in data"
-	assert "status" in data[0], "status is not in data"
-	assert "usage" in data[0], "usage is not in data"
-	assert "classification" in data[0], "classification is not in data"
+	data = data[0]
 
-	classification = data[0].get("classification")
-	id = [item["id"] for item in classification]
-
-	if expected_id:
-		assert "NPDX" in id, "NPDX is not in id"
-	else:
-		assert "NPDX" not in id, "NPDX is in id"
+	assert "publisher" in data, "publisher is not in the data"
+	assert "container-title" in data, "container-title is not in the data"
+	assert "DOI" in data, "DOI is not in the data"
+	assert "type" in data, "type is not in the data"
+	assert "language" in data, "language is not in the data"
+	assert "URL" in data, "URL is not in the data"
+	assert "published" in data, "published is not in the data"
+	assert "title" in data, "title is not in the data"
+	assert "author" in data, "author is not in the data"
+	assert "abstract" in data, "abstract is not in the data"

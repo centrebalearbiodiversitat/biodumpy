@@ -1,7 +1,7 @@
 iNaturalist Module
 ==================
 
-.. _iNat:
+.. _iNat_module:
 
 
 Overview

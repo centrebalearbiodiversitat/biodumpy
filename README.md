@@ -8,7 +8,6 @@
 ![PyPI - Downloads](https://img.shields.io/pypi/dm/biodumpy)
 
 
-
 ## Overview
 ``biodumpy`` is a powerful and versatile Python package designed to simplify the process of retrieving biological information 
 from several public databases. 
@@ -24,6 +23,7 @@ designed for retrieving information from its respective source. The modules impl
 
 - BOLD
 - COL
+- Crossref
 - GBIF
 - iNaturalist
 - IUCN
@@ -115,7 +115,8 @@ For detailed documentation and tutorials, please visit the ``biodumpy`` Read the
 ## Contribution
 ``biodumpy`` is an open-source project, and contributions are welcome! 
 If you have ideas for new features, bug fixes, or improvements, please submit an issue or pull request in our GitHub 
-repository or contact with the support team at [t.cancellario@uib.eu](mailto:t.cancellario@uib.eu).
+repository or contact with the support team at [t.cancellario@uib.eu](mailto:t.cancellario@uib.eu) or  
+[tomas.golomb@uib.eu](mailto:tomas.golomb@uib.eu).
 
 
 ## License
