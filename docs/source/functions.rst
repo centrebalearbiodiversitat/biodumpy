@@ -43,6 +43,11 @@ Function
    :undoc-members:
    :show-inheritance:
 
+.. automodule:: biodumpy.inputs.WORMS
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 .. automodule:: biodumpy.inputs.ZooBank
    :members:
    :undoc-members:

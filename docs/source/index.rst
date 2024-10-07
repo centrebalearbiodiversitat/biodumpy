@@ -68,5 +68,6 @@ If you encounter any bugs or issues with the package, please contact the develop
 Acknowledgments
 ---------------
 
-The project was supported by MCIN with funding from European Union—NextGenerationEU (PRTR-C17.I1) and the Government of
-the Balearic Islands.
+The project is developed by the "Centre Balear de Biodiversitat" (CBB) at the University of the Balearic Islands, with
+support from MCIN and funding from the European Union—NextGenerationEU (PRTR-C17.I1), as well as the Government of the
+Balearic Islands.

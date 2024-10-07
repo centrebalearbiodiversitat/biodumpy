@@ -13,7 +13,7 @@ from biodumpy.version import __version__ as version
 # -- Project information
 
 project = "biodumpy"
-copyright = "2024, CBB Data Team"
+copyright = "2024, Centre Balear de Biodiversitat (CBB) - Data Team"
 author = "Cancellario, T.; Golomb, T.; Roldán, A.; Far, A."
 
 
@@ -40,4 +40,5 @@ templates_path = ["_templates"]
 html_theme = "sphinx_rtd_theme"
 
 # -- Options for EPUB output
+
 epub_show_urls = "footnote"

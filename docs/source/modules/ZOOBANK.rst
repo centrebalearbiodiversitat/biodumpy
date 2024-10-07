@@ -39,10 +39,7 @@ dataset size is selected.
     from biodumpy.inputs import ZooBank
 
     # Taxa list
-    taxa = [
-    	'Alytes muletensis', 'Bufotes viridis',
-    	'Hyla meridionalis', 'Anax imperator'
-    ]
+    taxa = ['Alytes muletensis', 'Bufotes viridis', 'Hyla meridionalis', 'Anax imperator']
 
     # Set the module and start the download
     # Start the download

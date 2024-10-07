@@ -19,6 +19,7 @@ class CustomEncoder(json.JSONEncoder):
         else:
             return super().default(obj)
 
+
 def dump(file_name, obj_list, output_format="json"):
     """
     Dump a list of objects to JSON files. Optionally split into multiple files for bulk processing.
@@ -175,40 +176,3 @@ def parse_lat_lon(lat_lon: str):
         lon = -lon
 
     return [lat, lon]
-
-
-# def download_taxonomy(taxon: str, mail="A.N.Other@example.com"):
-# 	"""
-# 	Download taxonomy of a taxon from NCBI Taxonomy database.
-#
-# 	Args:
-# 	    taxon: String containing taxon name.
-# 	    mail: NCBI requires you to specify your email address with each request.
-#
-# 	Returns:
-# 	    None
-#
-# 	Example:
-# 	x = download_taxonomy('Alytes muletensis')
-# 	"""
-#
-# 	Entrez.email = mail
-#
-# 	# Retrieve taxonomy ID by taxon name
-# 	handle = Entrez.esearch(db="Taxonomy", term=f"{taxon}[All Names]", retmode="xml")
-# 	taxon_id = Entrez.read(handle)  # retrieve taxon ID
-# 	handle.close()
-#
-# 	if int(taxon_id["Count"]) > 0:
-# 		# Retrieve taxonomy by taxon ID
-# 		handle = Entrez.efetch(db="Taxonomy", id=taxon_id["IdList"], retmode="xml")
-# 		records = Entrez.read(handle)
-# 		handle.close()
-#
-# 		lin = records[0]["LineageEx"]
-# 		lin.append = {"TaxId": records[0]["TaxId"], "ScientificName": records[0]["ScientificName"].split()[-1], "Rank": records[0]["Rank"]}
-#
-# 	else:
-# 		lin = None
-#
-# 	return lin

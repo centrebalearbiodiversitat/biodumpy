@@ -44,7 +44,7 @@ endpoint `nameusage/search?`_.
 
     # Start the download
     bdp = Biodumpy([COL(bulk=True, check_syn=False)])
-    bdp.start(taxa, output_path='/Users/tcanc/PycharmProjects/biodumpy/downloads/{date}/{module}/{name}')
+    bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}')
 
 
 Retrieve nomenclature from COL - With synonym names

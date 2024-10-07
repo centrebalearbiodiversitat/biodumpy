@@ -21,14 +21,15 @@ up to date and comprehensive biological information available.
 ``biodumpy`` offers dedicated modules for each supported database, with each module featuring functions specifically 
 designed for retrieving information from its respective source. The modules implemented so far are:
 
-- BOLD
-- COL
+- Barcode of life data system v4 (BOLD)
+- Catalogue of life (COL)
 - Crossref
-- GBIF
+- Global biodiversity information facility (GBIF)
 - iNaturalist
-- IUCN
-- NCBI
-- OBIS
+- International union for the conservation of nature (IUCN)
+- National center for biotechnology information (NCBI)
+- Ocean biodiversity information system (OBIS)
+- World register of marine species (WoRMS)
 - ZooBank
 
 This list can be expanded, thus suggestions and feedback are greatly appreciated.
@@ -124,9 +125,9 @@ repository or contact with the support team at [t.cancellario@uib.eu](mailto:t.c
 
 
 ## Acknowledgments
-The project was supported by MCIN with funding from the European Union—NextGenerationEU (PRTR-C17.I1) and 
-the Government of the Balearic Islands.
-
+The project is developed by the "Centre Balear de Biodiversitat" (CBB) at the University of the Balearic Islands, with
+support from MCIN and funding from the European Union—NextGenerationEU (PRTR-C17.I1), as well as the Government of the
+Balearic Islands.
 
 
 <hr>

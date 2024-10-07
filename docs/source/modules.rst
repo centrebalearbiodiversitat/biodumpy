@@ -18,4 +18,5 @@ The current modules are dedicated for the following databases:
 - :doc:`modules/IUCN`
 - :doc:`modules/NCBI`
 - :doc:`modules/OBIS`
+- :doc:`modules/WORMS`
 - :doc:`modules/ZOOBANK`

@@ -99,10 +99,12 @@ class NCBI(Input):
 		max_bp: int = None,
 		summary: bool = False,
 		by_id: bool = False,
+		taxonomy: bool = False,
 		output_format: str = "json",
 		bulk: bool = False,
 	):
 		super().__init__(output_format, bulk)
+		self.mail = mail
 		self.max_bp = max_bp
 		self.db = db
 		self.step = step
@@ -110,6 +112,7 @@ class NCBI(Input):
 		self.query_type = query_type
 		self.summary = summary
 		self.by_id = by_id
+		self.taxonomy = taxonomy
 		Entrez.email = mail
 
 		if self.output_format == "fasta" and self.rettype != "fasta":
@@ -145,6 +148,10 @@ class NCBI(Input):
 					for seq in self._download_seq(seq_id, rettype=self.rettype, db=self.db):
 						payload.append(json.loads(json.dumps(seq, cls=CustomEncoder)))
 					pbar.update(len(seq_id))
+
+		if self.taxonomy:
+			taxonomy_ncbi = self._download_taxonomy(query, mail=self.mail)
+			payload.append({"taxonomy": taxonomy_ncbi})
 
 		return payload
 
@@ -255,3 +262,39 @@ class NCBI(Input):
 		if attempt == retries:
 			# logging.error(f"Failed to download record {seq_id} after {retries} attempts.")
 			print(f"Failed to download record {seq_id} after {retries} attempts.")
+
+	def _download_taxonomy(self, taxon: str, mail: str = None):
+		"""
+		Download taxonomy of a taxon from NCBI Taxonomy database.
+
+		Args:
+		    taxon: String containing taxon name.
+		    mail: NCBI requires you to specify your email address with each request.
+
+		Returns:
+		    None
+
+		Example:
+		x = download_taxonomy('Alytes muletensis')
+		"""
+
+		Entrez.email = mail
+
+		# Retrieve taxonomy ID by taxon name
+		handle = Entrez.esearch(db="Taxonomy", term=f"{taxon}[All Names]", retmode="xml")
+		taxon_id = Entrez.read(handle)  # retrieve taxon ID
+		handle.close()
+
+		if int(taxon_id["Count"]) > 0:
+			# Retrieve taxonomy by taxon ID
+			handle = Entrez.efetch(db="Taxonomy", id=taxon_id["IdList"], retmode="xml")
+			records = Entrez.read(handle)
+			handle.close()
+
+			lin = records[0]["LineageEx"]
+			lin.append = {"TaxId": records[0]["TaxId"], "ScientificName": records[0]["ScientificName"].split()[-1], "Rank": records[0]["Rank"]}
+
+		else:
+			lin = None
+
+		return lin
