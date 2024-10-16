@@ -22,19 +22,7 @@ def gbif_query(query, accepted_only, occ, geometry):
 		dynamic_path = os.path.join(temp_dir)
 
 	# Start biodumpy function
-	bdp = Biodumpy(
-		[
-			GBIF(
-				output_format="json",
-				dataset_key=gbif_backbone,
-				limit=20,
-				bulk=False,
-				accepted_only=accepted_only,
-				occ=occ,
-				geometry=geometry,
-			)
-		]
-	)
+	bdp = Biodumpy([GBIF(output_format="json", dataset_key=gbif_backbone, limit=20, bulk=False, accepted_only=accepted_only, occ=occ, geometry=geometry)])
 	bdp.start(elements=query, output_path=f"{dynamic_path}/downloads/{{date}}/{{module}}/{{name}}")
 
 	# Retrieve a file path
@@ -78,12 +66,7 @@ def test_gbif_initialization():
 	"query, accepted_only, occ, geometry",
 	[
 		(["Alytes muletensis (Sanchíz & Adrover, 1979)"], True, False, None),
-		(
-			["Alytes muletensis (Sanchíz & Adrover, 1979)"],
-			True,
-			True,
-			"POLYGON((0.248 37.604, 6.300 37.604, 6.300 41.472, 0.248 41.472, 0.248 37.604))",
-		),
+		(["Alytes muletensis (Sanchíz & Adrover, 1979)"], True, True, "POLYGON((0.248 37.604, 6.300 37.604, 6.300 41.472, 0.248 41.472, 0.248 37.604))"),
 	],
 )
 def test_download(query, accepted_only, occ, geometry):

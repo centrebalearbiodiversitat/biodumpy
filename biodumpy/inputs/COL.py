@@ -52,9 +52,7 @@ class COL(Input):
 			raise ValueError("Invalid output_format. Expected 'json'.")
 
 	def _download(self, query, **kwargs) -> list:
-		response = requests.get(
-			f"https://api.checklistbank.org/dataset/9923/nameusage/search?q={query}&content=SCIENTIFIC_NAME&type=EXACT&offset=0&limit=10"
-		)
+		response = requests.get(f"https://api.checklistbank.org/dataset/9923/nameusage/search?q={query}&content=SCIENTIFIC_NAME&type=EXACT&offset=0&limit=10")
 
 		if response.status_code != 200:
 			raise BiodumpyException(f"Taxonomy request. Error {response.status_code}")

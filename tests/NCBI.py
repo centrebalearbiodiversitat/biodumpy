@@ -96,20 +96,7 @@ def test_ncbi_initialization():
 	"query, summary, output_format, max_bp, db, step, rettype, query_type, by_id, taxonomy, taxonomy_only, mail",
 	[
 		(["Alytes muletensis"], False, "json", 2000, "nucleotide", 100, "gb", "[Organism]", False, False, False, "hola@quetal.com"),
-		(
-			["Alytes muletensis"],
-			False,
-			"json",
-			2000,
-			"nucleotide",
-			100,
-			"gb",
-			"[Organism] AND COX1[Gene]",
-			False,
-			False,
-			False,
-			"hola@quetal.com",
-		),
+		(["Alytes muletensis"], False, "json", 2000, "nucleotide", 100, "gb", "[Organism] AND COX1[Gene]", False, False, False, "hola@quetal.com"),
 		(["AY166960"], False, "json", 2000, "nucleotide", 100, "gb", None, True, False, False, "hola@quetal.com"),
 		(["Alytes muletensis"], True, "json", 2000, "nucleotide", 100, "gb", "[Organism]", False, False, False, "hola@quetal.com"),
 		(["Alytes muletensis"], False, "fasta", 2000, "nucleotide", 100, "fasta", "[Organism]", False, False, False, "hola@quetal.com"),
@@ -143,19 +130,7 @@ def test_download(query, summary, output_format, max_bp, db, step, rettype, quer
 		assert "description" in data, "description is not in data"
 
 		assert "annotations" in data, "annotations is not in data"
-		elem_annotations = [
-			"molecule_type",
-			"topology",
-			"data_file_division",
-			"date",
-			"accessions",
-			"sequence_version",
-			"keywords",
-			"source",
-			"organism",
-			"taxonomy",
-			"references",
-		]
+		elem_annotations = ["molecule_type", "topology", "data_file_division", "date", "accessions", "sequence_version", "keywords", "source", "organism", "taxonomy", "references"]
 		found_words = []
 		for word in elem_annotations:
 			if word in data["annotations"]:

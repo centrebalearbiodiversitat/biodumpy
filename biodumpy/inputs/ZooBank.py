@@ -71,9 +71,7 @@ class ZooBank(Input):
 
 			# Parsing the HTML content with BeautifulSoup
 			soup = BeautifulSoup(html_content, "html.parser")
-			referenceuuid = [
-				entry["href"].replace("/References/", "") for entry in soup.find_all(class_="biblio-entry") if "href" in entry.attrs
-			]
+			referenceuuid = [entry["href"].replace("/References/", "") for entry in soup.find_all(class_="biblio-entry") if "href" in entry.attrs]
 
 			for ref in tqdm(referenceuuid, desc="Fetching paper info"):
 				response_pub = requests.get(f"https://zoobank.org/References.json/{ref}")

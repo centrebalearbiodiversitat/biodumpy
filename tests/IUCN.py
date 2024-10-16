@@ -36,20 +36,7 @@ def iucn_query(query, api_key, habitat, regions, historical, threats, weblink, o
 		dynamic_path = os.path.join(temp_dir)
 
 	# Start biodumpy function
-	bdp = Biodumpy(
-		[
-			IUCN(
-				bulk=True,
-				api_key=api_key,
-				habitat=habitat,
-				regions=regions,
-				historical=historical,
-				threats=threats,
-				weblink=weblink,
-				output_format=output_format,
-			)
-		]
-	)
+	bdp = Biodumpy([IUCN(bulk=True, api_key=api_key, habitat=habitat, regions=regions, historical=historical, threats=threats, weblink=weblink, output_format=output_format)])
 	bdp.start(elements=query, output_path=f"{dynamic_path}/downloads/{{date}}/{{module}}/{{name}}")
 
 	# Retrieve a file path
@@ -117,16 +104,7 @@ def test_validate_regions_invalid():
 )
 def test_download(query, regions, habitat, historical, threats, weblink, output_format):
 	with redirect_stdout(trap):
-		data = iucn_query(
-			query=query,
-			regions=regions,
-			habitat=habitat,
-			historical=historical,
-			threats=threats,
-			output_format=output_format,
-			weblink=weblink,
-			api_key=API_KEY,
-		)
+		data = iucn_query(query=query, regions=regions, habitat=habitat, historical=historical, threats=threats, output_format=output_format, weblink=weblink, api_key=API_KEY)
 
 	# Check if data is not empty
 	assert len(data) > 0, "data length is 0"

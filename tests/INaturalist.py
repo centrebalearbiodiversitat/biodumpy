@@ -49,12 +49,7 @@ def test_inat_initialization():
 		INaturalist(output_format="xml")
 
 
-@pytest.mark.parametrize(
-	"query, output_format",
-	[
-		(["Alytes muletensis"], "json"),
-	],
-)
+@pytest.mark.parametrize("query, output_format", [(["Alytes muletensis"], "json")])
 def test_download(query, output_format):
 	with redirect_stdout(trap):
 		data = inat_query(query=query, output_format=output_format)

@@ -45,11 +45,7 @@ class INaturalist(Input):
 	>>> bdp.start(taxa, output_path='./biodumpy/downloads/{date}/{module}/{name}')
 	"""
 
-	def __init__(
-		self,
-		output_format: str = "json",
-		bulk: bool = False,
-	):
+	def __init__(self, output_format: str = "json", bulk: bool = False):
 		super().__init__(output_format, bulk)
 
 		if output_format != "json":

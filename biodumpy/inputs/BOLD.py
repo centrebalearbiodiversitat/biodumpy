@@ -124,8 +124,6 @@ class BOLD(Input):
 							}
 						)
 				else:
-					payload.append(
-						results["bold_records"]["records"] if "bold_records" in results and "records" in results["bold_records"] else []
-					)
+					payload.append(results["bold_records"]["records"] if "bold_records" in results and "records" in results["bold_records"] else [])
 
 			return payload

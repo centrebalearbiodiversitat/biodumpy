@@ -101,9 +101,7 @@ def test_download_syn(query, distribution, marine_only):
 		assert "locality" in dist, "locality is not in data"
 		assert dist["locality"] == "European waters (ERMS scope)", "locality is European waters (ERMS scope) - The first distribution"
 		assert "locationID" in dist, "locationID is not in data"
-		assert (
-			dist["locationID"] == "http://marineregions.org/mrgid/7130"
-		), "locationID is http://marineregions.org/mrgid/7130 - The first distribution"
+		assert dist["locationID"] == "http://marineregions.org/mrgid/7130", "locationID is http://marineregions.org/mrgid/7130 - The first distribution"
 		assert "higherGeography" in dist, "higherGeography is not in data"
 		assert dist["higherGeography"] == "North Atlantic Ocean", "higherGeography is North Atlantic Ocean - The first distribution"
 		assert "recordStatus" in dist, "recordStatus is not in data"

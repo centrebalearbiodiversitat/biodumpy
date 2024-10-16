@@ -244,9 +244,7 @@ class NCBI(Input):
 		attempt = 0
 		while attempt < retries:
 			try:
-				handle = Entrez.efetch(
-					db=db, id=seq_id, rettype=rettype, retmode=retmode, usehistory=history, WebEnv=webenv, query_key=query_key
-				)
+				handle = Entrez.efetch(db=db, id=seq_id, rettype=rettype, retmode=retmode, usehistory=history, WebEnv=webenv, query_key=query_key)
 
 				if self.rettype == "fasta":
 					return handle.read().split("\n\n")[:-1]
