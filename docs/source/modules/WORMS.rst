@@ -7,8 +7,7 @@ WORMS Module
 Overview
 --------
 
-The ``WORMS`` module enables users to easily retrieve nomenclature information from the World Register of Marine Species
-(`WoRMS`_) database. The information will be downloaded in JSON format.
+The ``WORMS`` module enables users to easily retrieve nomenclature information from the World Register of Marine Species (`WoRMS`_) database :cite:`worms2024`. The information will be downloaded in JSON format.
 
 Key Features
 ------------
@@ -20,9 +19,7 @@ Key Features
 Retrieve nomenclature from WoRMS
 --------------------------------
 
-In this example, we download the nomenclature from WoRMS for a list of taxa by setting the ``bulk`` parameter to *True*.
-Additionally, we set the parameter ``marine_only`` to restrict the search only for species belong the marine environment.
-This function utilizes the WoRMS ChecklistBankAPI endpoint `rest/AphiaRecordByAphiaID`_.
+In this example, we download the nomenclature from WoRMS for a list of taxa by setting the ``bulk`` parameter to *True*. Additionally, we set the parameter ``marine_only`` to restrict the search only for species belong the marine environment. This function utilizes the WoRMS ChecklistBankAPI endpoint `rest/AphiaRecordByAphiaID`_.
 
 .. _rest/AphiaRecordByAphiaID: https://www.marinespecies.org/rest/
 
@@ -48,8 +45,7 @@ This function utilizes the WoRMS ChecklistBankAPI endpoint `rest/AphiaRecordByAp
 Retrieve distribution from WoRMS
 --------------------------------
 
-In the following example, we download the nomenclature and  distribution data for the taxa. To include distribution information
-users can set the parameter ``distribution`` to *True*.
+In the following example, we download the nomenclature and distribution data for the taxa. To include distribution information users can set the parameter ``distribution`` to *True*.
 
 .. code-block:: python
 

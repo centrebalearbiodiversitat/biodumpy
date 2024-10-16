@@ -1,6 +1,8 @@
 import json
 import time
 
+from Bio.SearchIO._model import query
+
 from biodumpy import Input
 from biodumpy.utils import split_to_batches, CustomEncoder
 
@@ -61,6 +63,12 @@ class NCBI(Input):
 	by_id : bool, optional
 		If True, the function downloads the data using NCBI accession numbers as inputs.
 		Default is False.
+	taxonomy : bool, optional
+		If True, the function downloads and appends the taxonomy data to the main genetic information.
+		Default is False.
+	taxonomy_only : bool, optional
+		If True, the function downloads the taxonomy data from NCBI.
+		Default is False.
 	bulk : bool, optional
 	    If True, the function creates a bulk file for large downloads.
 	    For more information, refer to the Biodumpy package documentation.
@@ -90,18 +98,19 @@ class NCBI(Input):
 	"""
 
 	def __init__(
-		self,
-		mail: str = None,
-		db: str = "nucleotide",
-		rettype: str = "gb",
-		query_type: str = "[Organism]",
-		step: int = 100,
-		max_bp: int = None,
-		summary: bool = False,
-		by_id: bool = False,
-		taxonomy: bool = False,
-		output_format: str = "json",
-		bulk: bool = False,
+			self,
+			mail: str = None,
+			db: str = "nucleotide",
+			rettype: str = "gb",
+			query_type: str = "[Organism]",
+			step: int = 100,
+			max_bp: int = None,
+			summary: bool = False,
+			by_id: bool = False,
+			taxonomy: bool = False,
+			taxonomy_only: bool = False,
+			output_format: str = "json",
+			bulk: bool = False
 	):
 		super().__init__(output_format, bulk)
 		self.mail = mail
@@ -113,6 +122,7 @@ class NCBI(Input):
 		self.summary = summary
 		self.by_id = by_id
 		self.taxonomy = taxonomy
+		self.taxonomy_only = taxonomy_only
 		Entrez.email = mail
 
 		if self.output_format == "fasta" and self.rettype != "fasta":
@@ -121,19 +131,35 @@ class NCBI(Input):
 		if self.by_id and self.query_type is not None:
 			raise ValueError("Invalid parameters: 'by_id' is True, so 'query_type' must be None.")
 
-		if self.summary and self.output_format == "fasta" and self.rettype == "fasta":
+		if self.summary and (self.output_format == "fasta" or self.rettype == "fasta"):
 			raise ValueError("Invalid parameters: 'summary' is True, so 'output_format' cannot be 'fasta'.")
+
+		if self.taxonomy and (self.output_format == "fasta" or self.rettype == "fasta"):
+			raise ValueError("Invalid parameters: 'taxonomy' is True, so 'output_format' cannot be 'fasta'.")
+
+		if self.taxonomy_only and (self.output_format == "fasta" or self.rettype == "fasta"):
+			raise ValueError("Invalid parameters: 'taxonomy_only' is True, so 'output_format' cannot be 'fasta'.")
 
 		if output_format not in {"json", "fasta"}:
 			raise ValueError('Invalid output_format. Expected "json" or "fasta".')
 
 	def _download(self, query, **kwargs) -> list:
+
+		payload = []
+
+		if self.taxonomy_only:
+			taxonomy_ncbi = self._download_taxonomy(query, mail=self.mail)
+			# Extract the required fields
+			taxonomy = [{'TaxId': item['TaxId'], 'ScientificName': item['ScientificName'], 'Rank': item['Rank']}
+			            for item in taxonomy_ncbi]
+			payload.append(taxonomy)
+			return payload
+
 		if self.by_id:
 			ids_list = {query}
 		else:
 			ids_list = self._download_ids(term=f"{query}{self.query_type}", step=self.step)
 
-		payload = []
 		if self.summary:
 			with tqdm(total=len(ids_list), desc="NCBI summary retrieve", unit=" Summary") as pbar:
 				for seq_id in split_to_batches(list(ids_list), self.step):
@@ -220,7 +246,8 @@ class NCBI(Input):
 
 		return summary_list
 
-	def _download_seq(self, seq_id, db=None, rettype=None, retmode="text", retries=3, webenv=None, query_key=None, history="y"):
+	def _download_seq(self, seq_id, db=None, rettype=None, retmode="text", retries=3, webenv=None, query_key=None,
+	                  history="y"):
 		"""
 		Downloads a full Entrez record, saves it to a file, parses it, and updates the result.
 
@@ -240,7 +267,8 @@ class NCBI(Input):
 		while attempt < retries:
 			try:
 				handle = Entrez.efetch(
-					db=db, id=seq_id, rettype=rettype, retmode=retmode, usehistory=history, WebEnv=webenv, query_key=query_key
+					db=db, id=seq_id, rettype=rettype, retmode=retmode, usehistory=history, WebEnv=webenv,
+					query_key=query_key
 				)
 
 				if self.rettype == "fasta":
@@ -281,18 +309,19 @@ class NCBI(Input):
 		Entrez.email = mail
 
 		# Retrieve taxonomy ID by taxon name
-		handle = Entrez.esearch(db="Taxonomy", term=f"{taxon}[All Names]", retmode="xml")
+		handle = Entrez.esearch(db="Taxonomy", term=f"{taxon}[All Names]", retmode="xml", mail=mail)
 		taxon_id = Entrez.read(handle)  # retrieve taxon ID
 		handle.close()
 
 		if int(taxon_id["Count"]) > 0:
 			# Retrieve taxonomy by taxon ID
-			handle = Entrez.efetch(db="Taxonomy", id=taxon_id["IdList"], retmode="xml")
+			handle = Entrez.efetch(db="Taxonomy", id=taxon_id["IdList"], retmode="xml", mail=mail)
 			records = Entrez.read(handle)
 			handle.close()
 
 			lin = records[0]["LineageEx"]
-			lin.append = {"TaxId": records[0]["TaxId"], "ScientificName": records[0]["ScientificName"].split()[-1], "Rank": records[0]["Rank"]}
+			lin.append({"TaxId": records[0]["TaxId"], "ScientificName": records[0]["ScientificName"].split()[-1],
+			            "Rank": records[0]["Rank"]})
 
 		else:
 			lin = None

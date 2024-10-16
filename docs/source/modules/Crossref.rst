@@ -7,9 +7,8 @@ Crossref Module
 Overview
 --------
 
-The ``Crossref`` module allows users to easily retrieve scientific bibliographic metadata from Crossref database.
-By providing a list of Digital Object Identifier (DOI), users can access to bibliographic data.
-The information is downloaded in JSON format.
+The ``Crossref`` module allows users to easily retrieve scientific bibliographic metadata from Crossref database :cite:`crossref2024`. By providing a list of Digital Object Identifier (DOI), users can access to bibliographic data. The information is downloaded in JSON format.
+
 
 Key Features
 ------------
@@ -20,8 +19,7 @@ Key Features
 Retrieve comprehensive metadata from Crossref
 ---------------------------------------------
 
-This example demonstrates how users can download bibliographic information from Crossref from a list of DOI.
-The function relies on the Crossref API's `works`_ endpoint.
+This example demonstrates how users can download bibliographic information from Crossref from a list of DOI. The function relies on the Crossref API's `works`_ endpoint.
 
 
 .. _works: https://api.crossref.org/swagger-ui/index.html
@@ -40,9 +38,7 @@ The function relies on the Crossref API's `works`_ endpoint.
     bdp.start(doi, output_path='./downloads/{date}/{module}/{name}')
 
 
-The previous method downloads the entire set of data for each record from Crossref. However, users can also download a
-summarized version by setting the ``summary`` parameter to *True*. This option provides a more concise and manageable
-set of information. The fields of the result file are described below:
+The previous method downloads the entire set of data for each record from Crossref. However, users can also download a summarized version by setting the ``summary`` parameter to *True*. This option provides a more concise and manageable set of information. The fields of the result file are described below:
 
 - **publisher**: The name of the publishing entity responsible for releasing the publication.
 - **container-title**: The title of the journal or book in which the research is published.

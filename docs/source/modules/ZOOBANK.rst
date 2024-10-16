@@ -7,9 +7,7 @@ ZooBank Module
 Overview
 --------
 
-The ``ZooBank`` module allows users to easily retrieve scientific bibliographic information about taxa from the Official
-Registry of Zoological Nomenclature (ZooBank) database. By providing a taxa name, users can access to bibliographic data.
-The information is downloaded in JSON format.
+The ``ZooBank`` module allows users to easily retrieve scientific bibliographic information about taxa from the `Official Registry of Zoological Nomenclature`_ (ZooBank) database :cite:`zoobank2024`. By providing a taxa name, users can access to bibliographic data. The information is downloaded in JSON format.
 
 Key Features
 ------------

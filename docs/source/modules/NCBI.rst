@@ -15,6 +15,7 @@ Key Features
 
 - **Retrieve information from NCBI database.** Users can download the information stored into the NCBI database.
 - **Retrieve genetic information from NCBI database.** Users can download the genetic information in FASTA format.
+- **Retrieve taxonomic information from NCBI database.** Users can download the taxonomic information stored into the NCBI database.
 
 
 Retrieve comprehensive metadata from NCBI
@@ -23,6 +24,10 @@ Retrieve comprehensive metadata from NCBI
 In this example, we download the information from NCBI setting the parameter ``bulk`` to *True*. We download the data
 from the "nucleotide" database in GeneBank format. Do not underestimate the parameter ``query_type`` since it defines
 the type of query search. This function is based on biopython `Entrez`_ module.
+
+In this example, we set the parameter ``bulk`` to *True* because we know that the information to download is relatively small.
+Before setting this parameter to *True*, we recommend checking the size of the taxa information to avoid potential issues
+with computer memory.
 
 .. _Entrez: https://biopython.org/docs/1.75/api/Bio.Entrez.html
 
@@ -123,6 +128,33 @@ It is possible combine this approach also to download summary JSON or FASTA file
     # Start the download
     bdp = Biodumpy([NCBI(bulk=True, mail="hola@quetal.com", db="nucleotide", rettype="gb", query_type = None, by_id=True)])
     bdp.start(acc_numb, output_path='./downloads/{date}/{module}_acc_num/{name}')
+
+
+Downloading taxonomic information
+---------------------------------
+
+Users can download taxonomic information using two different methods:
+
+1) Download both genetic and taxonomic information in a single file by setting the parameter ``taxonomy`` to True.
+2) Download only the taxonomic information by setting the parameter ``taxonomy_only`` to True.
+
+.. code-block:: python
+
+	from biodumpy import Biodumpy
+	from biodumpy.inputs import NCBI
+
+	taxa = ['Alytes muletensis', 'Hyla meridionalis']
+
+	# Start the download following the approach n.1
+	bdp = Biodumpy([NCBI(bulk=False, mail="hola@quetal.com", db="nucleotide",
+						 query_type='[Organism]', taxonomy=True)])
+	bdp.start(taxa, output_path='./downloads/{date}/{module}_1/{name}')
+
+	# Start the download following the approach n.2
+	bdp = Biodumpy([NCBI(bulk=False, mail="hola@quetal.com", db="nucleotide",
+						 query_type='[Organism]', taxonomy_only=True)])
+	bdp.start(taxa, output_path='./downloads/{date}/{module}_2/{name}')
+
 
 
 Reference link

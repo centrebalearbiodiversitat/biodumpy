@@ -7,27 +7,22 @@ GBIF Module
 Overview
 --------
 
-The ``GBIF`` module allows users to easily retrieve data information from the Global Biodiversity Information Facility
-(`GBIF`_) database. The information is downloaded in JSON format.
+The ``GBIF`` module allows users to easily retrieve data information from the Global Biodiversity Information Facility (`GBIF`_) database :cite:`gbif2024`. The information is downloaded in JSON format.
 
 .. _GBIF: https://www.gbif.org/
+
 
 Key Features
 ------------
 
-- **Retrieve GBIF scientific nomenclature.** Users can obtain the scientific nomenclature of a taxon by accessing the GBIF
-  Backbone Taxonomy and retrieving its taxonomic classification.
-- **Retrieve occurrences.** Users can obtain occurrences of a taxon by accessing GBIF data to gather information on its
-  geographic distribution and associated metadata.
+- **Retrieve GBIF scientific nomenclature.** Users can obtain the scientific nomenclature of a taxon by accessing the GBIF Backbone Taxonomy and retrieving its taxonomic classification.
+- **Retrieve occurrences.** Users can obtain occurrences of a taxon by accessing GBIF data to gather information on its geographic distribution and associated metadata.
 
 
 Retrieve nomenclature information and associated metadata from GBIF
 -------------------------------------------------------------------
 
-In this example we demonstrated how download taxonomic nomenclature for a list of taxa from GBIF.
-We set the ``dataset_key`` to correspond with the GBIF Backbone Taxonomy and specify a ``limit`` of 20 results per page.
-Moreover, we extract only the accepted name using the parameter ``accepted_only`` to *True*.
-This function utilizes the GBIF API's endpoint `species/search`_.
+In this example we demonstrated how download taxonomic nomenclature for a list of taxa from GBIF. We set the ``dataset_key`` to correspond with the GBIF Backbone Taxonomy and specify a ``limit`` of 20 results per page. Moreover, we extract only the accepted name using the parameter ``accepted_only`` to *True*. This function utilizes the GBIF API's endpoint `species/search`_.
 
 .. _species/search: https://techdocs.gbif.org/en/openapi/v1/species#/
 
@@ -37,10 +32,7 @@ This function utilizes the GBIF API's endpoint `species/search`_.
 
 .. warning::
 
-    If the parameter ``accepted_only`` is set to *False*, the search results may include taxa that do not match the intended search.
-    For example, when searching for `Anax imperator Leach, 1815`_ with this parameter set to *False*, the results may include
-    unrelated taxa, such as the second record in the example, which is an Ephemeroptera rather than an Odonate.
-    **Please review the results carefully.**
+    If the parameter ``accepted_only`` is set to *False*, the search results may include taxa that do not match the intended search. For example, when searching for `Anax imperator Leach, 1815`_ with this parameter set to *False*, the results may include unrelated taxa, such as the second record in the example, which is an Ephemeroptera rather than an Odonate. **Please review the results carefully.**
 
 .. _Anax imperator Leach, 1815: https://api.gbif.org/v1/species/search?datasetKey=d7dddbf4-2cf0-4f39-9b2a-bb099caae36c&q=Anax%20imperator%20Leach,%201815&limit=20
 
@@ -65,12 +57,9 @@ This function utilizes the GBIF API's endpoint `species/search`_.
 Extract main information from downloaded file
 ---------------------------------------------
 
-Users can easily filter the data by loading the JSON file downloaded and selecting the required fields.
-In this example, we retrieve the taxonomy, GBIF taxon key, taxonomic status, and taxonomic rank of a taxon.
+Users can easily filter the data by loading the JSON file downloaded and selecting the required fields. In this example, we retrieve the taxonomy, GBIF taxon key, taxonomic status, and taxonomic rank of a taxon.
 
-In this case, we retrieve information for a single taxon because we set the ``bulk`` parameter to *False* in the previous
-code block. However, the following script is also applicable for processing bulk files. In the latter case, we obtain
-an object that contains all the taxa.
+In this case, we retrieve information for a single taxon because we set the ``bulk`` parameter to *False* in the previous code block. However, the following script is also applicable for processing bulk files. In the latter case, we obtain an object that contains all the taxa.
 
 .. code-block:: python
 
@@ -100,11 +89,7 @@ an object that contains all the taxa.
 Retrieve occurrences and associated metadata from GBIF
 ------------------------------------------------------
 
-The ``GBIF`` module provides also the ability to download occurrences for a specific taxon. By setting the parameter
-``occ`` to *True*, users can enable the download of these occurrences.
-Additionally, the module supports filtering occurrences based on a specified geographic region using the ``geometry``
-parameter. When a ``geometry`` is provided, only occurrences that fall within the defined polygon are included in the
-result. Here we provide an example to download and extract the main information from downloaded dataset.
+The ``GBIF`` module provides also the ability to download occurrences for a specific taxon. By setting the parameter ``occ`` to *True*, users can enable the download of these occurrences. Additionally, the module supports filtering occurrences based on a specified geographic region using the ``geometry`` parameter. When a ``geometry`` is provided, only occurrences that fall within the defined polygon are included in the result. Here we provide an example to download and extract the main information from downloaded dataset.
 
 .. code-block:: python
 

@@ -67,18 +67,14 @@ In detail, we described:
     from biodumpy.inputs import GBIF
 
     # Create a list of taxa
-    taxa = [
-        'Alytes muletensis (Sanchíz & Adrover, 1979)', 
-        'Bufotes viridis (Laurenti, 1768)',
-        'Hyla meridionalis Boettger, 1874', 
-        'Anax imperator Leach, 1815'
-    ]
+    taxa = ['Alytes muletensis (Sanchíz & Adrover, 1979)', 'Bufotes viridis (Laurenti, 1768)',
+            'Hyla meridionalis Boettger, 1874', 'Anax imperator Leach, 1815']
 
     # Set the Biodumpy function with the specific parameters
     bdp = Biodumpy([GBIF(bulk=False, accepted_only=True)])
 
     # Start the download
-    bdp.start(taxa, output_path='YOUR_OUTPUT_PATH/downloads/{date}/{module}/{name}')
+    bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}')
 ```
 
 **Example N.2**
@@ -94,12 +90,7 @@ In detail, we described:
     api_key = 'YOUR_IUCN_API_KEY'
 
     # Create a list of taxa
-    taxa = [
-        'Alytes muletensis', 
-        'Bufotes viridis', 
-        'Hyla meridionalis', 
-        'Anax imperator'
-    ]
+    taxa = ['Alytes muletensis', 'Bufotes viridis', 'Hyla meridionalis', 'Anax imperator']
 
     # Set the Biodumpy functions with the specific parameters
     bdp = Biodumpy([GBIF(bulk=False, accepted_only=True),
@@ -121,16 +112,14 @@ repository or contact with the support team at [t.cancellario@uib.eu](mailto:t.c
 
 
 ## License
-``biodumpy`` is licensed under the GNU GENERAL PUBLIC LICENSE. See the LICENSE file for more details.
+``biodumpy`` is licensed under the GNU General Public License for its software components. Additionally, any creative works associated with this project are licensed under the Creative Commons Attribution (CC BY) license. See the LICENSE file for more details.
 
 
 ## Acknowledgments
-The project is developed by the "Centre Balear de Biodiversitat" (CBB) at the University of the Balearic Islands, with
-support from MCIN and funding from the European Union—NextGenerationEU (PRTR-C17.I1), as well as the Government of the
-Balearic Islands.
+The project is developed by the "Centre Balear de Biodiversitat" (CBB) at the University of the Balearic Islands, with support from MCIN and funding from the European Union—NextGenerationEU (PRTR-C17.I1), as well as the Government of the Balearic Islands.
 
 
 <hr>
 <div style="display: flex; justify-content: center">
-<img src='https://raw.githubusercontent.com/centrebalearbiodiversitat/biodumpy/refs/heads/master/docs/source/static/logo_cbb.png' alt='logo_cbb' width='200'>
+<img src='https://raw.githubusercontent.com/centrebalearbiodiversitat/biodumpy/refs/heads/master/docs/source/static/founding.png' alt='logo_cbb' width='200'>
 </div>

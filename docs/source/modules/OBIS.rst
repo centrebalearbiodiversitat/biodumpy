@@ -7,26 +7,22 @@ OBIS Module
 Overview
 --------
 
-The ``OBIS`` module allows users to easily retrieve data information from the Ocean Biodiversity Information System
-(`OBIS`_) database. The information is downloaded in JSON format.
+The ``OBIS`` module allows users to easily retrieve data information from the Ocean Biodiversity Information System (`OBIS`_) database :cite:`obis2024`. The information is downloaded in JSON format.
 
 .. _OBIS: https://obis.org/
+
 
 Key Features
 ------------
 
-- **Retrieve OBIS scientific nomenclature.** Users can obtain the scientific nomenclature of a taxon by accessing the OBIS
-  taxonomy and retrieving its taxonomic classification.
-- **Retrieve occurrences.** Users can obtain occurrences of a taxon by accessing OBIS data to gather information on its
-  geographic distribution and associated metadata.
+- **Retrieve OBIS scientific nomenclature.** Users can obtain the scientific nomenclature of a taxon by accessing the OBIS taxonomy and retrieving its taxonomic classification.
+- **Retrieve occurrences.** Users can obtain occurrences of a taxon by accessing OBIS data to gather information on its geographic distribution and associated metadata.
 
 
 Retrieve nomenclature information and associated metadata from OBIS
 -------------------------------------------------------------------
 
-In this example we demonstrated how download taxonomic nomenclature for a list of taxa from OBIS. This database
-contains only **marine** species. Thus we use as reference list three taxa belonging the classes Bivalvia, Mammalia, and
-Anthozoa. This function utilizes the OBIS API's endpoint `/taxon/`_.
+In this example we demonstrated how download taxonomic nomenclature for a list of taxa from OBIS. This database contains only **marine** species. Thus we use as reference list three taxa belonging the classes Bivalvia, Mammalia, and Anthozoa. This function utilizes the OBIS API's endpoint `/taxon/`_.
 
 .. _/taxon/: https://api.obis.org/v3/taxon/
 
@@ -51,12 +47,9 @@ Anthozoa. This function utilizes the OBIS API's endpoint `/taxon/`_.
 Extract main information from downloaded file
 ---------------------------------------------
 
-Users can easily filter the data by loading the JSON file downloaded and selecting the required fields.
-In this example, we retrieve the taxonomy, OBIS taxonID, taxonomic status, and taxonomic rank of a taxon.
+Users can easily filter the data by loading the JSON file downloaded and selecting the required fields. In this example, we retrieve the taxonomy, OBIS taxonID, taxonomic status, and taxonomic rank of a taxon.
 
-In this example, we retrieve information for a single taxon because we set the ``bulk`` parameter to *False* previously
-code block. However, the following script is also applicable for processing bulk files. In the latter case, we obtain
-an object that contains all the taxa.
+We retrieve information for a single taxon because we set the ``bulk`` parameter to *False* previously code block. However, the following script is also applicable for processing bulk files. In the latter case, we obtain an object that contains all the taxa.
 
 .. code-block:: python
 
@@ -86,12 +79,7 @@ an object that contains all the taxa.
 Retrieve occurrences and associated metadata from OBIS
 ------------------------------------------------------
 
-The ``OBIS`` module provides also the ability to download occurrences for a specific taxon. By setting the parameter
-``occ`` to *True*, users can enable the download of these occurrences.
-Additionally, the module supports filtering occurrences based on a specified geographic region using either the
-``geometry`` or ``areaid`` parameters. These parameters can be used separately or together.
-When a ``geometry`` or ``areaid`` are provided, only occurrences that fall within the defined polygons are included in the
-result. Here we provide an example to download and extract the main information from downloaded dataset.
+The ``OBIS`` module provides also the ability to download occurrences for a specific taxon. By setting the parameter ``occ`` to *True*, users can enable the download of these occurrences. Additionally, the module supports filtering occurrences based on a specified geographic region using either the ``geometry`` or ``areaid`` parameters. These parameters can be used separately or together. When a ``geometry`` or ``areaid`` are provided, only occurrences that fall within the defined polygons are included in the result. Here we provide an example to download and extract the main information from downloaded dataset.
 
 .. code-block:: python
 
