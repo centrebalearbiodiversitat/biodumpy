@@ -46,12 +46,7 @@ class Crossref(Input):
 	>>> bdp.start(dois, output_path='./downloads/{date}/{module}/{name}')
 	"""
 
-	def __init__(
-		self,
-		summary: bool = False,
-		output_format: str = "json",
-		bulk: bool = False
-	):
+	def __init__(self, summary: bool = False, output_format: str = "json", bulk: bool = False):
 		super().__init__(output_format, bulk)
 		self.summary = summary
 
@@ -66,7 +61,7 @@ class Crossref(Input):
 			raise BiodumpyException(f"Reference request. Error {response.status_code}")
 
 		if response.content:
-			message = response.json().get('message', {})
+			message = response.json().get("message", {})
 			if self.summary:
 				abstract = message.get("abstract", None)
 				payload.append(
@@ -80,7 +75,7 @@ class Crossref(Input):
 						"published": message.get("published")["date-parts"],
 						"title": message.get("title")[0],
 						"author": message.get("author"),
-						"abstract": remove_tags(abstract) if abstract else None
+						"abstract": remove_tags(abstract) if abstract else None,
 					}
 				)
 			else:

@@ -70,7 +70,7 @@ def remove_tags(text: str) -> str:
 		str: The string with tags removed.
 	"""
 	# Use regular expression to remove tags
-	clean_text = re.sub(r'<.*?>', '', text)
+	clean_text = re.sub(r"<.*?>", "", text)
 	return clean_text
 
 

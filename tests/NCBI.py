@@ -13,8 +13,7 @@ from biodumpy.inputs import NCBI
 trap = io.StringIO()
 
 
-def ncbi_query(query, summary, output_format, max_bp, db, step, rettype,
-               query_type, by_id, taxonomy, taxonomy_only, mail):
+def ncbi_query(query, summary, output_format, max_bp, db, step, rettype, query_type, by_id, taxonomy, taxonomy_only, mail):
 	# Create temporary directory
 	with tempfile.TemporaryDirectory() as temp_dir:
 		# Construct the dynamic path using formatted strings
@@ -35,7 +34,7 @@ def ncbi_query(query, summary, output_format, max_bp, db, step, rettype,
 				by_id=by_id,
 				taxonomy=taxonomy,
 				taxonomy_only=taxonomy_only,
-				mail=mail
+				mail=mail,
 			)
 		]
 	)
@@ -97,14 +96,26 @@ def test_ncbi_initialization():
 	"query, summary, output_format, max_bp, db, step, rettype, query_type, by_id, taxonomy, taxonomy_only, mail",
 	[
 		(["Alytes muletensis"], False, "json", 2000, "nucleotide", 100, "gb", "[Organism]", False, False, False, "hola@quetal.com"),
-		(["Alytes muletensis"], False, "json", 2000, "nucleotide", 100, "gb", "[Organism] AND COX1[Gene]", False, False, False, "hola@quetal.com"),
+		(
+			["Alytes muletensis"],
+			False,
+			"json",
+			2000,
+			"nucleotide",
+			100,
+			"gb",
+			"[Organism] AND COX1[Gene]",
+			False,
+			False,
+			False,
+			"hola@quetal.com",
+		),
 		(["AY166960"], False, "json", 2000, "nucleotide", 100, "gb", None, True, False, False, "hola@quetal.com"),
 		(["Alytes muletensis"], True, "json", 2000, "nucleotide", 100, "gb", "[Organism]", False, False, False, "hola@quetal.com"),
 		(["Alytes muletensis"], False, "fasta", 2000, "nucleotide", 100, "fasta", "[Organism]", False, False, False, "hola@quetal.com"),
-	]
+	],
 )
-def test_download(query, summary, output_format, max_bp, db, step, rettype,
-                  query_type, by_id, taxonomy, taxonomy_only, mail):
+def test_download(query, summary, output_format, max_bp, db, step, rettype, query_type, by_id, taxonomy, taxonomy_only, mail):
 	with redirect_stdout(trap):
 		data = ncbi_query(
 			query=query,
@@ -118,7 +129,7 @@ def test_download(query, summary, output_format, max_bp, db, step, rettype,
 			by_id=by_id,
 			taxonomy=taxonomy,
 			taxonomy_only=taxonomy_only,
-			mail=mail
+			mail=mail,
 		)
 
 	# Check if data is not empty
@@ -132,13 +143,24 @@ def test_download(query, summary, output_format, max_bp, db, step, rettype,
 		assert "description" in data, "description is not in data"
 
 		assert "annotations" in data, "annotations is not in data"
-		elem_annotations = ['molecule_type', 'topology', 'data_file_division', 'date', 'accessions', 'sequence_version', 'keywords', 'source', 'organism', 'taxonomy', 'references']
+		elem_annotations = [
+			"molecule_type",
+			"topology",
+			"data_file_division",
+			"date",
+			"accessions",
+			"sequence_version",
+			"keywords",
+			"source",
+			"organism",
+			"taxonomy",
+			"references",
+		]
 		found_words = []
 		for word in elem_annotations:
 			if word in data["annotations"]:
 				found_words.append(word)
 		assert len(found_words) == 11, "Check the annotation list"
-
 
 		assert "features" in data, "features is not in data"
 
@@ -162,11 +184,10 @@ def test_download(query, summary, output_format, max_bp, db, step, rettype,
 	"query, summary, output_format, max_bp, db, step, rettype, query_type, by_id, taxonomy, taxonomy_only, mail",
 	[
 		(["Alytes muletensis"], False, "json", 2000, "nucleotide", 100, "gb", "[Organism]", False, True, False, "hola@quetal.com"),
-		(["Alytes muletensis"], False, "json", 2000, "nucleotide", 100, "gb", "[Organism]", False, False, True, "hola@quetal.com")
-	]
+		(["Alytes muletensis"], False, "json", 2000, "nucleotide", 100, "gb", "[Organism]", False, False, True, "hola@quetal.com"),
+	],
 )
-def test_download_taxonomy(query, summary, output_format, max_bp, db, step, rettype,
-                           query_type, by_id, taxonomy, taxonomy_only, mail):
+def test_download_taxonomy(query, summary, output_format, max_bp, db, step, rettype, query_type, by_id, taxonomy, taxonomy_only, mail):
 	with redirect_stdout(trap):
 		data = ncbi_query(
 			query=query,
@@ -180,7 +201,7 @@ def test_download_taxonomy(query, summary, output_format, max_bp, db, step, rett
 			by_id=by_id,
 			taxonomy=taxonomy,
 			taxonomy_only=taxonomy_only,
-			mail=mail
+			mail=mail,
 		)
 
 	# Check if data is not empty
@@ -193,15 +214,15 @@ def test_download_taxonomy(query, summary, output_format, max_bp, db, step, rett
 		assert len(data["taxonomy"]) == 23, "The length of taxonomy is not 23"
 
 		data = data["taxonomy"]
-		assert 'TaxId' in data[0], "TaxId is not in data[0]"
-		assert 'ScientificName' in data[0], "ScientificName is not in data[0]"
-		assert 'Rank' in data[0], "Rank is not in data[0]"
+		assert "TaxId" in data[0], "TaxId is not in data[0]"
+		assert "ScientificName" in data[0], "ScientificName is not in data[0]"
+		assert "Rank" in data[0], "Rank is not in data[0]"
 
 	if taxonomy is False and taxonomy_only:
 		data = data[0]
 
 		assert len(data) == 23, "The length of taxonomy is not 23"
 
-		assert 'TaxId' in data[0], "TaxId is not in data[0]"
-		assert 'ScientificName' in data[0], "ScientificName is not in data[0]"
-		assert 'Rank' in data[0], "Rank is not in data[0]"
+		assert "TaxId" in data[0], "TaxId is not in data[0]"
+		assert "ScientificName" in data[0], "ScientificName is not in data[0]"
+		assert "Rank" in data[0], "Rank is not in data[0]"

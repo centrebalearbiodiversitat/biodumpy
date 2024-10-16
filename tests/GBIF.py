@@ -83,8 +83,8 @@ def test_gbif_initialization():
 			True,
 			True,
 			"POLYGON((0.248 37.604, 6.300 37.604, 6.300 41.472, 0.248 41.472, 0.248 37.604))",
-		)
-	]
+		),
+	],
 )
 def test_download(query, accepted_only, occ, geometry):
 	with redirect_stdout(trap):

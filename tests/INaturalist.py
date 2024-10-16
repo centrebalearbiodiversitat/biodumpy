@@ -53,7 +53,7 @@ def test_inat_initialization():
 	"query, output_format",
 	[
 		(["Alytes muletensis"], "json"),
-	]
+	],
 )
 def test_download(query, output_format):
 	with redirect_stdout(trap):

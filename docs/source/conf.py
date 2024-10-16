@@ -25,11 +25,11 @@ extensions = [
 	"sphinx.ext.autodoc",
 	"sphinx.ext.autosummary",
 	"sphinx.ext.intersphinx",
-	'sphinxcontrib.bibtex'
+	"sphinxcontrib.bibtex",
 ]
 
-bibtex_bibfiles = ['references.bib']
-bibtex_reference_style = 'author_year'  # This will give you numbered references
+bibtex_bibfiles = ["references.bib"]
+bibtex_reference_style = "author_year"  # This will give you numbered references
 
 intersphinx_mapping = {
 	"python": ("https://docs.python.org/3/", None),
@@ -38,7 +38,6 @@ intersphinx_mapping = {
 intersphinx_disabled_domains = ["std"]
 
 templates_path = ["_templates"]
-
 
 
 # -- Options for HTML output

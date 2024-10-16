@@ -12,6 +12,7 @@ from biodumpy.inputs import COL
 # set a trap and redirect stdout. Remove the print of the function. In this wat the test output is cleanest.
 trap = io.StringIO()
 
+
 def col_query(query, syn):
 	# Create temporary directory
 	with tempfile.TemporaryDirectory() as temp_dir:
@@ -48,13 +49,7 @@ def test_col_initialization():
 
 
 # Add query in pytest.mark.parametrize. We can create a different query for accepted and synonym taxa.
-@pytest.mark.parametrize(
-	"query, syn, expected_id",
-	[
-		(["Bufo roseus"], True, False),
-		(["Bufo roseus"], False, True)
-	]
-)
+@pytest.mark.parametrize("query, syn, expected_id", [(["Bufo roseus"], True, False), (["Bufo roseus"], False, True)])
 def test_download_syn(query, syn, expected_id):
 	with redirect_stdout(trap):
 		data = col_query(query=query, syn=syn)

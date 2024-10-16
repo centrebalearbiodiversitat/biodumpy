@@ -51,13 +51,7 @@ def test_crossref_initialization():
 		Crossref(output_format="xml")
 
 
-@pytest.mark.parametrize(
-	"query, summary",
-	[
-		(["10.1038/s44185-022-00001-3"], False),
-		(["10.1038/s44185-022-00001-3"], True)
-	]
-)
+@pytest.mark.parametrize("query, summary", [(["10.1038/s44185-022-00001-3"], False), (["10.1038/s44185-022-00001-3"], True)])
 def test_download_syn(query, summary):
 	with redirect_stdout(trap):
 		data = crossref_query(query=query, summary=summary)

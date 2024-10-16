@@ -80,19 +80,19 @@ class NCBI(Input):
 	"""
 
 	def __init__(
-			self,
-			mail: str = None,
-			db: str = "nucleotide",
-			rettype: str = "gb",
-			query_type: str = "[Organism]",
-			step: int = 100,
-			max_bp: int = None,
-			summary: bool = False,
-			by_id: bool = False,
-			taxonomy: bool = False,
-			taxonomy_only: bool = False,
-			output_format: str = "json",
-			bulk: bool = False
+		self,
+		mail: str = None,
+		db: str = "nucleotide",
+		rettype: str = "gb",
+		query_type: str = "[Organism]",
+		step: int = 100,
+		max_bp: int = None,
+		summary: bool = False,
+		by_id: bool = False,
+		taxonomy: bool = False,
+		taxonomy_only: bool = False,
+		output_format: str = "json",
+		bulk: bool = False,
 	):
 		super().__init__(output_format, bulk)
 		self.mail = mail
@@ -131,10 +131,7 @@ class NCBI(Input):
 		if self.taxonomy_only:
 			taxonomy_ncbi = self._download_taxonomy(query)
 			# Extract the required fields
-			taxonomy = [{
-				'TaxId': item['TaxId'],
-				'ScientificName': item['ScientificName'],
-				'Rank': item['Rank']} for item in taxonomy_ncbi]
+			taxonomy = [{"TaxId": item["TaxId"], "ScientificName": item["ScientificName"], "Rank": item["Rank"]} for item in taxonomy_ncbi]
 
 			return [taxonomy] if self.bulk else taxonomy
 
@@ -228,8 +225,7 @@ class NCBI(Input):
 
 		return summary_list
 
-	def _download_seq(self, seq_id, db=None, rettype=None, retmode="text", retries=3, webenv=None, query_key=None,
-	                  history="y"):
+	def _download_seq(self, seq_id, db=None, rettype=None, retmode="text", retries=3, webenv=None, query_key=None, history="y"):
 		"""
 		Downloads a full Entrez record, saves it to a file, parses it, and updates the result.
 
@@ -249,8 +245,7 @@ class NCBI(Input):
 		while attempt < retries:
 			try:
 				handle = Entrez.efetch(
-					db=db, id=seq_id, rettype=rettype, retmode=retmode, usehistory=history, WebEnv=webenv,
-					query_key=query_key
+					db=db, id=seq_id, rettype=rettype, retmode=retmode, usehistory=history, WebEnv=webenv, query_key=query_key
 				)
 
 				if self.rettype == "fasta":
@@ -301,10 +296,6 @@ class NCBI(Input):
 			handle.close()
 
 			lin = records[0]["LineageEx"]
-			lin.append({
-				"TaxId": records[0]["TaxId"],
-				"ScientificName": records[0]["ScientificName"],
-				"Rank": records[0]["Rank"]
-			})
+			lin.append({"TaxId": records[0]["TaxId"], "ScientificName": records[0]["ScientificName"], "Rank": records[0]["Rank"]})
 
 		return lin

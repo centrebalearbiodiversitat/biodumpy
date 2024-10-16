@@ -12,6 +12,7 @@ from biodumpy.inputs import WORMS
 # set a trap and redirect stdout. Remove the print of the function. In this wat the test output is cleanest.
 trap = io.StringIO()
 
+
 def worms_query(query, distribution, marine_only):
 	# Create temporary directory
 	with tempfile.TemporaryDirectory() as temp_dir:
@@ -48,15 +49,8 @@ def test_worms_initialization():
 
 
 # Add query in pytest.mark.parametrize. We can create a different query for accepted and synonym taxa.
-@pytest.mark.parametrize(
-	"query, distribution, marine_only",
-	[
-		(["Pinna nobilis"], False, False),
-		(["Pinna nobilis"], True, True)
-	]
-)
+@pytest.mark.parametrize("query, distribution, marine_only", [(["Pinna nobilis"], False, False), (["Pinna nobilis"], True, True)])
 def test_download_syn(query, distribution, marine_only):
-
 	with redirect_stdout(trap):
 		data = worms_query(query=query, marine_only=marine_only, distribution=distribution)
 
@@ -107,7 +101,9 @@ def test_download_syn(query, distribution, marine_only):
 		assert "locality" in dist, "locality is not in data"
 		assert dist["locality"] == "European waters (ERMS scope)", "locality is European waters (ERMS scope) - The first distribution"
 		assert "locationID" in dist, "locationID is not in data"
-		assert dist["locationID"] == "http://marineregions.org/mrgid/7130", "locationID is http://marineregions.org/mrgid/7130 - The first distribution"
+		assert (
+			dist["locationID"] == "http://marineregions.org/mrgid/7130"
+		), "locationID is http://marineregions.org/mrgid/7130 - The first distribution"
 		assert "higherGeography" in dist, "higherGeography is not in data"
 		assert dist["higherGeography"] == "North Atlantic Ocean", "higherGeography is North Atlantic Ocean - The first distribution"
 		assert "recordStatus" in dist, "recordStatus is not in data"
@@ -116,14 +112,3 @@ def test_download_syn(query, distribution, marine_only):
 		assert dist["decimalLatitude"] is None, "decimalLatitude is None - The first distribution"
 		assert "decimalLongitude" in dist, "decimalLongitude is not in data"
 		assert dist["decimalLongitude"] is None, "decimalLongitude is None - The first distribution"
-
-
-
-
-
-
-
-
-
-
-

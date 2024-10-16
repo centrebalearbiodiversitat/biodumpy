@@ -62,8 +62,8 @@ def test_obis_initialization():
 		(["Pinna nobilis"], False, None, None),
 		(["Pinna nobilis"], True, "POLYGON((0.248 37.604, 6.300 37.604, 6.300 41.472, 0.248 41.472, 0.248 37.604))", None),
 		(["Pinna nobilis"], True, None, 33322),
-		(["Pinna nobilis"], True, "POLYGON((0.248 37.604, 6.300 37.604, 6.300 41.472, 0.248 41.472, 0.248 37.604))", 33322)
-	]
+		(["Pinna nobilis"], True, "POLYGON((0.248 37.604, 6.300 37.604, 6.300 41.472, 0.248 41.472, 0.248 37.604))", 33322),
+	],
 )
 def test_download(query, occ, geometry, areaid):
 	with redirect_stdout(trap):
