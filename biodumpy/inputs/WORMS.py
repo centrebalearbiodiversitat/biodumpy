@@ -37,12 +37,13 @@ class WORMS(Input):
     >>> bdp.start(taxa, output_path='./biodumpy/downloads/{date}/{module}/{name}')
     """
 
-	def __init__(self,
-	             marine_only: bool = False,
-	             distribution: bool = False,
-	             output_format: str = "json",
-	             bulk: bool = False):
-
+	def __init__(
+			self,
+			marine_only: bool = False,
+			distribution: bool = False,
+			output_format: str = "json",
+			bulk: bool = False
+	):
 		super().__init__(output_format, bulk)
 		self.marine_only = marine_only
 		self.distribution = distribution
@@ -51,52 +52,28 @@ class WORMS(Input):
 			raise ValueError("Invalid output_format. Expected 'json'.")
 
 	def _download(self, query, **kwargs) -> list:
-
 		payload = []
 
 		# Download taxon aphia
-		aphia = self._download_aphia(taxon=query, marine_only=self.marine_only)
-
+		aphia = self._worms_request(
+			f"https://www.marinespecies.org/rest/AphiaIDByName/{query}?marine_only={str(self.marine_only).lower()}"
+		)
 		if not aphia:
 			raise BiodumpyException(f"{query} - Aphia not found.")
 
 		# Retrieve nomenclature
-		response = requests.get(f"https://www.marinespecies.org/rest/AphiaRecordByAphiaID/{aphia}")
-
-		if response.status_code != 200:
-			raise BiodumpyException(f"Occurrences request. Error {response.status_code}")
+		response = self._worms_request(f"https://www.marinespecies.org/rest/AphiaRecordByAphiaID/{aphia}")
 
 		if self.distribution:
-			taxonomy = response.json()
-			dist = self._download_distribution(aphia=aphia)
+			response["distribution"] = self._worms_request(f"https://www.marinespecies.org/rest/AphiaDistributionsByAphiaID/{aphia}")
 
-			taxonomy["distribution"] = dist
-
-			payload.append(taxonomy)
-
-		else:
-			payload.append(response.json())
+		payload.append(response)
 
 		return payload
 
-	def _download_aphia(self, taxon: list, marine_only: bool = False) -> list:
-
-		response = requests.get(f"https://www.marinespecies.org/rest/AphiaIDByName/{taxon}?marine_only={str(marine_only).lower()}")
-
+	def _worms_request(self, url) -> list:
+		response = requests.get(url)
 		if response.status_code != 200:
 			raise BiodumpyException(f"Occurrences request. Error {response.status_code}")
 
-		payload_aphia = response.json()
-
-		return payload_aphia
-
-	def _download_distribution(self, aphia: int) -> list:
-
-		response = requests.get(f"https://www.marinespecies.org/rest/AphiaDistributionsByAphiaID/{aphia}")
-
-		if response.status_code != 200:
-			raise BiodumpyException(f"Occurrences request. Error {response.status_code}")
-
-		payload_distribution = response.json()
-
-		return payload_distribution
+		return response.json()

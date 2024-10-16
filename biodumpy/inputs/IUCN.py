@@ -47,18 +47,17 @@ class IUCN(Input):
     >>> bdp.start(taxa, output_path=output_path)
 	"""
 
-
 	def __init__(
-			self,
-			api_key: str,
-			habitat: bool = False,
-			regions: list = None,
-			historical: bool = False,
-			threats: bool = False,
-			citation: bool = False,
-			weblink: bool = False,
-			output_format: str = "json",
-			bulk: bool = False,
+		self,
+		api_key: str,
+		habitat: bool = False,
+		regions: list = None,
+		historical: bool = False,
+		threats: bool = False,
+		citation: bool = False,
+		weblink: bool = False,
+		output_format: str = "json",
+		bulk: bool = False,
 	):
 		super().__init__(output_format, bulk)
 		if regions is None:

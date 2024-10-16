@@ -1,30 +1,12 @@
 import json
 import time
 
-from Bio.SearchIO._model import query
-
 from biodumpy import Input
 from biodumpy.utils import split_to_batches, CustomEncoder
 
 from tqdm import tqdm
 from Bio import Entrez, SeqIO
 from http.client import IncompleteRead
-
-
-# class CustomEncoder(json.JSONEncoder):
-# 	def default(self, obj):
-# 		if hasattr(obj, "to_dict"):
-# 			return obj.to_dict()
-# 		elif hasattr(obj, "__dict__"):
-# 			if obj.__dict__:
-# 				return obj.__dict__
-# 			else:
-# 				try:
-# 					return str(obj) if obj else None
-# 				except Exception as e:
-# 					return str(e)
-# 		else:
-# 			return super().default(obj)
 
 
 class NCBI(Input):
@@ -144,16 +126,17 @@ class NCBI(Input):
 			raise ValueError('Invalid output_format. Expected "json" or "fasta".')
 
 	def _download(self, query, **kwargs) -> list:
-
 		payload = []
 
 		if self.taxonomy_only:
-			taxonomy_ncbi = self._download_taxonomy(query, mail=self.mail)
+			taxonomy_ncbi = self._download_taxonomy(query)
 			# Extract the required fields
-			taxonomy = [{'TaxId': item['TaxId'], 'ScientificName': item['ScientificName'], 'Rank': item['Rank']}
-			            for item in taxonomy_ncbi]
-			payload.append(taxonomy)
-			return payload
+			taxonomy = [{
+				'TaxId': item['TaxId'],
+				'ScientificName': item['ScientificName'],
+				'Rank': item['Rank']} for item in taxonomy_ncbi]
+
+			return [taxonomy] if self.bulk else taxonomy
 
 		if self.by_id:
 			ids_list = {query}
@@ -167,7 +150,6 @@ class NCBI(Input):
 						sumr["query"] = f"{query}{self.query_type}"
 						payload.append(json.loads(json.dumps(sumr, cls=CustomEncoder)))
 					pbar.update(len(seq_id))
-
 		else:
 			with tqdm(total=len(ids_list), desc="NCBI sequences retrieve", unit=" Sequences") as pbar:
 				for seq_id in split_to_batches(list(ids_list), self.step):
@@ -176,8 +158,8 @@ class NCBI(Input):
 					pbar.update(len(seq_id))
 
 		if self.taxonomy:
-			taxonomy_ncbi = self._download_taxonomy(query, mail=self.mail)
-			payload.append({"taxonomy": taxonomy_ncbi})
+			taxonomy_ncbi = self._download_taxonomy(query)
+			payload = [{"taxonomy": taxonomy_ncbi, "sequences": payload}]
 
 		return payload
 
@@ -291,7 +273,7 @@ class NCBI(Input):
 			# logging.error(f"Failed to download record {seq_id} after {retries} attempts.")
 			print(f"Failed to download record {seq_id} after {retries} attempts.")
 
-	def _download_taxonomy(self, taxon: str, mail: str = None):
+	def _download_taxonomy(self, taxon: str):
 		"""
 		Download taxonomy of a taxon from NCBI Taxonomy database.
 
@@ -306,24 +288,23 @@ class NCBI(Input):
 		x = download_taxonomy('Alytes muletensis')
 		"""
 
-		Entrez.email = mail
-
 		# Retrieve taxonomy ID by taxon name
-		handle = Entrez.esearch(db="Taxonomy", term=f"{taxon}[All Names]", retmode="xml", mail=mail)
+		handle = Entrez.esearch(db="Taxonomy", term=f"{taxon}[All Names]", retmode="xml")
 		taxon_id = Entrez.read(handle)  # retrieve taxon ID
 		handle.close()
+		lin = None
 
 		if int(taxon_id["Count"]) > 0:
 			# Retrieve taxonomy by taxon ID
-			handle = Entrez.efetch(db="Taxonomy", id=taxon_id["IdList"], retmode="xml", mail=mail)
+			handle = Entrez.efetch(db="Taxonomy", id=taxon_id["IdList"], retmode="xml")
 			records = Entrez.read(handle)
 			handle.close()
 
 			lin = records[0]["LineageEx"]
-			lin.append({"TaxId": records[0]["TaxId"], "ScientificName": records[0]["ScientificName"].split()[-1],
-			            "Rank": records[0]["Rank"]})
-
-		else:
-			lin = None
+			lin.append({
+				"TaxId": records[0]["TaxId"],
+				"ScientificName": records[0]["ScientificName"],
+				"Rank": records[0]["Rank"]
+			})
 
 		return lin
