@@ -9,26 +9,32 @@ Before using ``biodumpy``, users need to install the package in their Python env
 
    (.venv) $ pip install biodumpy
 
+Alternatively, if you are using an IDE like `PyCharm`_ or `Visual Studio`_, you can install the package via the Python Packages tool.
+
+.. _`PyCharm`: https://www.jetbrains.com/pycharm/?source=google&medium=cpc&campaign=EMEA_en_ES_PyCharm_Branded&term=pycharm&content=698987581572&gad_source=1&gclid=EAIaIQobChMIvJCN3reQiQMVyJpoCR2yswprEAAYASAAEgKRhPD_BwE
+
+.. _`Visual Studio`: https://code.visualstudio.com/
 
 Usage
 -----
 
-To simplify the use of ``biodumpy``, we create a general structure common among all the modules:
+To make ``biodumpy`` easier to use, we have designed a general structure that is consistent across all modules. Below is an overview of the main steps to get started with the package:
 
 1) **Load the package.** Import ``biodumpy`` into your Python environment.
 2) **Load the desired modules.** Import one or more specific modules needed to retrieve the data.
 3) **Set up the configuration of one or more modules.** Configure the ``biodumpy`` function/s with the required parameters.
 4) **Start the download.** Execute the function to begin retrieving the data.
 
-Here, we provide two examples illustrating the general structure of a ``biodumpy`` script:
 
-In detail, we described:
+Examples
+--------
 
-- **Single Module Example**: This example demonstrates how to use a single ``biodumpy`` module (e.g., GBIF).
+Here, we provide two examples illustrating the general structure of a ``biodumpy`` script. In detail, we described:
 
-- **Multiple Modules Example**: This example shows how to use multiple ``biodumpy`` modules (e.g., GBIF and IUCN).
+- **Example n.1**: Single Module Example. This example demonstrates how to use a single ``biodumpy`` module (e.g., GBIF).
+- **Example n.2**: Multiple Modules Example: This example shows how to use multiple ``biodumpy`` modules (e.g., GBIF and IUCN).
 
-**Example N.1**
+**Example n.1**
 
 .. code-block:: python
 
@@ -46,10 +52,10 @@ In detail, we described:
     bdp = Biodumpy([GBIF(bulk=False, accepted_only=True)])
 
     # Start the download
-    bdp.start(taxa, output_path='YOUR_OUTPUT_PATH/downloads/{date}/{module}/{name}')
+    bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}')
 
 
-**Example N.2**
+**Example n.2**
 
 .. code-block:: python
 
@@ -59,6 +65,7 @@ In detail, we described:
     # Import GBIF and IUCN modules
     from biodumpy.inputs import GBIF, IUCN
 
+    # Set your IUCN API Key
     api_key = 'YOUR_IUCN_API_KEY'
 
     # Create a list of taxa
@@ -75,19 +82,14 @@ In detail, we described:
 The ``bulk`` parameter
 ~~~~~~~~~~~~~~~~~~~~~~
 
-An important parameter common to all modules is ``bulk``. This parameter controls how the information is organized and 
-saved thus users can customize how the data is organized according to their needs.
+An important parameter common to all modules is ``bulk``. This parameter controls how information is organized and saved, allowing users to customize the data structure according to their needs.
 
-- If ``bulk`` is set to *True*, the information downloaded for each taxon is merged into a single file. 
-  This option may be useful if the amount of the total data is limited and for consolidating data and simplifying file management.
+- If ``bulk`` is set to *True*, the information downloaded for each taxon is merged into a single file. This option may be useful if the amount of the total data is limited and for consolidating data and simplifying file management.
 
-- If ``bulk`` is set to *False*, the information for each taxon is saved in a separate file. 
-  This option is useful for detailed analysis, when individual taxon files are required or when the amount of data for
-  each taxon is large.
+- If ``bulk`` is set to *False*, the information for each taxon is saved in a separate file. This option is useful for detailed analysis, when individual taxon files are required or when the amount of data for each taxon is large.
+
 
 Save result location
 ~~~~~~~~~~~~~~~~~~~~
 
-By default, ``biodumpy`` saves the resulting file in a folder named **download** into the working directory.
-Inside this folder, it creates a subfolder with the current date, and within it, it creates another subfolder named with
-the module name.
+By default, ``biodumpy`` saves the resulting file in a folder named *downloads* within the user's working directory. Inside this folder, a subfolder is automatically created, named after the current date. Within that, additional subfolders are generated, each named after the corresponding module(s) used.

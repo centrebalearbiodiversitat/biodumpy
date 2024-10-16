@@ -35,7 +35,7 @@ class COL(Input):
 	-------
 	>>> from biodumpy import Biodumpy
 	>>> from biodumpy.inputs import COL
-	# List oF taxa
+	# List of taxa
 	>>> taxa = ['Alytes muletensis', 'Bufotes viridis', 'Hyla meridionalis', 'Anax imperator', 'Bufo roseus', 'Stollia betae']
 	# Start the download
 	>>> bdp = Biodumpy([COL(bulk=True, check_syn=False)])

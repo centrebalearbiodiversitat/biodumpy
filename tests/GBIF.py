@@ -77,14 +77,14 @@ def test_gbif_initialization():
 @pytest.mark.parametrize(
 	"query, accepted_only, occ, geometry",
 	[
-		(["Alytes muletensis (Sanchíz & Adrover, 1979)"], True, False, None),  # accepted_only=True, occ=False, geometry...
+		(["Alytes muletensis (Sanchíz & Adrover, 1979)"], True, False, None),
 		(
 			["Alytes muletensis (Sanchíz & Adrover, 1979)"],
 			True,
 			True,
 			"POLYGON((0.248 37.604, 6.300 37.604, 6.300 41.472, 0.248 41.472, 0.248 37.604))",
-		),  # accepted_only=True, occ=True, geometry...
-	],
+		)
+	]
 )
 def test_download(query, accepted_only, occ, geometry):
 	with redirect_stdout(trap):

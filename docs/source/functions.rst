@@ -13,6 +13,11 @@ Function
    :undoc-members:
    :show-inheritance:
 
+.. automodule:: biodumpy.inputs.Crossref
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 .. automodule:: biodumpy.inputs.GBIF
    :members:
    :undoc-members:
@@ -34,6 +39,11 @@ Function
    :show-inheritance:
 
 .. automodule:: biodumpy.inputs.OBIS
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+.. automodule:: biodumpy.inputs.WORMS
    :members:
    :undoc-members:
    :show-inheritance:

@@ -70,7 +70,6 @@ class Biodumpy:
 
 					try:
 						payload = inp._download(**el)
-						logging.info(f"Download data for {module_name} was successful.\n")
 					except Exception as e:
 						logging.error(f'[{module_name}] Failed to download data for "{name}": {str(e)} \n')
 						continue

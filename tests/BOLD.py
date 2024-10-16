@@ -66,7 +66,7 @@ def test_bold_initialization():
 		(["Alytes muletensis"], True, False, "json"),  # Test the output file of summary=True.
 		(["Alytes muletensis"], False, False, "json"),  # Test the output file of summary=True.
 		(["Alytes muletensis"], False, True, "fasta"),  # Test the output of fasta file.
-	],
+	]
 )
 def test_download(query, summary, fasta, output_format):
 	with redirect_stdout(trap):

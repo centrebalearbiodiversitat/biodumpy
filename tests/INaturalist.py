@@ -52,8 +52,8 @@ def test_inat_initialization():
 @pytest.mark.parametrize(
 	"query, output_format",
 	[
-		(["Alytes muletensis"], "json"),  # Test the output file of summary=True.
-	],
+		(["Alytes muletensis"], "json"),
+	]
 )
 def test_download(query, output_format):
 	with redirect_stdout(trap):

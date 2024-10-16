@@ -7,10 +7,10 @@ COL Module
 Overview
 --------
 
-The ``COL`` module enables users to easily retrieve nomenclature information from the Catalogue of Life (`COL`_)
-database. The information will be downloaded in JSON format.
+The ``COL`` module enables users to easily retrieve nomenclature information from the Catalogue of Life (`CoL`_) database :cite:`barki2024`. The information will be downloaded in JSON format.
 
-.. _COL: https://www.catalogueoflife.org/
+.. _CoL: https://www.catalogueoflife.org/
+
 
 Key Features
 ------------
@@ -19,12 +19,10 @@ Key Features
 - **Check for synonym.** Users can obtain the accepted nomenclature of a given taxon if it is listed as a synonym in the COL database.
 
 
-Retrieve nomenclature from COL - Only accepted names
+Retrieve nomenclature from CoL - Only accepted names
 ----------------------------------------------------
 
-In this first example, we download the nomenclature from COL for a list of taxa by setting the ``bulk`` parameter to *True*.
-In this case, the list of taxa consists only of accepted names. This function utilizes the COL ChecklistBankAPI
-endpoint `nameusage/search?`_.
+In this first example, we download the nomenclature from CoL for a list of taxa by setting the ``bulk`` parameter to *True*. In this case, the list of taxa consists only of accepted names. This function utilizes the CoL ChecklistBankAPI endpoint `nameusage/search?`_.
 
 .. _nameusage/search?: https://api.checklistbank.org/dataset/9923/nameusage/search?
 
@@ -44,14 +42,13 @@ endpoint `nameusage/search?`_.
 
     # Start the download
     bdp = Biodumpy([COL(bulk=True, check_syn=False)])
-    bdp.start(taxa, output_path='/Users/tcanc/PycharmProjects/biodumpy/downloads/{date}/{module}/{name}')
+    bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}')
 
 
-Retrieve nomenclature from COL - With synonym names
+Retrieve nomenclature from CoL - With synonym names
 ---------------------------------------------------
 
-In the following example, the species *Bufo roseus* is a synonym of *Bufotes viridis*.
-Here, we test the difference in the results by setting the parameter ``check_syn`` to *False* or *True*.
+In the following example, the species *Bufo roseus* is a synonym of *Bufotes viridis*. Here, we test the difference in the results by setting the parameter ``check_syn`` to *False* or *True*.
 
 .. code-block:: python
 

@@ -1,6 +1,23 @@
 import csv
 import json
 import os
+import re
+
+
+class CustomEncoder(json.JSONEncoder):
+	def default(self, obj):
+		if hasattr(obj, "to_dict"):
+			return obj.to_dict()
+		elif hasattr(obj, "__dict__"):
+			if obj.__dict__:
+				return obj.__dict__
+			else:
+				try:
+					return str(obj) if obj else None
+				except Exception as e:
+					return str(e)
+		else:
+			return super().default(obj)
 
 
 def dump(file_name, obj_list, output_format="json"):
@@ -8,9 +25,9 @@ def dump(file_name, obj_list, output_format="json"):
 	Dump a list of objects to JSON files. Optionally split into multiple files for bulk processing.
 
 	Parameters:
-	    file_name (str): Base name of the output JSON file.
-	    obj_list (list): List of objects to be written to JSON.
-	    output_format: output format. Default is "json". Other formats can be "fasta", "pdf".
+		file_name (str): Base name of the output JSON file.
+		obj_list (list): List of objects to be written to JSON.
+		output_format: output format. Default is "json". Other formats can be "fasta", "pdf".
 	"""
 
 	create_directory(file_name)
@@ -26,9 +43,35 @@ def dump(file_name, obj_list, output_format="json"):
 
 
 def create_directory(file_name):
+	"""
+	Creates a directory for the given file name if it does not already exist.
+
+	Args:
+		file_name (str): The path of the file for which the directory should be created.
+
+	Example:
+		create_directory('/path/to/directory/file.txt')
+		This will create '/path/to/directory/' if it does not already exist.
+	"""
+
 	directory = os.path.dirname(file_name)
 	if not os.path.exists(directory):
 		os.makedirs(directory)
+
+
+def remove_tags(text: str) -> str:
+	"""
+	Removes XML/HTML-like tags from the input string.
+
+	Args:
+		text (str): The input string containing tags.
+
+	Returns:
+		str: The string with tags removed.
+	"""
+	# Use regular expression to remove tags
+	clean_text = re.sub(r'<.*?>', '', text)
+	return clean_text
 
 
 def clean_nones(value):
@@ -110,10 +153,10 @@ def parse_lat_lon(lat_lon: str):
 	Parse coordinate.
 
 	Args:
-	    lat_lon: String containing latitude and longitude.
+		lat_lon: String containing latitude and longitude.
 
 	Returns:
-	    List of coordinates.
+		List of coordinates.
 
 	Example:
 	parse_lat_lon("34.0522 N 118.2437 E")
@@ -133,40 +176,3 @@ def parse_lat_lon(lat_lon: str):
 		lon = -lon
 
 	return [lat, lon]
-
-
-# def download_taxonomy(taxon: str, mail="A.N.Other@example.com"):
-# 	"""
-# 	Download taxonomy of a taxon from NCBI Taxonomy database.
-#
-# 	Args:
-# 	    taxon: String containing taxon name.
-# 	    mail: NCBI requires you to specify your email address with each request.
-#
-# 	Returns:
-# 	    None
-#
-# 	Example:
-# 	x = download_taxonomy('Alytes muletensis')
-# 	"""
-#
-# 	Entrez.email = mail
-#
-# 	# Retrieve taxonomy ID by taxon name
-# 	handle = Entrez.esearch(db="Taxonomy", term=f"{taxon}[All Names]", retmode="xml")
-# 	taxon_id = Entrez.read(handle)  # retrieve taxon ID
-# 	handle.close()
-#
-# 	if int(taxon_id["Count"]) > 0:
-# 		# Retrieve taxonomy by taxon ID
-# 		handle = Entrez.efetch(db="Taxonomy", id=taxon_id["IdList"], retmode="xml")
-# 		records = Entrez.read(handle)
-# 		handle.close()
-#
-# 		lin = records[0]["LineageEx"]
-# 		lin.append = {"TaxId": records[0]["TaxId"], "ScientificName": records[0]["ScientificName"].split()[-1], "Rank": records[0]["Rank"]}
-#
-# 	else:
-# 		lin = None
-#
-# 	return lin

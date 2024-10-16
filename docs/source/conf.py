@@ -13,7 +13,7 @@ from biodumpy.version import __version__ as version
 # -- Project information
 
 project = "biodumpy"
-copyright = "2024, CBB Data Team"
+copyright = "2024, Centre Balear de Biodiversitat (CBB) - Data Team"
 author = "Cancellario, T.; Golomb, T.; Roldán, A.; Far, A."
 
 
@@ -25,7 +25,11 @@ extensions = [
 	"sphinx.ext.autodoc",
 	"sphinx.ext.autosummary",
 	"sphinx.ext.intersphinx",
+	'sphinxcontrib.bibtex'
 ]
+
+bibtex_bibfiles = ['references.bib']
+bibtex_reference_style = 'author_year'  # This will give you numbered references
 
 intersphinx_mapping = {
 	"python": ("https://docs.python.org/3/", None),
@@ -35,9 +39,12 @@ intersphinx_disabled_domains = ["std"]
 
 templates_path = ["_templates"]
 
+
+
 # -- Options for HTML output
 
 html_theme = "sphinx_rtd_theme"
 
 # -- Options for EPUB output
+
 epub_show_urls = "footnote"

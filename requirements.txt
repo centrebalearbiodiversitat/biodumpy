@@ -6,4 +6,4 @@ lxml==5.2.2
 selenium==4.23.0
 pandas==2.2.2
 beautifulsoup4==4.12.3
-pytest==8.3.2
+pytest==8.3.3

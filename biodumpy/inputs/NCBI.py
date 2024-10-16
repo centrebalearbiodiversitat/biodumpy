@@ -1,28 +1,12 @@
 import json
+import time
 
 from biodumpy import Input
-from biodumpy.utils import split_to_batches
+from biodumpy.utils import split_to_batches, CustomEncoder
 
 from tqdm import tqdm
-import time
 from Bio import Entrez, SeqIO
 from http.client import IncompleteRead
-
-
-class CustomEncoder(json.JSONEncoder):
-	def default(self, obj):
-		if hasattr(obj, "to_dict"):
-			return obj.to_dict()
-		elif hasattr(obj, "__dict__"):
-			if obj.__dict__:
-				return obj.__dict__
-			else:
-				try:
-					return str(obj) if obj else None
-				except Exception as e:
-					return str(e)
-		else:
-			return super().default(obj)
 
 
 class NCBI(Input):
@@ -61,6 +45,12 @@ class NCBI(Input):
 	by_id : bool, optional
 		If True, the function downloads the data using NCBI accession numbers as inputs.
 		Default is False.
+	taxonomy : bool, optional
+		If True, the function downloads and appends the taxonomy data to the main genetic information.
+		Default is False.
+	taxonomy_only : bool, optional
+		If True, the function downloads the taxonomy data from NCBI.
+		Default is False.
 	bulk : bool, optional
 	    If True, the function creates a bulk file for large downloads.
 	    For more information, refer to the Biodumpy package documentation.
@@ -90,19 +80,22 @@ class NCBI(Input):
 	"""
 
 	def __init__(
-		self,
-		mail: str = None,
-		db: str = "nucleotide",
-		rettype: str = "gb",
-		query_type: str = "[Organism]",
-		step: int = 100,
-		max_bp: int = None,
-		summary: bool = False,
-		by_id: bool = False,
-		output_format: str = "json",
-		bulk: bool = False,
+			self,
+			mail: str = None,
+			db: str = "nucleotide",
+			rettype: str = "gb",
+			query_type: str = "[Organism]",
+			step: int = 100,
+			max_bp: int = None,
+			summary: bool = False,
+			by_id: bool = False,
+			taxonomy: bool = False,
+			taxonomy_only: bool = False,
+			output_format: str = "json",
+			bulk: bool = False
 	):
 		super().__init__(output_format, bulk)
+		self.mail = mail
 		self.max_bp = max_bp
 		self.db = db
 		self.step = step
@@ -110,6 +103,8 @@ class NCBI(Input):
 		self.query_type = query_type
 		self.summary = summary
 		self.by_id = by_id
+		self.taxonomy = taxonomy
+		self.taxonomy_only = taxonomy_only
 		Entrez.email = mail
 
 		if self.output_format == "fasta" and self.rettype != "fasta":
@@ -118,19 +113,36 @@ class NCBI(Input):
 		if self.by_id and self.query_type is not None:
 			raise ValueError("Invalid parameters: 'by_id' is True, so 'query_type' must be None.")
 
-		if self.summary and self.output_format == "fasta" and self.rettype == "fasta":
+		if self.summary and (self.output_format == "fasta" or self.rettype == "fasta"):
 			raise ValueError("Invalid parameters: 'summary' is True, so 'output_format' cannot be 'fasta'.")
+
+		if self.taxonomy and (self.output_format == "fasta" or self.rettype == "fasta"):
+			raise ValueError("Invalid parameters: 'taxonomy' is True, so 'output_format' cannot be 'fasta'.")
+
+		if self.taxonomy_only and (self.output_format == "fasta" or self.rettype == "fasta"):
+			raise ValueError("Invalid parameters: 'taxonomy_only' is True, so 'output_format' cannot be 'fasta'.")
 
 		if output_format not in {"json", "fasta"}:
 			raise ValueError('Invalid output_format. Expected "json" or "fasta".')
 
 	def _download(self, query, **kwargs) -> list:
+		payload = []
+
+		if self.taxonomy_only:
+			taxonomy_ncbi = self._download_taxonomy(query)
+			# Extract the required fields
+			taxonomy = [{
+				'TaxId': item['TaxId'],
+				'ScientificName': item['ScientificName'],
+				'Rank': item['Rank']} for item in taxonomy_ncbi]
+
+			return [taxonomy] if self.bulk else taxonomy
+
 		if self.by_id:
 			ids_list = {query}
 		else:
 			ids_list = self._download_ids(term=f"{query}{self.query_type}", step=self.step)
 
-		payload = []
 		if self.summary:
 			with tqdm(total=len(ids_list), desc="NCBI summary retrieve", unit=" Summary") as pbar:
 				for seq_id in split_to_batches(list(ids_list), self.step):
@@ -138,13 +150,16 @@ class NCBI(Input):
 						sumr["query"] = f"{query}{self.query_type}"
 						payload.append(json.loads(json.dumps(sumr, cls=CustomEncoder)))
 					pbar.update(len(seq_id))
-
 		else:
 			with tqdm(total=len(ids_list), desc="NCBI sequences retrieve", unit=" Sequences") as pbar:
 				for seq_id in split_to_batches(list(ids_list), self.step):
 					for seq in self._download_seq(seq_id, rettype=self.rettype, db=self.db):
 						payload.append(json.loads(json.dumps(seq, cls=CustomEncoder)))
 					pbar.update(len(seq_id))
+
+		if self.taxonomy:
+			taxonomy_ncbi = self._download_taxonomy(query)
+			payload = [{"taxonomy": taxonomy_ncbi, "sequences": payload}]
 
 		return payload
 
@@ -213,7 +228,8 @@ class NCBI(Input):
 
 		return summary_list
 
-	def _download_seq(self, seq_id, db=None, rettype=None, retmode="text", retries=3, webenv=None, query_key=None, history="y"):
+	def _download_seq(self, seq_id, db=None, rettype=None, retmode="text", retries=3, webenv=None, query_key=None,
+	                  history="y"):
 		"""
 		Downloads a full Entrez record, saves it to a file, parses it, and updates the result.
 
@@ -233,7 +249,8 @@ class NCBI(Input):
 		while attempt < retries:
 			try:
 				handle = Entrez.efetch(
-					db=db, id=seq_id, rettype=rettype, retmode=retmode, usehistory=history, WebEnv=webenv, query_key=query_key
+					db=db, id=seq_id, rettype=rettype, retmode=retmode, usehistory=history, WebEnv=webenv,
+					query_key=query_key
 				)
 
 				if self.rettype == "fasta":
@@ -255,3 +272,39 @@ class NCBI(Input):
 		if attempt == retries:
 			# logging.error(f"Failed to download record {seq_id} after {retries} attempts.")
 			print(f"Failed to download record {seq_id} after {retries} attempts.")
+
+	def _download_taxonomy(self, taxon: str):
+		"""
+		Download taxonomy of a taxon from NCBI Taxonomy database.
+
+		Args:
+		    taxon: String containing taxon name.
+		    mail: NCBI requires you to specify your email address with each request.
+
+		Returns:
+		    None
+
+		Example:
+		x = download_taxonomy('Alytes muletensis')
+		"""
+
+		# Retrieve taxonomy ID by taxon name
+		handle = Entrez.esearch(db="Taxonomy", term=f"{taxon}[All Names]", retmode="xml")
+		taxon_id = Entrez.read(handle)  # retrieve taxon ID
+		handle.close()
+		lin = None
+
+		if int(taxon_id["Count"]) > 0:
+			# Retrieve taxonomy by taxon ID
+			handle = Entrez.efetch(db="Taxonomy", id=taxon_id["IdList"], retmode="xml")
+			records = Entrez.read(handle)
+			handle.close()
+
+			lin = records[0]["LineageEx"]
+			lin.append({
+				"TaxId": records[0]["TaxId"],
+				"ScientificName": records[0]["ScientificName"],
+				"Rank": records[0]["Rank"]
+			})
+
+		return lin
