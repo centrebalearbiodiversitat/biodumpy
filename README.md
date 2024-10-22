@@ -9,17 +9,13 @@
 
 
 ## Overview
-``biodumpy`` is a powerful and versatile Python package designed to simplify the process of retrieving biological information 
-from several public databases. 
-With ``biodumpy``, researchers can easily download and manage data from multiple sources, ensuring access to the most 
-up to date and comprehensive biological information available.
+``biodumpy`` is a powerful and versatile Python package designed to simplify the process of retrieving biological information from several public databases. With ``biodumpy``, researchers can easily download and manage data from multiple sources, ensuring access to the most up to date and comprehensive biological information available.
 
 > **Note:** This package is currently under development.
 
 
 ## Key Features
-``biodumpy`` offers dedicated modules for each supported database, with each module featuring functions specifically 
-designed for retrieving information from its respective source. The modules implemented so far are:
+``biodumpy`` offers dedicated modules for each supported database, with each module featuring functions specifically designed for retrieving information from its respective source. The modules implemented so far are:
 
 - Barcode of life data system v4 (BOLD)
 - Catalogue of life (COL)
@@ -106,9 +102,7 @@ For detailed documentation and tutorials, please visit the ``biodumpy`` Read the
 
 ## Contribution
 ``biodumpy`` is an open-source project, and contributions are welcome! 
-If you have ideas for new features, bug fixes, or improvements, please submit an issue or pull request in our GitHub 
-repository or contact with the support team at [t.cancellario@uib.eu](mailto:t.cancellario@uib.eu) or  
-[tomas.golomb@uib.eu](mailto:tomas.golomb@uib.eu).
+If you have ideas for new features, bug fixes, or improvements, please submit an issue or pull request in our GitHub repository or contact with the support team at [t.cancellario@uib.eu](mailto:t.cancellario@uib.eu) or [tomas.golomb@uib.eu](mailto:tomas.golomb@uib.eu).
 
 
 ## License

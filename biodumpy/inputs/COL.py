@@ -44,7 +44,12 @@ class COL(Input):
 
 	ACCEPTED_TERMS = ["accepted", "provisionally accepted"]
 
-	def __init__(self, output_format: str = "json", bulk: bool = False, check_syn: bool = False):
+	def __init__(
+		self,
+		output_format: str = "json",
+		bulk: bool = False,
+		check_syn: bool = False
+	):
 		super().__init__(output_format, bulk)
 		self.check_syn = check_syn
 

@@ -14,10 +14,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Parameter weblink in the IUCN module.
 - Parameters taxonomy and taxonomy_only in the NCBI module.
 - Sections "The adaptation of biodumpy to R" and "Bibliography" in the documentation.
+- Test coverage.
 
 ### Changed
 - Improved documentation.
-- Enhanced tests for the IUCN and NCBI modules.
+- Enhanced tests for BOLD, COL, Crossref, GBIF, iNaturalist, IUCN, OBIS, WORMS, ZooBank modules.
 
 ---
 

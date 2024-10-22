@@ -13,3 +13,4 @@ list*
 /biodumpy.egg-info/
 /build/
 /dist/
+/htmlcov

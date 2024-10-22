@@ -5,9 +5,7 @@ If you use `biodumpy` in your research, please cite it as follows:
 Available at: [biodumpy](https://pypi.org/project/biodumpy/).
 
 ## Description
-`biodumpy` is a powerful and versatile Python package designed to simplify the process of retrieving biological 
-information from several public databases. With `biodumpy`, researchers can easily download and manage data from multiple 
-sources, ensuring access to the most up to date and comprehensive biological information available.
+`biodumpy` is a powerful and versatile Python package designed to simplify the process of retrieving biological information from several public databases. With `biodumpy`, researchers can easily download and manage data from multiple sources, ensuring access to the most up to date and comprehensive biological information available.
 
 
 # Citations for Packages Used
@@ -183,7 +181,3 @@ Available at: [ZooBank](https://zoobank.org/).
 **Citation**: ZooBank. (2024). International Commission on Zoological Nomenclature.
 
 ---
-
-
-
-

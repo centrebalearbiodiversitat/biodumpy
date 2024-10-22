@@ -6,8 +6,7 @@ NCBI Module
 Overview
 --------
 
-The ``NCBI`` module allows users to easily retrieve data information from the the National Center for Biotechnology
-Information (`NCBI`_) database. The information can be downloaded in JSON or FASTA format.
+The ``NCBI`` module allows users to easily retrieve data information from the the National Center for Biotechnology Information (`NCBI`_) database. The information can be downloaded in JSON or FASTA format.
 
 
 Key Features
@@ -21,13 +20,8 @@ Key Features
 Retrieve comprehensive metadata from NCBI
 -----------------------------------------
 
-In this example, we download the information from NCBI setting the parameter ``bulk`` to *True*. We download the data
-from the "nucleotide" database in GeneBank format. Do not underestimate the parameter ``query_type`` since it defines
-the type of query search. This function is based on biopython `Entrez`_ module.
-
-In this example, we set the parameter ``bulk`` to *True* because we know that the information to download is relatively small.
-Before setting this parameter to *True*, we recommend checking the size of the taxa information to avoid potential issues
-with computer memory.
+In this example, we download the information from NCBI setting the parameter ``bulk`` to *True*. We download the data from the "nucleotide" database in GeneBank format. Do not underestimate the parameter ``query_type`` since it defines the type of query search. This function is based on biopython `Entrez`_ module.
+We set the parameter ``bulk`` to *True* because we know that the information to download is relatively small. Before setting this parameter to *True*, we recommend checking the size of the taxa information to avoid potential issues with computer memory.
 
 .. _Entrez: https://biopython.org/docs/1.75/api/Bio.Entrez.html
 
@@ -48,9 +42,10 @@ with computer memory.
     bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}')
 
 
-Users can refine their search by adjusting the ``query_type`` parameter. For instance, if you want to download sequences
-related to the cytochrome c oxidase marker (COI), you can set the ``query_type`` to '[Organism] AND "COI" [Gene]'.
-This allows you to combine multiple search criteria to better target the specific data you need.
+Users can refine their search by adjusting the ``query_type`` parameter. For instance, if you want to download sequences related to the cytochrome c oxidase marker (COI), you can set the ``query_type`` to '[Organism] AND "COI" [Gene]'. This allows you to combine multiple search criteria to better target the specific data you need.
+
+Other parameters that can improve the download performance of the NCBI module are the ``step_id`` and ``step_seq`` parameters, which control the chunk size for downloading IDs and sequences, respectively. While the chunk size for IDs can be relatively large (e.g., 500 IDs) without causing significant memory issues, setting a high value for ``step_seq`` can be problematic due to the potentially large size of the sequence data, which may overwhelm system memory. In the following example, we set ``step_id`` to 100 and ``step_seq`` to 1000, as we previously evaluated the total number and size of the data to download.
+
 
 .. code-block:: python
 
@@ -60,16 +55,15 @@ This allows you to combine multiple search criteria to better target the specifi
     taxa = ['Anax imperator']
 
     # Start the download
-    bdp = Biodumpy([NCBI(bulk=False, mail="hola@quetal.com", db="nucleotide",
-        rettype="gb", query_type='[Organism] AND "COI" [Gene]')])
+    bdp = Biodumpy([NCBI(bulk=False, mail="hola@quetal.com", db="nucleotide", rettype="gb",
+    				query_type='[Organism] AND "COI" [Gene]', step_id=100, step_seq=1000)])
     bdp.start(taxa, output_path='./downloads/{date}/{module}_gene/{name}')
 
 
 Download NCBI a summary of metadata
 -----------------------------------
 
-Users can also obtain a summary of metadata by setting the ``summary`` parameter to *True*.
-When enabled, the resulting JSON will include the following details:
+Users can also obtain a summary of metadata by setting the ``summary`` parameter to *True*. When enabled, the resulting JSON will include the following details:
 
 - **Id**: A numerical identifier (GI Number) that used to be assigned to each sequence version (e.g., "345678912").
 - **Caption**: A unique identifier (accession number) assigned to a sequence when it is submitted to GenBank (e.g., "NM_001256789").
@@ -86,16 +80,14 @@ When enabled, the resulting JSON will include the following details:
 
     # Start the download
     bdp = Biodumpy([NCBI(bulk=False, mail="hola@quetal.com", db="nucleotide",
-        rettype="gb", query_type='[Organism]', summary=True)])
+        			rettype="gb", query_type='[Organism]', summary=True)])
     bdp.start(taxa, output_path='./downloads/{date}/{module}_summary/{name}')
 
 
 Downloading data in FASTA format
 --------------------------------
 
-This function also provides a boolean ``fasta`` parameter to download the file in FASTA format. Following the general
-structure of the ``biodumpy`` package, sequences can be downloaded for individual organisms or in bulk. Below is an
-example demonstrating how to download FASTA files.
+This function also provides a boolean ``fasta`` parameter to download the file in FASTA format. Following the general structure of the ``biodumpy`` package, sequences can be downloaded for individual organisms or in bulk. Below is an example demonstrating how to download FASTA files.
 
 .. code-block:: python
 
@@ -106,7 +98,7 @@ example demonstrating how to download FASTA files.
 
     # Start the download
     bdp = Biodumpy([NCBI(bulk=False, mail="hola@quetal.com", db="nucleotide", rettype="fasta",
-        query_type='[Organism]', output_format='fasta')])
+        			query_type='[Organism]', output_format='fasta')])
     bdp.start(taxa, output_path='./downloads/{date}/{module}_fasta/{name}')
 
 
@@ -114,9 +106,7 @@ example demonstrating how to download FASTA files.
 Downloading using the NCBI accession number
 -------------------------------------------
 
-If needed, users can download data using a list of NCBI accession numbers as input by setting the ``by_id`` parameter to
-*True*. In this case, the ``query_type`` parameter must be set to ``None`` or an empty string (``""``).
-It is possible combine this approach also to download summary JSON or FASTA files.
+If needed, users can download data using a list of NCBI accession numbers as input by setting the ``by_id`` parameter to *True*. In this case, the ``query_type`` parameter must be set to ``None`` or an empty string (``""``). It is possible combine this approach also to download summary JSON or FASTA files.
 
 .. code-block:: python
 

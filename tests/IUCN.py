@@ -12,8 +12,8 @@ from biodumpy.inputs import IUCN
 # set a trap and redirect stdout. Remove the print of the function. In this wat the test output is cleanest.
 trap = io.StringIO()
 
-
-API_KEY = None
+# TO DO: remove api key
+API_KEY = ""
 
 IUCN_REGIONS = [
 	"northern_africa",
@@ -25,7 +25,7 @@ IUCN_REGIONS = [
 	"western_africa",
 	"southern_africa",
 	"mediterranean",
-	"europe",
+	"europe"
 ]
 
 
@@ -46,7 +46,7 @@ def iucn_query(query, api_key, habitat, regions, historical, threats, weblink, o
 				historical=historical,
 				threats=threats,
 				weblink=weblink,
-				output_format=output_format,
+				output_format=output_format
 			)
 		]
 	)
@@ -112,7 +112,7 @@ def test_validate_regions_invalid():
 		(["Alytes muletensis"], ["global"], True, False, False, False, "json"),
 		(["Alytes muletensis"], ["global"], False, True, False, False, "json"),
 		(["Alytes muletensis"], ["global"], False, False, True, False, "json"),
-		(["Alytes muletensis"], ["global"], False, False, False, True, "json"),
+		(["Alytes muletensis"], ["global"], False, False, False, True, "json")
 	],
 )
 def test_download(query, regions, habitat, historical, threats, weblink, output_format):
@@ -125,7 +125,7 @@ def test_download(query, regions, habitat, historical, threats, weblink, output_
 			threats=threats,
 			output_format=output_format,
 			weblink=weblink,
-			api_key=API_KEY,
+			api_key=API_KEY
 		)
 
 	# Check if data is not empty
