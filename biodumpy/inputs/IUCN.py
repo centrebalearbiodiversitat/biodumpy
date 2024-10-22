@@ -105,27 +105,19 @@ class IUCN(Input):
 
 			if taxon_info:
 				if self.habitat:
-					habitat_info = self._icun_request(
-						f"https://apiv3.iucnredlist.org/api/v3/habitats/species/id/{taxon_id}/region/{region}?token={self.api_key}"
-					)
+					habitat_info = self._icun_request(f"https://apiv3.iucnredlist.org/api/v3/habitats/species/id/{taxon_id}/region/{region}?token={self.api_key}")
 					taxon_info.update({"habitat": habitat_info})
 
 				if self.historical:
-					historical_info = self._icun_request(
-						f"https://apiv3.iucnredlist.org/api/v3/species/history/id/{taxon_id}/region/{region}?token={self.api_key}"
-					)
+					historical_info = self._icun_request(f"https://apiv3.iucnredlist.org/api/v3/species/history/id/{taxon_id}/region/{region}?token={self.api_key}")
 					taxon_info.update({"historical": historical_info})
 
 				if self.threats:
-					threats_info = self._icun_request(
-						f"https://apiv3.iucnredlist.org/api/v3/threats/species/id/{taxon_id}/region/{region}?token={self.api_key}"
-					)
+					threats_info = self._icun_request(f"https://apiv3.iucnredlist.org/api/v3/threats/species/id/{taxon_id}/region/{region}?token={self.api_key}")
 					taxon_info.update({"threats": threats_info})
 
 				if self.citation:
-					citation_info = self._icun_request(
-						f"https://apiv3.iucnredlist.org/api/v3/species/citation/id/{taxon_id}/region/{region}?token={self.api_key}"
-					)
+					citation_info = self._icun_request(f"https://apiv3.iucnredlist.org/api/v3/species/citation/id/{taxon_id}/region/{region}?token={self.api_key}")
 					taxon_info.update({"citation": citation_info})
 
 				if self.weblink:

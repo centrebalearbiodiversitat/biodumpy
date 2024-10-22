@@ -234,8 +234,7 @@ class NCBI(Input):
 
 		return summary_list
 
-	def _download_seq(self, seq_id, db=None, rettype=None, retmode="text", retries=3, webenv=None, query_key=None,
-	                  history="y"):
+	def _download_seq(self, seq_id, db=None, rettype=None, retmode="text", retries=3, webenv=None, query_key=None, history="y"):
 		"""
 		Downloads a full Entrez record, saves it to a file, parses it, and updates the result.
 
@@ -255,7 +254,9 @@ class NCBI(Input):
 		while attempt < retries:
 			try:
 				handle = Entrez.efetch(
-					db=db, id=seq_id, rettype=rettype, retmode=retmode, usehistory=history, WebEnv=webenv,
+					db=db, id=seq_id,
+					rettype=rettype, retmode=retmode,
+					usehistory=history, WebEnv=webenv,
 					query_key=query_key
 				)
 
@@ -307,7 +308,6 @@ class NCBI(Input):
 			handle.close()
 
 			lin = records[0]["LineageEx"]
-			lin.append({"TaxId": records[0]["TaxId"], "ScientificName": records[0]["ScientificName"],
-			            "Rank": records[0]["Rank"]})
+			lin.append({"TaxId": records[0]["TaxId"], "ScientificName": records[0]["ScientificName"], "Rank": records[0]["Rank"]})
 
 		return lin

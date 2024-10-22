@@ -42,9 +42,7 @@ class Biodumpy:
 
 		log_handler = MemoryHandler(capacity=1024)
 
-		logging.basicConfig(
-			level=logging.ERROR, format="%(asctime)s - %(levelname)s - %(message)s", datefmt="%Y-%m-%d %H:%M:%S", handlers=[log_handler]
-		)
+		logging.basicConfig(level=logging.ERROR, format="%(asctime)s - %(levelname)s - %(message)s", datefmt="%Y-%m-%d %H:%M:%S", handlers=[log_handler])
 
 		bulk_input = {}
 		try:
@@ -80,18 +78,10 @@ class Biodumpy:
 						bulk_input[inp].extend(payload)
 
 					else:
-						dump(
-							file_name=f"{output_path.format(date=current_date, module=module_name, name=clean_name)}",
-							obj_list=payload,
-							output_format=inp.output_format,
-						)
+						dump(file_name=f"{output_path.format(date=current_date, module=module_name, name=clean_name)}", obj_list=payload, output_format=inp.output_format)
 		finally:
 			for inp, payload in bulk_input.items():
-				dump(
-					file_name=output_path.format(date=current_date, module=type(inp).__name__, name="bulk"),
-					obj_list=payload,
-					output_format=inp.output_format,
-				)
+				dump(file_name=output_path.format(date=current_date, module=type(inp).__name__, name="bulk"), obj_list=payload, output_format=inp.output_format)
 
 			if log_handler.buffer:
 				down_path = str()

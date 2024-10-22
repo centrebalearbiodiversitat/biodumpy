@@ -90,9 +90,7 @@ def test_download(query, accepted_only, occ, geometry):
 	assert len(data) > 0, "data length is 0"
 
 	# Check the main info in a GBIF JSON file
-
 	data = data[0]
-
 	if occ is False:
 		assert "key" in data, "key is not in data"
 		assert data["key"] == 2426609, "key is not 2426609"

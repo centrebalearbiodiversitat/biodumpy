@@ -12,8 +12,8 @@ from biodumpy.inputs import IUCN
 # set a trap and redirect stdout. Remove the print of the function. In this wat the test output is cleanest.
 trap = io.StringIO()
 
-# TO DO: remove api key
-API_KEY = ""
+
+API_KEY = None
 
 IUCN_REGIONS = [
 	"northern_africa",

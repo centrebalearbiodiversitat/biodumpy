@@ -123,11 +123,8 @@ class BOLD(Input):
 								"genbank_accession": genbank_accession[0] if genbank_accession else None,
 							}
 						)
-
-					return payload
 				else:
-
 					res = results["bold_records"]["records"] if "bold_records" in results and "records" in results["bold_records"] else []
+					payload = list(res.values())
 
-					payload.append(list(res.values()))
-					return payload[0]
+			return payload
