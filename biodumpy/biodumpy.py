@@ -84,6 +84,7 @@ class Biodumpy:
 				dump(file_name=output_path.format(date=current_date, module=type(inp).__name__, name="bulk"), obj_list=payload, output_format=inp.output_format)
 
 			if log_handler.buffer:
+				print("---- Please review the dump file; errors have been detected ----")
 				down_path = str()
 				for folder in output_path.split("/"):
 					if "{" in folder:
@@ -91,7 +92,7 @@ class Biodumpy:
 					down_path = f"{down_path}{folder}/"
 
 				create_directory(down_path)
-				with open(f"{down_path}/dump.log", "w") as f:
+				with open(f"{down_path}/dump_{current_date}.log", "w") as f:
 					for record in log_handler.buffer:
 						log_entry = f"{record.levelname}: {record.getMessage()}\n"
 						f.write(log_entry)

@@ -59,31 +59,57 @@ class GBIF(Input):
 		if output_format != "json":
 			raise ValueError('Invalid output_format. Expected "json".')
 
-		if occ and not accepted_only:
-			raise ValueError("Invalid accepted_only. Expected True.")
+		# if occ and not accepted_only:
+		# 	raise ValueError("Invalid accepted_only. Expected True.")
 
 	def _download(self, query, **kwargs) -> list:
 		payload = []
-		response = requests.get(f"https://api.gbif.org/v1/species/search?datasetKey={self.dataset_key}&q={query}&limit={self.limit}")
+
+		# Search taxonomy
+		# response = requests.get(f"https://api.gbif.org/v1/species/search?datasetKey={self.dataset_key}&q={query}&limit={self.limit}")
+
+		response = requests.get(f"https://api.gbif.org/v1/species?",
+		                        params={"datasetKey": self.dataset_key,
+		                                "name": query,
+		                                "limit": self.limit,
+		                                "offset": 0}
+		                        )
 
 		if response.status_code != 200:
 			raise BiodumpyException(f"Taxonomy request. Error {response.status_code}")
 
 		if response.content:
+
 			payload = response.json()["results"]
+
 			if self.accepted:
 				# We keep the record only if the query corresponds to the scientific name in the data downloaded.
-				payload = list(filter(lambda x: x.get("taxonomicStatus") == "ACCEPTED" and str(query[0]) in x.get("scientificName", ""), payload))
+				# payload = list(filter(lambda x: x.get("taxonomicStatus") == "ACCEPTED" and str(query[0]) in x.get("scientificName", ""), payload))
 
-			if self.occ and len(payload) > 0:
-				tax_key = payload[0]["nubKey"]
-				payload = self._download_gbif_occ(taxon_key=tax_key, geometry=self.geometry)
+				if payload[0].get("taxonomicStatus") != "ACCEPTED":
+					acceptedKey = payload[0].get("acceptedKey")
+					response_accepted = requests.get(f"https://api.gbif.org/v1/species/{acceptedKey}")
+					payload = response_accepted.json()
+
+				if self.occ and len(payload) > 0:
+					payload = self._download_gbif_occ(accepted_taxon_key=acceptedKey, geometry=self.geometry)
+
+			else:
+				payload = payload[0]
+
+				if self.occ and len(payload) > 0:
+					payload = self._download_gbif_occ(taxon_key=payload["key"], geometry=self.geometry)
 
 		return payload
 
-	def _download_gbif_occ(self, taxon_key: int, geometry: str):
+	def _download_gbif_occ(self, taxon_key: int = None, accepted_taxon_key: int = None, geometry: str = None):
 		response_occ = requests.get(
-			f"https://api.gbif.org/v1/occurrence/search", params={"acceptedTaxonKey": taxon_key, "occurrenceStatus": "PRESENT", "geometry": geometry, "limit": 300}
+			f"https://api.gbif.org/v1/occurrence/search",
+			params={"taxonKey": taxon_key,
+			        "acceptedTaxonKey": accepted_taxon_key,
+			        "occurrenceStatus": "PRESENT",
+			        "geometry": geometry,
+			        "limit": 300}
 		)
 
 		if response_occ.status_code != 200:
@@ -104,7 +130,12 @@ class GBIF(Input):
 				while offset < total_records:
 					response_occ = requests.get(
 						f"https://api.gbif.org/v1/occurrence/search",
-						params={"acceptedTaxonKey": taxon_key, "occurrenceStatus": "PRESENT", "geometry": geometry, "limit": 300, "offset": offset},
+						params={"taxonKey": taxon_key,
+						        "acceptedTaxonKey": accepted_taxon_key,
+						        "occurrenceStatus": "PRESENT",
+						        "geometry": geometry,
+						        "limit": 300,
+						        "offset": offset}
 					)
 
 					data = response_occ.json()

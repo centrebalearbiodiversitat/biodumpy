@@ -74,8 +74,6 @@ def test_download_syn(query, info, dataset_size):
 	assert len(data) > 0, "data length is 0"
 
 	data = data[0]
-	print(data)
-
 
 	if info:
 		assert 'Identifier' in data[0], "Identifier not in data"
