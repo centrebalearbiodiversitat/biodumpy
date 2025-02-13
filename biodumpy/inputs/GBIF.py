@@ -75,23 +75,21 @@ class GBIF(Input):
 		payload = []
 
 		# Search taxonomy
-		response = requests.get(f"https://api.gbif.org/v1/species?",
-		                        params={"datasetKey": self.dataset_key,
-		                                "name": query,
-		                                "limit": self.limit,
-		                                "offset": 0}
-		                        )
+		response = requests.get(
+			f"https://api.gbif.org/v1/species?",
+				params={
+					"datasetKey": self.dataset_key,
+					"name": query,
+					"limit": self.limit,
+					"offset": 0
+				}
+		)
 
 		if response.status_code != 200:
 			raise BiodumpyException(f"Taxonomy request. Error {response.status_code}")
 
-		# if len(payload) == 0:
-		# 	raise BiodumpyException(f"Taxonomy not found.")
-
 		if response.content:
-
 			payload = response.json()["results"]
-
 			if len(payload) > 1:
 				# raise BiodumpyException(f"Multiple equal matches for {query}")
 				keys = [entry["key"] for entry in payload]
@@ -126,7 +124,7 @@ class GBIF(Input):
 					acceptedKey = payload[0].get("key")
 
 				if self.occ and len(payload) > 0:
-				# A taxon key from the GBIF backbone. Only synonym taxa are included in the search, so a search for Aves with acceptedTaxonKey=212 (i.e. /occurrence/search?taxonKey=212) will match occurrences identified as birds, but not any known family, genus or species of bird.Parameter may be repeated.
+					# A taxon key from the GBIF backbone. Only synonym taxa are included in the search, so a search for Aves with acceptedTaxonKey=212 (i.e. /occurrence/search?taxonKey=212) will match occurrences identified as birds, but not any known family, genus or species of bird.Parameter may be repeated.
 					payload = self._download_gbif_occ(accepted_taxon_key=acceptedKey, geometry=self.geometry)
 
 			else:
@@ -141,18 +139,20 @@ class GBIF(Input):
 	def _download_gbif_occ(self, taxon_key: int = None, accepted_taxon_key: int = None, geometry: str = None):
 		response_occ = requests.get(
 			f"https://api.gbif.org/v1/occurrence/search",
-			params={"taxonKey": taxon_key,
-			        "acceptedTaxonKey": accepted_taxon_key,
-			        "occurrenceStatus": "PRESENT",
-			        "geometry": geometry,
-			        "limit": 300}
+			params={
+				"taxonKey": taxon_key,
+				"acceptedTaxonKey": accepted_taxon_key,
+				"occurrenceStatus": "PRESENT",
+				"geometry": geometry,
+				"limit": 300
+			}
 		)
 
 		if response_occ.status_code != 200:
 			raise BiodumpyException(f"Occurrence request. Error {response_occ.status_code}")
 
-		if response_occ.status_code == 0:
-			raise BiodumpyException(f"Occurrence not found.")
+		# if response_occ.status_code == 0:
+		# 	raise BiodumpyException(f"Occurrence not found.")
 
 		if response_occ.content:
 			payload_occ = response_occ.json()
@@ -169,12 +169,14 @@ class GBIF(Input):
 				while offset < total_records:
 					response_occ = requests.get(
 						f"https://api.gbif.org/v1/occurrence/search",
-						params={"taxonKey": taxon_key,
-						        "acceptedTaxonKey": accepted_taxon_key,
-						        "occurrenceStatus": "PRESENT",
-						        "geometry": geometry,
-						        "limit": 300,
-						        "offset": offset}
+						params={
+							"taxonKey": taxon_key,
+							"acceptedTaxonKey": accepted_taxon_key,
+							"occurrenceStatus": "PRESENT",
+							"geometry": geometry,
+							"limit": 300,
+							"offset": offset
+						}
 					)
 
 					data = response_occ.json()
