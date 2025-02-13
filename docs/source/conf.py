@@ -19,7 +19,8 @@ author = "Cancellario, T.; Golomb, T.; Roldán, A.; Far, A."
 
 # -- General configuration
 
-extensions = ["sphinx.ext.duration", "sphinx.ext.doctest", "sphinx.ext.autodoc", "sphinx.ext.autosummary", "sphinx.ext.intersphinx", "sphinxcontrib.bibtex"]
+extensions = ["sphinx.ext.duration", "sphinx.ext.doctest", "sphinx.ext.autodoc", "sphinx.ext.autosummary",
+              "sphinx.ext.intersphinx", "sphinxcontrib.bibtex", 'sphinx_togglebutton']
 
 bibtex_bibfiles = ["references.bib"]
 bibtex_reference_style = "author_year"  # This will give you numbered references
@@ -29,11 +30,14 @@ intersphinx_disabled_domains = ["std"]
 
 templates_path = ["_templates"]
 
-
 # -- Options for HTML output
-
 html_theme = "sphinx_rtd_theme"
+html_static_path = ['./']
+html_css_files = ['custom.css']
 
 # -- Options for EPUB output
-
 epub_show_urls = "footnote"
+
+# -- Control the “hint” text that is displayed next to togglebuttons
+togglebutton_hint = "Output format file"
+togglebutton_hint_hide = "Output format file"

@@ -33,7 +33,7 @@ Users can install ``reticulate`` directly from CRAN as follows:
 	install.packages("reticulate", dependencies=TRUE)
 
 
-Once the package is installed, users can set up a specific *virtual environment*. Likely, This step is uncommon for R users, but it's important to understand it properly. Like R, Python has a vast number of packages outside its core that can add new functionalities beyond the standard Python installation. However, only one version of a package can be installed at a time, which can be problematic if you're working on multiple projects that require different package versions, as they may conflict with other dependencies.
+Once the package is installed, users can set up a specific *virtual environment*. Likely, this step is uncommon for R users, but it's important to understand it properly. Like R, Python has a vast number of packages outside its core that can add new functionalities beyond the standard Python installation. However, only one version of a package can be installed at a time, which can be problematic if you're working on multiple projects that require different package versions, as they may conflict with other dependencies.
 To solve this inconvenience, Python offers the possibility to create a *virtual environment* to manage the packages and their dependencies for each project independently.
 
 By default, ``reticulate`` use an isolated Python virtual environment named "r-reticulate". However, users can modify the virtual environment using the command ``use_virtualenv()``.
@@ -67,7 +67,7 @@ Below, we provide two examples of using biodumpy in R:
 	inputs <- import("biodumpy.inputs")
 
 	# Define the taxa vector
-	taxa <- c("Alytes muletensis", "Hyla meridionalis")
+	taxa <- list("Alytes muletensis", "Hyla meridionalis")
 
 	#-----------#
 	# Example 1 #
@@ -95,3 +95,7 @@ Below, we provide two examples of using biodumpy in R:
 
 	# Start the process with the specified taxa and output path
 	bdp$start(taxa, output_path = "./downloads_ex2/{date}/{module}/{name}")
+
+
+Example of data filtering
+-------------------------

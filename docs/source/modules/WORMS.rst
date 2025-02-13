@@ -7,13 +7,17 @@ WORMS Module
 Overview
 --------
 
-The ``WORMS`` module enables users to easily retrieve nomenclature information from the World Register of Marine Species (`WoRMS`_) database :cite:`worms2024`. The information will be downloaded in JSON format.
+The ``WORMS`` module enables users to easily retrieve nomenclature information from the World Register of Marine Species (`WoRMS`_) database :cite:`worms2024`.
+
+.. toggle:: Click to expand
+
+    JSON
 
 Key Features
 ------------
 
-- **Retrieve nomenclature information from WoRMS database.** Users can access the nomenclature details of a given taxon stored in the WoRMS database.
-- **Obtain taxon distribution.** Users can obtain the distribution of a given taxon.
+- **Retrieve nomenclature information from WoRMS.** Users can access the nomenclature details of a given taxon stored in the WoRMS database.
+- **Obtain taxon distribution from WoRMS.** Users can obtain the distribution of a given taxon.
 
 
 Retrieve nomenclature from WoRMS
@@ -39,7 +43,7 @@ In this example, we download the nomenclature from WoRMS for a list of taxa by s
 
     # Start the download
     bdp = Biodumpy([WORMS(bulk=True, marine_only=True)])
-    bdp.start(taxa, output_path='./biodumpy/downloads/{date}/{module}/{name}')
+    bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}')
 
 
 Retrieve distribution from WoRMS

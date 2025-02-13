@@ -7,7 +7,9 @@ main*
 list*
 *.json
 *.log
-/proof.py
+/main.py
+/cmd.txt
+/haplotype_collapse.py
 
 /.idea
 /biodumpy.egg-info/

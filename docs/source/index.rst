@@ -10,8 +10,11 @@ Welcome to ``biodumpy``: A Comprehensive Biological Data Downloader
 
 Overview
 --------
+In recent years, public biodiversity platforms and their associated datasets have grown significantly, driven by advancements in research, institutional efforts, expanded data storage capabilities, and the availability of powerful computational tools. These developments have provided unprecedented access to ecological and biological data, covering extensive geographic regions, long time periods, and a wide array of taxonomic groups. Such resources have become essential in ecological research, enabling scientists to undertake more thorough analyses and explore hypotheses that were previously unfeasible due to data constraints. These constraints include issues such as inconsistent data quality, low data quantity, and the heterogeneity of sources.
 
-``biodumpy`` is a powerful and versatile `Python`_ package designed to simplify the process of retrieving biological information from several public databases. With ``biodumpy``, researchers can easily download and manage data from multiple sources, ensuring access to the most up-to-date and comprehensive biological information available.
+As these databases have expanded, so too has the number of programming libraries aimed at facilitating data access and interaction, making data retrieval more straightforward. However, most of these tools have been designed to work with a single database, posing difficulties for researchers who need to integrate information from multiple sources.
+
+To overcome this limitation, we developed ``biodumpy``, a Python library that simplifies the retrieval, management, and integration of biological data across various public databases. ``biodumpy`` grants users access to a broad range of up-to-date datasets, including genetic, distributional, taxonomic, and bibliographic information. Its modular design enables efficient data retrieval tailored to specific taxa, with support for processing multiple modules concurrently.
 
 .. _`Python`: https://www.python.org/downloads/
 
@@ -32,6 +35,7 @@ Key Features
    usage
    modules
    functions
+   useful_code
    To R
    bibliography
 
@@ -45,7 +49,7 @@ Contribution
 License
 -------
 
-`biodumpy` is licensed under the GNU General Public License for its software components. Additionally, any creative works associated with this project are licensed under the Creative Commons Attribution (CC BY) license. See the `LICENSE`_ file for more details.
+``biodumpy`` is licensed under the GNU General Public License for its software components. Additionally, any creative works associated with this project are licensed under the Creative Commons Attribution (CC BY) license. See the `LICENSE`_ section for more details.
 
 .. _`LICENSE`: https://github.com/centrebalearbiodiversitat/biodumpy/blob/master/LICENSE
 
@@ -53,10 +57,10 @@ Disclaimer
 ----------
 The data retrieved and downloaded using this package is sourced from external databases. We do not take responsibility for the accuracy, completeness, or currency of the data. Users are advised to verify the information independently. By using this package, you agree that the authors and contributors are not liable for any errors, omissions, or potential consequences arising from the use of the data.
 
-If you encounter any bugs or issues with the package, please contact the developers for support.
+If you encounter any bugs or issues using the package, please contact the developers for support.
 
 
 Acknowledgments
 ---------------
 
-The project is developed by the "Centre Balear de Biodiversitat" (CBB) at the University of the Balearic Islands, with support from MCIN and funding from the European Union—NextGenerationEU (PRTR-C17.I1), as well as the Government of the Balearic Islands.
+This package has been partially sponsored and promoted by the Comunitat Autonoma de les Illes Balears through the Conselleria d'Educació i Universitats and by the European Union- Next Generation EU/PRTR-C17.I1.

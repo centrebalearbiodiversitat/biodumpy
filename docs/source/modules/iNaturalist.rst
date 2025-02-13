@@ -7,39 +7,61 @@ iNaturalist Module
 Overview
 --------
 
-The ``iNaturalist`` module allows users to easily retrieve photos from iNaturalist (`iNaturalist`_) database :cite:inaturalist2024. The information is downloaded in JSON format.
+The ``INaturalist`` module allows users to easily retrieve taxa and photo metadata from iNaturalist (`iNaturalist`_) database :cite:`inaturalist2024`.
+
+.. toggle:: Click to expand
+
+    JSON
 
 
 Key Features
 ------------
 
-- **Retrieve photos from iNaturalist database.** Users can download the photo link from iNaturalist database.
+- **Retrieve taxon metadata from iNaturalist.** Users can download the metadata for a given taxon from iNaturalist database.
+- **Retrieve photo metadata from iNaturalist.** Users can download the photo link from iNaturalist database.
 
+Retrieve taxon metadata from iNaturalist
+----------------------------------------
 
-Retrieve photo link from iNaturalist
-------------------------------------
-
-In this example, we download the information from iNaturalist setting the parameter ``bulk`` to *True*. This function is based on the iNaturalist v1 API's endpoint `v1/taxa`_.
-
-.. _v1/taxa: https://api.inaturalist.org/v1/taxa
+In the following example, we download taxon metadata from iNaturalist with the parameter ``info`` set to *True*. This function uses the iNaturalist v1 API’s `v1/taxa`_ endpoint with the default parameters *order=desc* and *order_by=observations_count*, as proposed in the iNaturalist API guide example.
 
 .. note::
 
-    The taxonomy list should be compiled using only the taxon names, excluding any authorship information.
+    If the API query returns multiple results, only the first one will be returned.
 
+    The taxonomy list should be compiled using only the taxon names, excluding any authorship information.
 
 .. code-block:: python
 
     from biodumpy import Biodumpy
     from biodumpy.inputs import INaturalist
+
     # List of taxa
-    taxa = [
-        'Alytes muletensis', 'Bufotes viridis', 'Hyla meridionalis',
-        'Anax imperator', 'Bufo roseus', 'Stollia betae'
-    ]
+    taxa = ['Alytes muletensis', 'Bufotes viridis', 'Hyla meridionalis', 'Anax imperator']
+
+    # Start the download
+    bdp = Biodumpy([INaturalist(bulk=True, info=True)])
+    bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}')
+
+
+Retrieve photo metadata from iNaturalist
+----------------------------------------
+
+In this example, we download the information from iNaturalist setting the parameter ``bulk`` to *True*. This function is based on the iNaturalist v1 API's endpoint `v1/taxa`_.
+
+.. _v1/taxa: https://api.inaturalist.org/v1/taxa
+
+.. code-block:: python
+
+    from biodumpy import Biodumpy
+    from biodumpy.inputs import INaturalist
+
+    # List of taxa
+    taxa = ['Alytes muletensis', 'Bufotes viridis', 'Hyla meridionalis', 'Anax imperator']
+
     # Start the download
     bdp = Biodumpy([INaturalist(bulk=True)])
-    bdp.start(taxa, output_path='./biodumpy/downloads/{date}/{module}/{name}')
+    bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}')
 
 
 To view the photo, users can append the 'image_id' value at the end of the following link: https://inaturalist-open-data.s3.amazonaws.com/photos/ . For example: https://inaturalist-open-data.s3.amazonaws.com/photos/34826202/medium.jpg

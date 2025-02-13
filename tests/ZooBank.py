@@ -76,6 +76,7 @@ def test_download_syn(query, info, dataset_size):
 	data = data[0]
 
 	if info:
+		data = data["info"]
 		assert 'Identifier' in data[0], "Identifier not in data"
 		assert 'IdentifierDomain' in data[0], "IdentifierDomain not in data"
 		assert 'Abbreviation' in data[0], "Abbreviation not in data"

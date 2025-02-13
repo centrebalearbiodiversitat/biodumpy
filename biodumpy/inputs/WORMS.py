@@ -34,7 +34,7 @@ class WORMS(Input):
 	>>> taxa = ['Pinna nobilis', 'Delphinus delphis', 'Plerogyra sinuosa']
 	# Start the download
 	>>> bdp = Biodumpy([WORMS(bulk=True, marine_only=True)])
-	>>> bdp.start(taxa, output_path='./biodumpy/downloads/{date}/{module}/{name}')
+	>>> bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}')
 	"""
 
 	def __init__(self, marine_only: bool = False, distribution: bool = False, output_format: str = "json", bulk: bool = False):

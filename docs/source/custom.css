@@ -1,0 +1,4 @@
+/* Justify text in Sphinx documentation */
+body {
+    text-align: justify;
+}

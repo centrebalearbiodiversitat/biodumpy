@@ -73,7 +73,7 @@ class OBIS(Input):
 			"size": 10000,  # Max size in OBIS is 10000
 			"after": None,
 			"geometry": geometry,
-			"areaid": areaid,
+			"areaid": areaid
 		}
 
 		try:

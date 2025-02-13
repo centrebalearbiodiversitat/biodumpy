@@ -39,12 +39,10 @@ class IUCN(Input):
 	>>> api_key = 'YOUR_API_KEY'
 	# Taxa list
 	>>> taxa = ['Alytes muletensis', 'Bufotes viridis', 'Hyla meridionalis']
-	# Select your output path
-	>>> output_path = 'YOUR_OUTPUT_PATH'
 	# Select the regions
 	>>> regions = ['global', 'europe']
 	>>> bdp = Biodumpy([IUCN(api_key=api_key, bulk=True, regions=regions)])
-	>>> bdp.start(taxa, output_path=output_path)
+	>>> bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}')
 	"""
 
 	def __init__(

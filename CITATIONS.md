@@ -157,7 +157,7 @@ Available at: [IUCN](https://www.iucnredlist.org/).
 
 Available at: [NCBI](https://www.ncbi.nlm.nih.gov/).
 
-**Citation**: National Center for Biotechnology Information (NCBI). Bethesda (MD): National Library of Medicine (US), National Center for Biotechnology Information; [1988]. 
+**Citation**: National Center for Biotechnology Information (NCBI). Bethesda (MD): National Library of Medicine (US), National Center for Biotechnology Information; [2024]. 
 
 ---
 **Ocean biodiversity information system (OBIS)**

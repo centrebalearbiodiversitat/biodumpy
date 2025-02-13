@@ -11,14 +11,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Added
 - Crossref module.
 - WORMS module.
-- Parameter weblink in the IUCN module.
-- Parameters taxonomy and taxonomy_only in the NCBI module.
+- Parameter ``weblink`` in the IUCN module.
+- Parameter ``dataset_key`` in the COL module.
+- Parameters ``taxonomy`` and ``taxonomy_only`` in the NCBI module.
 - Sections "The adaptation of biodumpy to R" and "Bibliography" in the documentation.
 - Test coverage.
 
 ### Changed
 - Improved documentation.
 - Enhanced tests for BOLD, COL, Crossref, GBIF, iNaturalist, IUCN, OBIS, WORMS, ZooBank modules.
+- Changed endpoint taxonomy in GBIF module. 
+- Simplified the BOLD module removing the boolean parameter ``fasta``. 
 
 ---
 

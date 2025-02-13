@@ -7,16 +7,19 @@ COL Module
 Overview
 --------
 
-The ``COL`` module enables users to easily retrieve nomenclature information from the Catalogue of Life (`CoL`_) database :cite:`barki2024`. The information will be downloaded in JSON format.
+The ``COL`` module enables users to easily retrieve nomenclature information from the Catalogue of Life (`CoL`_) database :cite:`barki2024`.
 
 .. _CoL: https://www.catalogueoflife.org/
 
+.. toggle:: Click to expand
+
+    JSON
 
 Key Features
 ------------
 
-- **Retrieve nomenclature information from COL database.** Users can access the nomenclature details of a given taxon stored in the COL database.
-- **Check for synonym.** Users can obtain the accepted nomenclature of a given taxon if it is listed as a synonym in the COL database.
+- **Retrieve nomenclature information from CoL.** Users can access the nomenclature details of a given taxon stored in the CoL database.
+- **Check for synonym.** Users can obtain the accepted nomenclature of a given taxon if it is listed as a synonym in the CoL database.
 
 
 Retrieve nomenclature from CoL - Only accepted names
@@ -67,8 +70,7 @@ In the following example, the species *Bufo roseus* is a synonym of *Bufotes vir
     bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}_true')
 
 
-When the parameter ``check_syn`` is set to *False*, the ``COL`` module provides both the accepted name and the synonym at the
-species level. However, when ``check_syn`` is set to *True*, the results include only the accepted name.
+When the parameter ``check_syn`` is set to *False*, the ``COL`` module provides both the accepted name and the synonym at the species level. However, when ``check_syn`` is set to *True*, the results include only the accepted name.
 
 ``check_syn = False``
 
@@ -106,14 +108,11 @@ species level. However, when ``check_syn`` is set to *True*, the results include
 Retrieve nomenclature from COL - Taxon with multiple IDs
 --------------------------------------------------------
 
-Sometimes, in the COL database, the same taxon can have multiple IDs. In such cases, the ``COL`` module allows users
-to select a specific ID. We recommend choosing the ID after verifying it on the COL website. We can try this option with
-the species *Stollia betae*.
+Sometimes, in the CoL database, the same taxon can have multiple IDs. In such cases, the ``COL`` module allows users to select a specific ID. We recommend choosing the ID after verifying it on the CoL website. We can try this option with the species *Stollia betae*.
 
 .. warning::
 
-    Occasionally, the IDs proposed by the ``COL`` module may differ from those provided by COL after a search.
-    If this occurs, or if users encounter difficulties to find the correct ID, select the option *Skip*.
+    Occasionally, the IDs proposed by the ``COL`` module may differ from those provided by CoL after a search. If this occurs, or if users encounter difficulties to find the correct ID, select the option *Skip*.
 
 
 .. code-block:: python
@@ -128,6 +127,9 @@ the species *Stollia betae*.
     bdp = Biodumpy([COL(bulk=False, check_syn=True)])
     bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}')
 
+
+Example of data filtering
+-------------------------
 
 
 Reference link/s
