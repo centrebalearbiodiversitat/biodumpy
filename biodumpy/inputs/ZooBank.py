@@ -39,13 +39,7 @@ class ZooBank(Input):
 	>>> bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}')
 	"""
 
-	def __init__(
-			self,
-			dataset_size: str = "small",
-			output_format: str = "json",
-			info: bool = False,
-			bulk: bool = False
-	):
+	def __init__(self, dataset_size: str = "small", output_format: str = "json", info: bool = False, bulk: bool = False):
 		super().__init__(output_format, bulk)
 		self.dataset_size = dataset_size
 		self.info = info
@@ -94,7 +88,7 @@ class ZooBank(Input):
 
 		if self.info and referenceuuid != [""]:
 			for refuid in referenceuuid:
-				index = next((i for i, entry in enumerate(payload) if entry.get('referenceuuid') == refuid), None)
+				index = next((i for i, entry in enumerate(payload) if entry.get("referenceuuid") == refuid), None)
 
 				response_id = requests.get(f"https://zoobank.org/Identifiers.json/{refuid}")
 				try:

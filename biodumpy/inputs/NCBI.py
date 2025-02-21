@@ -85,20 +85,20 @@ class NCBI(Input):
 	"""
 
 	def __init__(
-			self,
-			mail: str = None,
-			db: str = 'nucleotide',
-			rettype: str = 'gb',
-			query_type: str = '[Organism]',
-			step_id: int = 100,
-			step_seq: int = 100,
-			max_bp: int = None,
-			summary: bool = False,
-			by_id: bool = False,
-			taxonomy: bool = False,
-			taxonomy_only: bool = False,
-			output_format: str = 'json',
-			bulk: bool = False
+		self,
+		mail: str = None,
+		db: str = "nucleotide",
+		rettype: str = "gb",
+		query_type: str = "[Organism]",
+		step_id: int = 100,
+		step_seq: int = 100,
+		max_bp: int = None,
+		summary: bool = False,
+		by_id: bool = False,
+		taxonomy: bool = False,
+		taxonomy_only: bool = False,
+		output_format: str = "json",
+		bulk: bool = False,
 	):
 		super().__init__(output_format, bulk)
 		self.mail = mail
@@ -115,24 +115,23 @@ class NCBI(Input):
 		self.taxonomy_only = taxonomy_only
 		Entrez.email = mail
 
-		if self.output_format == 'fasta' and self.rettype != 'fasta':
-			raise ValueError('Invalid output_format or rettype. Expected fasta.')
+		if self.output_format == "fasta" and self.rettype != "fasta":
+			raise ValueError("Invalid output_format or rettype. Expected fasta.")
 
 		if self.by_id and self.query_type is not None:
 			raise ValueError("Invalid parameters: 'by_id' is True, so 'query_type' must be None.")
 
-		if self.summary and (self.output_format == 'fasta' or self.rettype == 'fasta'):
+		if self.summary and (self.output_format == "fasta" or self.rettype == "fasta"):
 			raise ValueError("Invalid parameters: 'summary' is True, so 'output_format' cannot be 'fasta'.")
 
-		if self.taxonomy and (self.output_format == 'fasta' or self.rettype == 'fasta'):
+		if self.taxonomy and (self.output_format == "fasta" or self.rettype == "fasta"):
 			raise ValueError("Invalid parameters: 'taxonomy' is True, so 'output_format' cannot be 'fasta'.")
 
-		if self.taxonomy_only and (self.output_format == 'fasta' or self.rettype == 'fasta'):
+		if self.taxonomy_only and (self.output_format == "fasta" or self.rettype == "fasta"):
 			raise ValueError("Invalid parameters: 'taxonomy_only' is True, so 'output_format' cannot be 'fasta'.")
 
-		if output_format not in {'json', 'fasta'}:
+		if output_format not in {"json", "fasta"}:
 			raise ValueError('Invalid output_format. Expected "json" or "fasta".')
-
 
 	def _download(self, query, **kwargs) -> list:
 		payload = []
@@ -140,15 +139,14 @@ class NCBI(Input):
 		if self.taxonomy_only:
 			taxonomy_ncbi = self._download_taxonomy(query)
 			# Extract the required fields
-			taxonomy = [{'TaxId': item['TaxId'], 'ScientificName': item['ScientificName'], 'Rank': item['Rank']} for
-			            item in taxonomy_ncbi]
+			taxonomy = [{"TaxId": item["TaxId"], "ScientificName": item["ScientificName"], "Rank": item["Rank"]} for item in taxonomy_ncbi]
 
 			return [taxonomy] if self.bulk else taxonomy
 
 		if self.by_id:
 			ids_list = {query}
 		else:
-			ids_list = self._download_ids(term=f'{query}{self.query_type}', step_id=self.step_id)
+			ids_list = self._download_ids(term=f"{query}{self.query_type}", step_id=self.step_id)
 
 		if self.summary:
 			with tqdm(total=len(ids_list), desc="NCBI summary retrieve", unit=" Summary") as pbar:
@@ -255,12 +253,7 @@ class NCBI(Input):
 		attempt = 0
 		while attempt < retries:
 			try:
-				handle = Entrez.efetch(
-					db=db, id=seq_id,
-					rettype=rettype, retmode=retmode,
-					usehistory=history, WebEnv=webenv,
-					query_key=query_key
-				)
+				handle = Entrez.efetch(db=db, id=seq_id, rettype=rettype, retmode=retmode, usehistory=history, WebEnv=webenv, query_key=query_key)
 
 				if self.rettype == "fasta":
 					return handle.read().split("\n\n")[:-1]

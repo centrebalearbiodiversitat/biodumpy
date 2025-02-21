@@ -101,7 +101,7 @@ def test_ncbi_initialization():
 		(["Alytes muletensis"], False, "json", 2000, "nucleotide", 100, 100, "gb", "[Organism] AND COX1[Gene]", False, False, False, "ok"),
 		(["AY166960"], False, "json", 2000, "nucleotide", 100, 100, "gb", None, True, False, False, "ok"),
 		(["Alytes muletensis"], True, "json", 2000, "nucleotide", 100, 100, "gb", "[Organism]", False, False, False, "ok"),
-		(["Alytes muletensis"], False, "fasta", 2000, "nucleotide", 100, 100, "fasta", "[Organism]", False, False, False, "ok")
+		(["Alytes muletensis"], False, "fasta", 2000, "nucleotide", 100, 100, "fasta", "[Organism]", False, False, False, "ok"),
 	],
 )
 def test_download(query, summary, output_format, max_bp, db, step_id, step_seq, rettype, query_type, by_id, taxonomy, taxonomy_only, mail):
@@ -119,7 +119,7 @@ def test_download(query, summary, output_format, max_bp, db, step_id, step_seq, 
 			by_id=by_id,
 			taxonomy=taxonomy,
 			taxonomy_only=taxonomy_only,
-			mail=mail
+			mail=mail,
 		)
 
 	# Check if data is not empty
@@ -133,19 +133,7 @@ def test_download(query, summary, output_format, max_bp, db, step_id, step_seq, 
 		assert "description" in data, "description is not in data"
 
 		assert "annotations" in data, "annotations is not in data"
-		elem_annotations = [
-			"molecule_type",
-			"topology",
-			"data_file_division",
-			"date",
-			"accessions",
-			"sequence_version",
-			"keywords",
-			"source",
-			"organism",
-			"taxonomy",
-			"references"
-		]
+		elem_annotations = ["molecule_type", "topology", "data_file_division", "date", "accessions", "sequence_version", "keywords", "source", "organism", "taxonomy", "references"]
 		found_words = []
 		for word in elem_annotations:
 			if word in data["annotations"]:
@@ -174,7 +162,7 @@ def test_download(query, summary, output_format, max_bp, db, step_id, step_seq, 
 	"query, summary, output_format, max_bp, db, step_id, step_seq, rettype, query_type, by_id, taxonomy, taxonomy_only, mail",
 	[
 		(["Alytes muletensis"], False, "json", 2000, "nucleotide", 100, 100, "gb", "[Organism]", False, True, False, "hola@quetal.com"),
-		(["Alytes muletensis"], False, "json", 2000, "nucleotide", 100, 100, "gb", "[Organism]", False, False, True, "hola@quetal.com")
+		(["Alytes muletensis"], False, "json", 2000, "nucleotide", 100, 100, "gb", "[Organism]", False, False, True, "hola@quetal.com"),
 	],
 )
 def test_download_taxonomy(query, summary, output_format, max_bp, db, step_id, step_seq, rettype, query_type, by_id, taxonomy, taxonomy_only, mail):
@@ -208,12 +196,11 @@ def test_download_taxonomy(query, summary, output_format, max_bp, db, step_id, s
 		assert "TaxId" in data, "TaxId is not in data"
 		assert data["TaxId"] == "131567", "TaxId is not 131567"
 		assert "ScientificName" in data, "ScientificName is not in data"
-		assert data["ScientificName"] == 'cellular organisms', "ScientificName is not cellular organisms"
+		assert data["ScientificName"] == "cellular organisms", "ScientificName is not cellular organisms"
 		assert "Rank" in data, "Rank is not in data"
-		assert data["Rank"] == 'no rank', "Rank is not no rank"
+		assert data["Rank"] == "no rank", "Rank is not no rank"
 
 	if taxonomy is False and taxonomy_only:
-
 		assert len(data) == 23, "The length of taxonomy is not 23"
 
 		data = data[0]
@@ -222,6 +209,6 @@ def test_download_taxonomy(query, summary, output_format, max_bp, db, step_id, s
 		assert "TaxId" in data, "TaxId is not in data"
 		assert data["TaxId"] == "131567", "TaxId is not 131567"
 		assert "ScientificName" in data, "ScientificName is not in data"
-		assert data["ScientificName"] == 'cellular organisms', "ScientificName is not cellular organisms"
+		assert data["ScientificName"] == "cellular organisms", "ScientificName is not cellular organisms"
 		assert "Rank" in data, "Rank is not in data"
-		assert data["Rank"] == 'no rank', "Rank is not no rank"
+		assert data["Rank"] == "no rank", "Rank is not no rank"

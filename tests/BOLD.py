@@ -54,14 +54,7 @@ def test_bold_initialization():
 		BOLD(output_format="xml")
 
 
-@pytest.mark.parametrize(
-	"query, summary, output_format",
-	[
-		(["Alytes muletensis"], True, "json"),
-		(["Alytes muletensis"], False, "json"),
-		(["Alytes muletensis"], False, "fasta")
-	],
-)
+@pytest.mark.parametrize("query, summary, output_format", [(["Alytes muletensis"], True, "json"), (["Alytes muletensis"], False, "json"), (["Alytes muletensis"], False, "fasta")])
 def test_download(query, summary, output_format):
 	with redirect_stdout(trap):
 		data = bold_query(query=query, summary=summary, output_format=output_format)
@@ -79,8 +72,7 @@ def test_download(query, summary, output_format):
 		assert "record_id" in data, "record_id is not in data"
 		assert "processid" in data, "processid is not in data"
 		assert "bin_uri" in data, "bin_uri is not in data"
-		assert data["bin_uri"] == 'BOLD:ABY0152', "bin_uri is not 'BOLD:ABY0152'"
-
+		assert data["bin_uri"] == "BOLD:ABY0152", "bin_uri is not 'BOLD:ABY0152'"
 
 		assert "specimen_identifiers" in data, "specimen_identifiers is not in data"
 		sp_ident = data["specimen_identifiers"]
@@ -88,7 +80,6 @@ def test_download(query, summary, output_format):
 		assert "catalognum" in sp_ident, "catalognum is not in specimen_identifiers"
 		assert "fieldnum" in sp_ident, "fieldnum is not in specimen_identifiers"
 		assert "institution_storing" in sp_ident, "institution_storing is not in specimen_identifiers"
-
 
 		assert "taxonomy" in data, "taxonomy is not in data"
 		taxon = data["taxonomy"]
@@ -106,26 +97,22 @@ def test_download(query, summary, output_format):
 		assert species["name"] == "Alytes muletensis", "species name is not in Alytes muletensis"
 		assert species["reference"] == "(Sanchíz and Adrover, 1979)", "species reference is not in (Sanchíz and Adrover, 1979)"
 
+		assert "specimen_desc" in data, "specimen_desc is not in data"
+		sp_desc = data["specimen_desc"]
+		assert "voucher_status" in sp_desc, "voucher_status is not in specimen_desc"
+		assert "extrainfo" in sp_desc, "extrainfo is not in specimen_desc"
 
-		assert 'specimen_desc' in data, "specimen_desc is not in data"
-		sp_desc = data['specimen_desc']
-		assert 'voucher_status' in sp_desc, "voucher_status is not in specimen_desc"
-		assert 'extrainfo' in sp_desc, "extrainfo is not in specimen_desc"
+		assert "collection_event" in data, "collection_event is not in data"
+		coll_event = data["collection_event"]
+		assert "collectors" in coll_event, "collectors is not in collection_event"
+		assert "country" in coll_event, "country is not in collection_event"
 
-
-		assert 'collection_event' in data, "collection_event is not in data"
-		coll_event = data['collection_event']
-		assert 'collectors' in coll_event, "collectors is not in collection_event"
-		assert 'country' in coll_event, "country is not in collection_event"
-
-
-		assert 'sequences' in data, "sequences is not in data"
-		seq = data['sequences']["sequence"][0]
-		assert 'sequenceID' in seq, "sequenceID is not in sequences"
-		assert 'markercode' in seq, "markercode is not in sequences"
-		assert 'genbank_accession' in seq, "genbank_accession is not in sequences"
-		assert 'nucleotides' in seq, "nucleotides is not in sequences"
-
+		assert "sequences" in data, "sequences is not in data"
+		seq = data["sequences"]["sequence"][0]
+		assert "sequenceID" in seq, "sequenceID is not in sequences"
+		assert "markercode" in seq, "markercode is not in sequences"
+		assert "genbank_accession" in seq, "genbank_accession is not in sequences"
+		assert "nucleotides" in seq, "nucleotides is not in sequences"
 
 	if summary and output_format != "fasta":
 		# Check the summary structure

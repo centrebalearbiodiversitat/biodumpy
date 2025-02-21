@@ -47,13 +47,7 @@ class COL(Input):
 
 	ACCEPTED_TERMS = ["accepted", "provisionally accepted"]
 
-	def __init__(
-			self,
-			check_syn: bool = False,
-			dataset_key: int = 9923,
-			bulk: bool = False,
-			output_format: str = "json",
-	):
+	def __init__(self, check_syn: bool = False, dataset_key: int = 9923, bulk: bool = False, output_format: str = "json"):
 		super().__init__(output_format, bulk)
 		self.check_syn = check_syn
 		self.dataset_key = dataset_key
@@ -62,16 +56,10 @@ class COL(Input):
 			raise ValueError("Invalid output_format. Expected 'json'.")
 
 	def _download(self, query, **kwargs) -> list:
-
 		response = requests.get(
 			f"https://api.checklistbank.org/dataset/{self.dataset_key}/nameusage/search?",
-			params={
-				"q": query,
-				"content": "SCIENTIFIC_NAME",
-				"type": "EXACT",
-				"offset": 0,
-				"limit": 10
-			})
+			params={"q": query, "content": "SCIENTIFIC_NAME", "type": "EXACT", "offset": 0, "limit": 10},
+		)
 
 		if response.status_code != 200:
 			raise BiodumpyException(f"Taxonomy request. Error {response.status_code}")
@@ -87,7 +75,7 @@ class COL(Input):
 			if len(result) > 1:
 				ids = [item.get("id") for item in result if "id" in item]
 				ids = ", ".join(ids)
-				id_input = input(f"Please enter the correct taxon ID of {query} \n ID: {ids}; Skip \n" f"Insert the ID:")
+				id_input = input(f"Please enter the correct taxon ID of {query} \n ID: {ids}; Skip \nInsert the ID:")
 
 				if id_input == "Skip":
 					result = [{"id": None, "usage": None, "status": None, "classification": None}]

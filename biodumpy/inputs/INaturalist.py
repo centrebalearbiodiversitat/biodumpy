@@ -50,10 +50,7 @@ class INaturalist(Input):
 	>>> bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}')
 	"""
 
-	def __init__(self,
-	             info: bool = False,
-	             output_format: str = "json",
-	             bulk: bool = False):
+	def __init__(self, info: bool = False, output_format: str = "json", bulk: bool = False):
 		super().__init__(output_format, bulk)
 		self.info = info
 
@@ -84,8 +81,7 @@ class INaturalist(Input):
 					payload.append(results[0])
 				else:
 					payload.append(results[0])
-					print(f"More than one result for the taxon: {query}. \nOnly the first result was used in the output.",
-					      file=sys.stderr)
+					print(f"More than one result for the taxon: {query}. \nOnly the first result was used in the output.", file=sys.stderr)
 
 				return payload
 
@@ -127,7 +123,7 @@ class INaturalist(Input):
 							"taxon": query,
 							"image_id": url_photo.replace("square", "medium"),
 							"license_code": photo_info["license_code"],
-							"attribution": photo_info["attribution"]
+							"attribution": photo_info["attribution"],
 						}
 
 				return [photo_details]

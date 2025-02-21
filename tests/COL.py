@@ -14,7 +14,6 @@ trap = io.StringIO()
 
 
 def col_query(query, check_syn):
-
 	# Create temporary directory
 	with tempfile.TemporaryDirectory() as temp_dir:
 		# Construct the dynamic path using formatted strings
@@ -49,13 +48,7 @@ def test_col_initialization():
 		COL(output_format="xml")
 
 
-@pytest.mark.parametrize(
-	"query, check_syn",
-	[
-		(["Bufo roseus"], True),
-		(["Bufo roseus"], False)
-	]
-)
+@pytest.mark.parametrize("query, check_syn", [(["Bufo roseus"], True), (["Bufo roseus"], False)])
 def test_download(query, check_syn):
 	with redirect_stdout(trap):
 		data = col_query(query=query, check_syn=check_syn)
@@ -66,13 +59,13 @@ def test_download(query, check_syn):
 	# Check the main structure of the JSON file
 	data = data[0]
 	assert "origin_taxon" in data, "origin_taxon is not in data"
-	assert data["origin_taxon"] == 'Bufo roseus', "origin_taxon is not in Bufo roseus"
+	assert data["origin_taxon"] == "Bufo roseus", "origin_taxon is not in Bufo roseus"
 
 	assert "taxon_id" in data, "taxon_id is not in data"
-	assert data["taxon_id"] == 'NPDX', "taxon_id is not in NPDX"
+	assert data["taxon_id"] == "NPDX", "taxon_id is not in NPDX"
 
 	assert "status" in data, "status is not in data"
-	assert data["status"] == 'synonym', "status is not in synonym"
+	assert data["status"] == "synonym", "status is not in synonym"
 
 	assert "usage" in data, "usage is not in data"
 	usage = data["usage"]
@@ -93,7 +86,7 @@ def test_download(query, check_syn):
 	assert usage["parentId"] == "NPMS", "parentId is not NPMS"
 	assert "accepted" in usage, "accepted is not in usage"
 	assert "label" in usage, "label is not in usage"
-	assert usage["label"] == 'Bufo roseus Merrem, 1820', "label is not Bufo roseus Merrem, 1820"
+	assert usage["label"] == "Bufo roseus Merrem, 1820", "label is not Bufo roseus Merrem, 1820"
 	assert "labelHtml" in usage, "labelHtml is not in usage"
 	assert "merged" in usage, "merged is not in usage"
 

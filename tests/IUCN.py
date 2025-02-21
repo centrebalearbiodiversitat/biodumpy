@@ -25,7 +25,7 @@ IUCN_REGIONS = [
 	"western_africa",
 	"southern_africa",
 	"mediterranean",
-	"europe"
+	"europe",
 ]
 
 
@@ -36,20 +36,7 @@ def iucn_query(query, api_key, habitat, regions, historical, threats, weblink, o
 		dynamic_path = os.path.join(temp_dir)
 
 	# Start biodumpy function
-	bdp = Biodumpy(
-		[
-			IUCN(
-				bulk=True,
-				api_key=api_key,
-				habitat=habitat,
-				regions=regions,
-				historical=historical,
-				threats=threats,
-				weblink=weblink,
-				output_format=output_format
-			)
-		]
-	)
+	bdp = Biodumpy([IUCN(bulk=True, api_key=api_key, habitat=habitat, regions=regions, historical=historical, threats=threats, weblink=weblink, output_format=output_format)])
 	bdp.start(elements=query, output_path=f"{dynamic_path}/downloads/{{date}}/{{module}}/{{name}}")
 
 	# Retrieve a file path
@@ -112,21 +99,12 @@ def test_validate_regions_invalid():
 		(["Alytes muletensis"], ["global"], True, False, False, False, "json"),
 		(["Alytes muletensis"], ["global"], False, True, False, False, "json"),
 		(["Alytes muletensis"], ["global"], False, False, True, False, "json"),
-		(["Alytes muletensis"], ["global"], False, False, False, True, "json")
+		(["Alytes muletensis"], ["global"], False, False, False, True, "json"),
 	],
 )
 def test_download(query, regions, habitat, historical, threats, weblink, output_format):
 	with redirect_stdout(trap):
-		data = iucn_query(
-			query=query,
-			regions=regions,
-			habitat=habitat,
-			historical=historical,
-			threats=threats,
-			output_format=output_format,
-			weblink=weblink,
-			api_key=API_KEY
-		)
+		data = iucn_query(query=query, regions=regions, habitat=habitat, historical=historical, threats=threats, output_format=output_format, weblink=weblink, api_key=API_KEY)
 
 	# Check if data is not empty
 	assert len(data) > 0, "data length is 0"
@@ -143,7 +121,7 @@ def test_download(query, regions, habitat, historical, threats, weblink, output_
 	assert data["category"] == "EN", "the category is not EN"
 
 	assert "assessment_date" in data, "assessment_date is not in data"
-	assert data["assessment_date"] == '2023-02-20', "the assessment_date is not 2023-02-20"
+	assert data["assessment_date"] == "2023-02-20", "the assessment_date is not 2023-02-20"
 
 	assert "region" in data, "region is not in data"
 	assert data["region"] == "global", "the region is not global"
