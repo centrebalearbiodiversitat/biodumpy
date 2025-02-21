@@ -7,7 +7,11 @@ Crossref Module
 Overview
 --------
 
-The ``Crossref`` module allows users to easily retrieve scientific bibliographic metadata from Crossref database :cite:`crossref2024`. By providing a list of Digital Object Identifier (DOI), users can access to bibliographic data. The information is downloaded in JSON format.
+The ``Crossref`` module allows users to easily retrieve scientific bibliographic metadata from Crossref database :cite:`crossref2024`. By providing a list of Digital Object Identifier (DOI), users can access to bibliographic data.
+
+.. toggle:: Click to expand
+
+    JSON
 
 
 Key Features
@@ -19,7 +23,7 @@ Key Features
 Retrieve comprehensive metadata from Crossref
 ---------------------------------------------
 
-This example demonstrates how users can download bibliographic information from Crossref from a list of DOI. The function relies on the Crossref API's `works`_ endpoint.
+This example demonstrates how users can download bibliographic information from Crossref using a list of DOIs as input. The function relies on the Crossref API's `works`_ endpoint.
 
 
 .. _works: https://api.crossref.org/swagger-ui/index.html
@@ -50,6 +54,10 @@ The previous method downloads the entire set of data for each record from Crossr
 - **title**: The title of the publication.
 - **author**: The names of the authors who contributed to the research along with their main academic information.
 - **abstract**: The publication abstract (if available).
+
+Example of data filtering
+-------------------------
+
 
 Reference link/s
 ----------------

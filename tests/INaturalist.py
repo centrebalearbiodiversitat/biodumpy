@@ -13,14 +13,14 @@ from biodumpy.inputs import INaturalist
 trap = io.StringIO()
 
 
-def inat_query(query, output_format):
+def inat_query(query):
 	# Create temporary directory
 	with tempfile.TemporaryDirectory() as temp_dir:
 		# Construct the dynamic path using formatted strings
 		dynamic_path = os.path.join(temp_dir)
 
 	# Start biodumpy function
-	bdp = Biodumpy([INaturalist(bulk=True, output_format=output_format)])
+	bdp = Biodumpy([INaturalist(bulk=True)])
 	bdp.start(elements=query, output_path=f"{dynamic_path}/downloads/{{date}}/{{module}}/{{name}}")
 
 	# Retrieve a file path
@@ -49,15 +49,23 @@ def test_inat_initialization():
 		INaturalist(output_format="xml")
 
 
-@pytest.mark.parametrize("query, output_format", [(["Alytes muletensis"], "json")])
-def test_download(query, output_format):
+@pytest.mark.parametrize("query", [(["Alytes muletensis"])])
+def test_download(query):
 	with redirect_stdout(trap):
-		data = inat_query(query=query, output_format=output_format)
+		data = inat_query(query=query)
 
 	# Check if data is not empty
 	assert len(data) > 0, "data length is 0"
 
-	assert "taxon" in data[0], "taxon is not in data"
-	assert "image_id" in data[0], "image_id is not in data"
-	assert "license_code" in data[0], "license_code is not in data"
-	assert "attribution" in data[0], "attribution is not in data"
+	data = data[0]
+
+	assert "taxon" in data, "taxon is not in data"
+	assert data["taxon"] == "Alytes muletensis", "taxon is not Alytes muletensis"
+	assert "image_id" in data, "image_id is not in data"
+	assert data["image_id"] == "61080851/medium.jpeg", "image_id is not 61080851/medium.jpeg"
+	assert "license_code" in data, "license_code is not in data"
+	assert data["license_code"] == "cc-by-nc", "image_id is not cc-by-nc"
+	assert "attribution" in data, "attribution is not in data"
+	assert data["attribution"] == "(c) Gert Jan Verspui, some rights reserved (CC BY-NC), uploaded by Gert Jan Verspui", (
+		"attribution is not (c) Gert Jan Verspui, some rights reserved (CC BY-NC), uploaded by Gert Jan Verspui"
+	)

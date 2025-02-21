@@ -13,7 +13,7 @@ from biodumpy.inputs import NCBI
 trap = io.StringIO()
 
 
-def ncbi_query(query, summary, output_format, max_bp, db, step, rettype, query_type, by_id, taxonomy, taxonomy_only, mail):
+def ncbi_query(query, summary, output_format, max_bp, db, step_id, step_seq, rettype, query_type, by_id, taxonomy, taxonomy_only, mail):
 	# Create temporary directory
 	with tempfile.TemporaryDirectory() as temp_dir:
 		# Construct the dynamic path using formatted strings
@@ -28,7 +28,8 @@ def ncbi_query(query, summary, output_format, max_bp, db, step, rettype, query_t
 				output_format=output_format,
 				max_bp=max_bp,
 				db=db,
-				step=step,
+				step_id=step_id,
+				step_seq=step_seq,
 				rettype=rettype,
 				query_type=query_type,
 				by_id=by_id,
@@ -64,7 +65,8 @@ def test_ncbi_initialization():
 	assert ncbi.db == "nucleotide"
 	assert ncbi.rettype == "gb"
 	assert ncbi.query_type == "[Organism]"
-	assert ncbi.step == 100
+	assert ncbi.step_id == 100
+	assert ncbi.step_seq == 100
 	assert ncbi.max_bp is None
 	assert ncbi.summary == False
 	assert ncbi.by_id == False
@@ -93,16 +95,16 @@ def test_ncbi_initialization():
 
 
 @pytest.mark.parametrize(
-	"query, summary, output_format, max_bp, db, step, rettype, query_type, by_id, taxonomy, taxonomy_only, mail",
+	"query, summary, output_format, max_bp, db, step_id, step_seq, rettype, query_type, by_id, taxonomy, taxonomy_only, mail",
 	[
-		(["Alytes muletensis"], False, "json", 2000, "nucleotide", 100, "gb", "[Organism]", False, False, False, "hola@quetal.com"),
-		(["Alytes muletensis"], False, "json", 2000, "nucleotide", 100, "gb", "[Organism] AND COX1[Gene]", False, False, False, "hola@quetal.com"),
-		(["AY166960"], False, "json", 2000, "nucleotide", 100, "gb", None, True, False, False, "hola@quetal.com"),
-		(["Alytes muletensis"], True, "json", 2000, "nucleotide", 100, "gb", "[Organism]", False, False, False, "hola@quetal.com"),
-		(["Alytes muletensis"], False, "fasta", 2000, "nucleotide", 100, "fasta", "[Organism]", False, False, False, "hola@quetal.com"),
+		(["Alytes muletensis"], False, "json", 2000, "nucleotide", 100, 100, "gb", "[Organism]", False, False, False, "ok"),
+		(["Alytes muletensis"], False, "json", 2000, "nucleotide", 100, 100, "gb", "[Organism] AND COX1[Gene]", False, False, False, "ok"),
+		(["AY166960"], False, "json", 2000, "nucleotide", 100, 100, "gb", None, True, False, False, "ok"),
+		(["Alytes muletensis"], True, "json", 2000, "nucleotide", 100, 100, "gb", "[Organism]", False, False, False, "ok"),
+		(["Alytes muletensis"], False, "fasta", 2000, "nucleotide", 100, 100, "fasta", "[Organism]", False, False, False, "ok"),
 	],
 )
-def test_download(query, summary, output_format, max_bp, db, step, rettype, query_type, by_id, taxonomy, taxonomy_only, mail):
+def test_download(query, summary, output_format, max_bp, db, step_id, step_seq, rettype, query_type, by_id, taxonomy, taxonomy_only, mail):
 	with redirect_stdout(trap):
 		data = ncbi_query(
 			query=query,
@@ -110,7 +112,8 @@ def test_download(query, summary, output_format, max_bp, db, step, rettype, quer
 			output_format=output_format,
 			max_bp=max_bp,
 			db=db,
-			step=step,
+			step_id=step_id,
+			step_seq=step_seq,
 			rettype=rettype,
 			query_type=query_type,
 			by_id=by_id,
@@ -156,13 +159,13 @@ def test_download(query, summary, output_format, max_bp, db, step, rettype, quer
 
 
 @pytest.mark.parametrize(
-	"query, summary, output_format, max_bp, db, step, rettype, query_type, by_id, taxonomy, taxonomy_only, mail",
+	"query, summary, output_format, max_bp, db, step_id, step_seq, rettype, query_type, by_id, taxonomy, taxonomy_only, mail",
 	[
-		(["Alytes muletensis"], False, "json", 2000, "nucleotide", 100, "gb", "[Organism]", False, True, False, "hola@quetal.com"),
-		(["Alytes muletensis"], False, "json", 2000, "nucleotide", 100, "gb", "[Organism]", False, False, True, "hola@quetal.com"),
+		(["Alytes muletensis"], False, "json", 2000, "nucleotide", 100, 100, "gb", "[Organism]", False, True, False, "hola@quetal.com"),
+		(["Alytes muletensis"], False, "json", 2000, "nucleotide", 100, 100, "gb", "[Organism]", False, False, True, "hola@quetal.com"),
 	],
 )
-def test_download_taxonomy(query, summary, output_format, max_bp, db, step, rettype, query_type, by_id, taxonomy, taxonomy_only, mail):
+def test_download_taxonomy(query, summary, output_format, max_bp, db, step_id, step_seq, rettype, query_type, by_id, taxonomy, taxonomy_only, mail):
 	with redirect_stdout(trap):
 		data = ncbi_query(
 			query=query,
@@ -170,7 +173,8 @@ def test_download_taxonomy(query, summary, output_format, max_bp, db, step, rett
 			output_format=output_format,
 			max_bp=max_bp,
 			db=db,
-			step=step,
+			step_id=step_id,
+			step_seq=step_seq,
 			rettype=rettype,
 			query_type=query_type,
 			by_id=by_id,
@@ -182,22 +186,29 @@ def test_download_taxonomy(query, summary, output_format, max_bp, db, step, rett
 	# Check if data is not empty
 	assert len(data) > 0, "data length is 0"
 
-	if taxonomy:
-		data = data[-1]
-		assert "taxonomy" in data, "taxonomy is not in data"
+	data = data[0]
 
+	if taxonomy:
+		assert "taxonomy" in data, "taxonomy is not in data"
 		assert len(data["taxonomy"]) == 23, "The length of taxonomy is not 23"
 
-		data = data["taxonomy"]
-		assert "TaxId" in data[0], "TaxId is not in data[0]"
-		assert "ScientificName" in data[0], "ScientificName is not in data[0]"
-		assert "Rank" in data[0], "Rank is not in data[0]"
+		data = data["taxonomy"][0]
+		assert "TaxId" in data, "TaxId is not in data"
+		assert data["TaxId"] == "131567", "TaxId is not 131567"
+		assert "ScientificName" in data, "ScientificName is not in data"
+		assert data["ScientificName"] == "cellular organisms", "ScientificName is not cellular organisms"
+		assert "Rank" in data, "Rank is not in data"
+		assert data["Rank"] == "no rank", "Rank is not no rank"
 
 	if taxonomy is False and taxonomy_only:
-		data = data[0]
-
 		assert len(data) == 23, "The length of taxonomy is not 23"
 
-		assert "TaxId" in data[0], "TaxId is not in data[0]"
-		assert "ScientificName" in data[0], "ScientificName is not in data[0]"
-		assert "Rank" in data[0], "Rank is not in data[0]"
+		data = data[0]
+		assert len(data) == 3, "The length of taxonomy is not 3"
+
+		assert "TaxId" in data, "TaxId is not in data"
+		assert data["TaxId"] == "131567", "TaxId is not 131567"
+		assert "ScientificName" in data, "ScientificName is not in data"
+		assert data["ScientificName"] == "cellular organisms", "ScientificName is not cellular organisms"
+		assert "Rank" in data, "Rank is not in data"
+		assert data["Rank"] == "no rank", "Rank is not no rank"

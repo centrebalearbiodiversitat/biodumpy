@@ -20,7 +20,7 @@ class ZooBank(Input):
 	    We recommend choosing 'small' if the number of articles for a given taxon is lower than 200, or 'large' if
 	    it exceeds 200. Default is 'small'.
 	info : bool, optional
-	    If set to True, the function will download only additional article information not included in the main research,
+	    If set to True, the function will download additional article information not included in the main research,
 	    such as the DOI. Default is False.
 	bulk : bool, optional
 	    If True, the function creates a bulk file. For further information, see the documentation of the Biodumpy
@@ -60,6 +60,8 @@ class ZooBank(Input):
 				raise BiodumpyException(f"Reference request. Error {response.status_code}")
 
 			payload = response.json()
+			referenceuuid = [item["referenceuuid"] for item in payload]
+
 		else:
 			print("Searching in ZooBank...")
 			response_pub = requests.get(f"https://zoobank.org/Search?search_term={query}")
@@ -84,21 +86,15 @@ class ZooBank(Input):
 				else:
 					print(f"Failed to retrieve data for {ref}")
 
-		if not self.info:
-			return payload
-
-		referenceuuid = [item["referenceuuid"] for item in payload]
-
-		payload = []
-		if referenceuuid != [""]:
+		if self.info and referenceuuid != [""]:
 			for refuid in referenceuuid:
+				index = next((i for i, entry in enumerate(payload) if entry.get("referenceuuid") == refuid), None)
+
 				response_id = requests.get(f"https://zoobank.org/Identifiers.json/{refuid}")
-
-				if response_id.status_code != 200:
-					raise BiodumpyException(f"Referenceuuid request. Error {response_id.status_code}")
-
-				payload.append(response_id.json())
-		else:
-			print("No referenceuuid found.")
+				try:
+					response_id_json = response_id.json()
+					payload[index]["info"] = response_id_json
+				except requests.exceptions.JSONDecodeError as e:
+					print(f"Failed to parse JSON with reference uid{refuid}:", e)
 
 		return payload

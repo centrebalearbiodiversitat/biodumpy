@@ -20,7 +20,7 @@ def zoobank_query(query, info, dataset_size):
 		dynamic_path = os.path.join(temp_dir)
 
 	# Start biodumpy function
-	bdp = Biodumpy([ZooBank(bulk=False, dataset_size=dataset_size, info=info)])
+	bdp = Biodumpy([ZooBank(bulk=True, dataset_size=dataset_size, info=info)])
 	bdp.start(elements=query, output_path=f"{dynamic_path}/downloads/{{date}}/{{module}}/{{name}}")
 
 	# Retrieve a file path
@@ -68,14 +68,44 @@ def test_download_syn(query, info, dataset_size):
 	# Check if data is not empty
 	assert len(data) > 0, "data length is 0"
 
+	data = data[0]
+
 	if info:
-		data = data[0]
-		assert "Abbreviation" in data[0], "Abbreviation is not in the data"
-		assert "Identifier" in data[0], "Identifier is not in the data"
-		assert "IdentifierUUID" in data[0], "IdentifierUUID is not in the data"
+		data = data["info"]
+		assert "Identifier" in data[0], "Identifier not in data"
+		assert "IdentifierDomain" in data[0], "IdentifierDomain not in data"
+		assert "Abbreviation" in data[0], "Abbreviation not in data"
+		assert "IdentifierURL" in data[0], "IdentifierURL not in data"
+		assert "RegisteringAgentGivenName" in data[0], "RegisteringAgentGivenName not in data"
+		assert "RegisteringAgentFamilyName" in data[0], "RegisteringAgentFamilyName not in data"
+		assert "RegisteringAgentOrganizationName" in data[0], "RegisteringAgentOrganizationName not in data"
+		assert "IdentifierUUID" in data[0], "IdentifierUUID not in data"
+		assert "DomainLogoURL" in data[0], "DomainLogoURL not in data"
+		assert "ResolutionNote" in data[0], "ResolutionNote not in data"
 
 	else:
-		assert "referenceuuid" in data[0], "referenceuuid is not in the data"
-		assert "label" in data[0], "label is not in the data"
-		assert "year" in data[0], "year is not in the data"
-		assert "title" in data[0], "title is not in the data"
+		assert "referenceuuid" in data, "referenceuuid is not in data"
+		assert data["referenceuuid"] == "083a67c2-d89b-4631-bfec-d610d396e68f", "referenceuuid is not 083a67c2-d89b-4631-bfec-d610d396e68f"
+		assert "label" in data, "label is not in data"
+		assert "value" in data, "value is not in data"
+		assert "authorlist" in data, "authorlist is not in data"
+		assert "year" in data, "year is not in data"
+		assert data["year"] == "2019", "year is not 2019"
+		assert "title" in data, "title is not in data"
+		assert "citationdetails" in data, "citationdetails is not in data"
+		assert "volume" in data, "volume is not in data"
+		assert "number" in data, "number is not in data"
+		assert "edition" in data, "edition is not in data"
+		assert "publisher" in data, "publisher is not in data"
+		assert "placepublished" in data, "placepublished is not in data"
+		assert "pagination" in data, "pagination is not in data"
+		assert "startpage" in data, "startpage is not in data"
+		assert "endpage" in data, "endpage is not in data"
+		assert "language" in data, "language is not in data"
+		assert "languageid" in data, "languageid is not in data"
+		assert "referencetype" in data, "referencetype is not in data"
+		assert data["referencetype"] == "Journal Article", "referencetype is not Journal Article"
+		assert "lsid" in data, "lsid is not in data"
+		assert "parentreferenceid" in data, "parentreferenceid is not in data"
+		assert "parentreference" in data, "parentreference is not in data"
+		assert "authors" in data, "authors is not in data"

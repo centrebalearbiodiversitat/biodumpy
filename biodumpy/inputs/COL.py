@@ -11,6 +11,9 @@ class COL(Input):
 	----------
 	query : list
 	    The list of taxa to query.
+	dataset_key : int
+		The dataset key to query.
+		Default is 9923.
 	check_syn : bool, optional
 	    If True, the function returns only the accepted nomenclature of a taxon.
 	    See Detail section for further information.
@@ -39,20 +42,24 @@ class COL(Input):
 	>>> taxa = ['Alytes muletensis', 'Bufotes viridis', 'Hyla meridionalis', 'Anax imperator', 'Bufo roseus', 'Stollia betae']
 	# Start the download
 	>>> bdp = Biodumpy([COL(bulk=True, check_syn=False)])
-	>>> bdp.start(taxa, output_path='./biodumpy/downloads/{date}/{module}/{name}')
+	>>> bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}')
 	"""
 
 	ACCEPTED_TERMS = ["accepted", "provisionally accepted"]
 
-	def __init__(self, output_format: str = "json", bulk: bool = False, check_syn: bool = False):
+	def __init__(self, check_syn: bool = False, dataset_key: int = 9923, bulk: bool = False, output_format: str = "json"):
 		super().__init__(output_format, bulk)
 		self.check_syn = check_syn
+		self.dataset_key = dataset_key
 
 		if output_format != "json":
 			raise ValueError("Invalid output_format. Expected 'json'.")
 
 	def _download(self, query, **kwargs) -> list:
-		response = requests.get(f"https://api.checklistbank.org/dataset/9923/nameusage/search?q={query}&content=SCIENTIFIC_NAME&type=EXACT&offset=0&limit=10")
+		response = requests.get(
+			f"https://api.checklistbank.org/dataset/{self.dataset_key}/nameusage/search?",
+			params={"q": query, "content": "SCIENTIFIC_NAME", "type": "EXACT", "offset": 0, "limit": 10},
+		)
 
 		if response.status_code != 200:
 			raise BiodumpyException(f"Taxonomy request. Error {response.status_code}")
@@ -68,7 +75,7 @@ class COL(Input):
 			if len(result) > 1:
 				ids = [item.get("id") for item in result if "id" in item]
 				ids = ", ".join(ids)
-				id_input = input(f"Please enter the correct taxon ID of {query} \n ID: {ids}; Skip \n" f"Insert the ID:")
+				id_input = input(f"Please enter the correct taxon ID of {query} \n ID: {ids}; Skip \nInsert the ID:")
 
 				if id_input == "Skip":
 					result = [{"id": None, "usage": None, "status": None, "classification": None}]

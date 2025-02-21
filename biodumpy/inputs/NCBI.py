@@ -18,8 +18,8 @@ class NCBI(Input):
 	query : list
 	    A list of taxa to query in the BOLD database.
 	mail : str, optional
-	    Email address used with Entrez functions to identify the user.
-	    This is required by NCBI to track usage and report problems.
+	    Email address used with Entrez functions to identify the user. This is required by NCBI to track usage and
+	    report problems.
 	    Default is None.
 	db : str, optional
 	    NCBI database to search and download data from. Options include "nucleotide", "protein", "gene", and others.
@@ -28,16 +28,21 @@ class NCBI(Input):
 	    The format for data retrieval from NCBI. Common formats include 'gb' (GenBank), 'fasta', 'xml', etc.
 	    Default is 'gb'.
 	query_type : str, optional
-	    Defines the type of query search, such as "[Organism]" or "[Gene]".
-	    This determines how the query is interpreted by NCBI.
+	    Defines the type of query search, such as "[Organism]" or "[Gene]". This determines how the query is
+	    interpreted by NCBI.
 	    Default is "[Organism]".
-	step : int, optional
-	    Number of records to download per chunk. For example, if the total data to download is 10,000 and the step is set to 100,
-	    the function will download in chunks of 100 records per request.
+	step_id : int, optional
+	    Number of id records to download per chunk. For example, if the total data to download is 10,000 and the
+	    step_id is set to 100, the function will download in chunks of 100 records per request.
+	    Default is 100.
+	step_seq : int, optional
+	    Number of sequence records to download per chunk. For example, if the total data to download is 10,
+	    000 and the step_seq is set to 100, the function will download in chunks of 100 records per request. Be
+	    careful with this parameter, as setting it too high may fill the entire memory and cause the function to stop.
 	    Default is 100.
 	max_bp : int, optional
-	    Maximum number of base pairs allowed for each sequence. Records with more base pairs than this value will be excluded.
-	    If None, all records will be downloaded regardless of size.
+	    Maximum number of base pairs allowed for each sequence. Records with more base pairs than this value will be
+	    excluded. If None, all records will be downloaded regardless of size.
 	    Default is None.
 	summary : bool, optional
 	    If True, the function returns a summary of the downloaded metadata instead of the full records.
@@ -52,8 +57,8 @@ class NCBI(Input):
 		If True, the function downloads the taxonomy data from NCBI.
 		Default is False.
 	bulk : bool, optional
-	    If True, the function creates a bulk file for large downloads.
-	    For more information, refer to the Biodumpy package documentation.
+	    If True, the function creates a bulk file for large downloads. For more information, refer to the Biodumpy
+	    package documentation.
 	    Default is False.
 	output_format : str, optional
 	    The format of the output file. Available options are: 'json', 'fasta', 'pdf'.
@@ -75,7 +80,7 @@ class NCBI(Input):
 	# List of taxa
 	>>> taxa = ['Alytes muletensis', 'Hyla meridionalis', 'Anax imperator', 'Bufo roseus', 'Stollia betae']
 	# Set the module and start the download
-	>>> bdp = Biodumpy([NCBI(bulk=False, mail="hola@quetal.com", db="nucleotide", rettype="gb", query_type='[Organism]')])
+	>>> bdp = Biodumpy([NCBI(bulk=False, mail='hola@quetal.com', db='nucleotide', rettype='gb', query_type='[Organism]')])
 	>>> bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}')
 	"""
 
@@ -85,7 +90,8 @@ class NCBI(Input):
 		db: str = "nucleotide",
 		rettype: str = "gb",
 		query_type: str = "[Organism]",
-		step: int = 100,
+		step_id: int = 100,
+		step_seq: int = 100,
 		max_bp: int = None,
 		summary: bool = False,
 		by_id: bool = False,
@@ -98,8 +104,10 @@ class NCBI(Input):
 		self.mail = mail
 		self.max_bp = max_bp
 		self.db = db
-		self.step = step
+		self.step_id = step_id
+		self.step_seq = step_seq
 		self.rettype = rettype
+		self.output_format = output_format
 		self.query_type = query_type
 		self.summary = summary
 		self.by_id = by_id
@@ -108,7 +116,7 @@ class NCBI(Input):
 		Entrez.email = mail
 
 		if self.output_format == "fasta" and self.rettype != "fasta":
-			raise ValueError("Invalid output_format. Expected fasta.")
+			raise ValueError("Invalid output_format or rettype. Expected fasta.")
 
 		if self.by_id and self.query_type is not None:
 			raise ValueError("Invalid parameters: 'by_id' is True, so 'query_type' must be None.")
@@ -138,18 +146,18 @@ class NCBI(Input):
 		if self.by_id:
 			ids_list = {query}
 		else:
-			ids_list = self._download_ids(term=f"{query}{self.query_type}", step=self.step)
+			ids_list = self._download_ids(term=f"{query}{self.query_type}", step_id=self.step_id)
 
 		if self.summary:
 			with tqdm(total=len(ids_list), desc="NCBI summary retrieve", unit=" Summary") as pbar:
-				for seq_id in split_to_batches(list(ids_list), self.step):
+				for seq_id in split_to_batches(list(ids_list), self.step_seq):
 					for sumr in self._download_summary(seq_id):
 						sumr["query"] = f"{query}{self.query_type}"
 						payload.append(json.loads(json.dumps(sumr, cls=CustomEncoder)))
 					pbar.update(len(seq_id))
 		else:
 			with tqdm(total=len(ids_list), desc="NCBI sequences retrieve", unit=" Sequences") as pbar:
-				for seq_id in split_to_batches(list(ids_list), self.step):
+				for seq_id in split_to_batches(list(ids_list), self.step_seq):
 					for seq in self._download_seq(seq_id, rettype=self.rettype, db=self.db):
 						payload.append(json.loads(json.dumps(seq, cls=CustomEncoder)))
 					pbar.update(len(seq_id))
@@ -160,7 +168,7 @@ class NCBI(Input):
 
 		return payload
 
-	def _download_ids(self, term, step):
+	def _download_ids(self, term, step_id):
 		"""
 		Downloads NCBI IDs based on a search term and counts the total base pairs (bp) for the retrieved sequences.
 
@@ -174,7 +182,8 @@ class NCBI(Input):
 		tuple: A list of dictionaries with 'id' and 'bp' keys, and the total count of base pairs.
 
 		Example usage:
-		id_bp_list, total_bp = download_NCBI_ids_and_count_bp(term="Alytes muletensis[Organism]", db='nucleotide', step=10, mail='your-email@example.com')
+		id_bp_list, total_bp = download_NCBI_ids_and_count_bp(term="Alytes muletensis[Organism]", db='nucleotide',
+		step=10, mail='your-email@example.com')
 		print(id_bp_list)
 		"""
 
@@ -185,9 +194,9 @@ class NCBI(Input):
 		id_bp_list = set()
 		total_ids = int(record["Count"])
 		with tqdm(total=total_ids, desc="NCBI IDs retrieve", unit=" IDs") as pbar:
-			for start in range(0, total_ids, step):
+			for start in range(0, total_ids, step_id):
 				try:
-					handle = Entrez.esearch(db=self.db, retstart=start, retmax=step, term=term)
+					handle = Entrez.esearch(db=self.db, retstart=start, retmax=step_id, term=term)
 					record = Entrez.read(handle)
 					handle.close()
 

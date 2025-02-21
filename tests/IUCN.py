@@ -12,8 +12,8 @@ from biodumpy.inputs import IUCN
 # set a trap and redirect stdout. Remove the print of the function. In this wat the test output is cleanest.
 trap = io.StringIO()
 
-
-API_KEY = None
+# TO DO: Remove IUCN KEY
+API_KEY = ""
 
 IUCN_REGIONS = [
 	"northern_africa",
@@ -121,7 +121,7 @@ def test_download(query, regions, habitat, historical, threats, weblink, output_
 	assert data["category"] == "EN", "the category is not EN"
 
 	assert "assessment_date" in data, "assessment_date is not in data"
-	assert data["assessment_date"] == "2020-04-23", "the assessment_date is not 2020-04-23"
+	assert data["assessment_date"] == "2023-02-20", "the assessment_date is not 2023-02-20"
 
 	assert "region" in data, "region is not in data"
 	assert data["region"] == "global", "the region is not global"
@@ -153,13 +153,13 @@ def test_download(query, regions, habitat, historical, threats, weblink, output_
 
 		historical = data["historical"]
 
-		assert len(historical) == 7, "the number of historical records is 7"
+		assert len(historical) == 8, "the number of historical records is 8"
 
 		assert "year" in historical[0], "code is not in historical[0]"
-		assert historical[0]["year"] == "2020", "the year is not 2020"
+		assert historical[0]["year"] == "2024", "the year is not 2024"
 
 		assert "assess_year" in historical[0], "assess_year is not in historical[0]"
-		assert historical[0]["assess_year"] == "2020", "the year is not 2020"
+		assert historical[0]["assess_year"] == "2023", "the year is not 2023"
 
 		assert "code" in historical[0], "code is not in historical[0]"
 		assert historical[0]["code"] == "EN", "the code is not EN"

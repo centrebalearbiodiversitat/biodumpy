@@ -25,9 +25,9 @@ def dump(file_name, obj_list, output_format="json"):
 	Dump a list of objects to JSON files. Optionally split into multiple files for bulk processing.
 
 	Parameters:
-		file_name (str): Base name of the output JSON file.
-		obj_list (list): List of objects to be written to JSON.
-		output_format: output format. Default is "json". Other formats can be "fasta", "pdf".
+	    file_name (str): Base name of the output JSON file.
+	    obj_list (list): List of objects to be written to JSON.
+	    output_format: output format. Default is "json". Other formats can be "fasta", "pdf".
 	"""
 
 	create_directory(file_name)
@@ -46,12 +46,12 @@ def create_directory(file_name):
 	"""
 	Creates a directory for the given file name if it does not already exist.
 
-	Args:
-		file_name (str): The path of the file for which the directory should be created.
+	Parameters:
+	    file_name (str): The path of the file for which the directory should be created.
 
 	Example:
-		create_directory('/path/to/directory/file.txt')
-		This will create '/path/to/directory/' if it does not already exist.
+	    create_directory('/path/to/directory/file.txt')
+	    This will create '/path/to/directory/' if it does not already exist.
 	"""
 
 	directory = os.path.dirname(file_name)
@@ -64,10 +64,10 @@ def remove_tags(text: str) -> str:
 	Removes XML/HTML-like tags from the input string.
 
 	Args:
-		text (str): The input string containing tags.
+	    text (str): The input string containing tags.
 
 	Returns:
-		str: The string with tags removed.
+	    str: The string with tags removed.
 	"""
 	# Use regular expression to remove tags
 	clean_text = re.sub(r"<.*?>", "", text)
@@ -153,10 +153,10 @@ def parse_lat_lon(lat_lon: str):
 	Parse coordinate.
 
 	Args:
-		lat_lon: String containing latitude and longitude.
+	    lat_lon: String containing latitude and longitude.
 
 	Returns:
-		List of coordinates.
+	    List of coordinates.
 
 	Example:
 	parse_lat_lon("34.0522 N 118.2437 E")
@@ -176,3 +176,98 @@ def parse_lat_lon(lat_lon: str):
 		lon = -lon
 
 	return [lat, lon]
+
+
+def read_fasta(file_path: str) -> list:
+	"""
+	Reads a fasta file. The output is a list of dictionaries containing the sequences.
+
+	Parameters
+	----------
+
+	file_path: str
+	    Path of the fasta file.
+	"""
+
+	# Check if the file is .fasta.
+	if not file_path.endswith((".fasta", ".fas", ".fa", ".fna", ".ffn", ".faa", ".mpfa", ".frn")):
+		raise ValueError(f"Invalid file: '{file_path}'. Please provide a file with a correct extension.")
+
+	sequences = []
+	with open(file_path, "r") as file:
+		sequence_id = None
+		sequence_data = []
+
+		for line in file:
+			line = line.strip()
+			if line.startswith(">"):  # Header line
+				if sequence_id:  # Save the previous sequence
+					sequences.append({"id": sequence_id, "sequence": "".join(sequence_data)})
+				sequence_id = line[1:]  # Exclude '>'
+				sequence_data = []
+			else:
+				sequence_data.append(line)
+
+		if sequence_id:  # Save the last sequence
+			sequences.append({"id": sequence_id, "sequence": "".join(sequence_data)})
+
+	return sequences
+
+
+def save_fasta(file_path: str, sequences: list):
+	"""
+	Save a list of sequences to a FASTA file.
+
+	Parameters
+	----------
+
+	file_path:
+	    Path to the output FASTA file.
+
+	sequences:
+	    List of dictionaries with 'id' and 'sequence' data.
+	"""
+
+	with open(file_path, "w") as file:
+		for seq in sequences:
+			# Write the header line (e.g., '>id')
+			file.write(f">{seq['id']}\n" if isinstance(seq, dict) else f">{seq[0]}\n")
+			# Write the sequence in multiple lines if needed
+			sequence = seq["sequence"] if isinstance(seq, dict) else seq[1]
+			for i in range(0, len(sequence), 80):  # Break the sequence into chunks of 80 characters
+				file.write(sequence[i : i + 80] + "\n")
+
+
+def haplo_collapse(fasta_file):
+	"""
+	Function to collapse haplotypes from FASTA file.
+
+	Parameters
+	----------
+	fasta_file :
+	    The input FASTA file containing the sequences to be collapsed.
+
+	Details
+	-------
+	This function produce a list of dictionary containing two fields:
+	    - sequence: Stores the genetic information of the sequence.
+	    - ids: Contains the identifiers of all sequences that were collapsed into the respective sequence.
+
+	Example
+	-------
+	>>> a = haplo_collapse(fasta_file)
+	"""
+
+	if not all("id" in item and "sequence" in item for item in fasta_file):
+		raise ValueError("The FASTA format is not formatted correctly.")
+
+	haplo = {}
+	for item in fasta_file:
+		key = item["id"]
+		value = item["sequence"]
+
+		if value not in haplo:
+			haplo[value] = {"sequence": value, "ids": []}
+		haplo[value]["ids"].append(key)
+
+	return list(haplo.values())

@@ -7,9 +7,13 @@ IUCN Module
 Overview
 --------
 
-The ``IUCN`` module allows users to easily retrieve information about species assessments, habitats, and threats from the IUCN :cite:`iucn2024`. By providing the taxon name and an API key, users can access the desired data. The information is downloaded in JSON format. For more details on obtaining API keys and accessing the documentation, please visit the IUCN Red List API v3 (`IUCN_API`_).
+The ``IUCN`` module allows users to easily retrieve information about species assessments, habitats, and threats from the IUCN :cite:`iucn2024`. By providing the taxon name and an API key, users can access the desired data. For more details on obtaining API keys and accessing the documentation, please visit the IUCN Red List API v3 (`IUCN_API`_).
 
 .. _IUCN_API: https://apiv3.iucnredlist.org/api/v3/docs#regions
+
+.. toggle:: Click to expand
+
+    JSON
 
 
 Key Features
@@ -42,19 +46,16 @@ Users can download IUCN information for a specific species and select one or mor
     # Taxa list
     taxa = ['Alytes muletensis', 'Bufotes viridis', 'Hyla meridionalis', 'Anax imperator']
 
-    # Select your output path
-    output_path = 'YOUR_OUTPUT_PATH'
-
     # Create a list containing the IUCN regions
     regions = ['global', 'europe']
 
     # Set the module and start the download
     bdp = Biodumpy([IUCN(api_key=api_key, bulk=True, region=regions)])
-    bdp.start(taxa, output_path=output_path)
+    bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}')
 
 
 Retrieve IUCN habitat information
----------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Users can retrieve information about IUCN species habitat setting the parameter ``habitat`` to *True*.
 
@@ -65,7 +66,7 @@ Users can retrieve information about IUCN species habitat setting the parameter 
 
 
 Retrieve IUCN historical assessments
-------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 To obtain the historical assessments of the species, users can set the parameter ``historical`` to *True*.
 
@@ -76,7 +77,7 @@ To obtain the historical assessments of the species, users can set the parameter
 
 
 Retrieve IUCN threat information
---------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Threats information about a species is downloadable setting the parameter ``threats`` to *True*.
 
@@ -87,7 +88,7 @@ Threats information about a species is downloadable setting the parameter ``thre
 
 
 Retrieve IUCN citation and weblink
-----------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The citation for a given species assessment and the redirection link are downloadable by setting the parameters ``citation`` and ``weblink`` to *True*.
 
