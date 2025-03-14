@@ -28,7 +28,7 @@ IUCN_REGIONS = [
 ]
 
 
-def iucn_query(query, api_key, habitat, regions, historical, threats, output_format):
+def iucn_query(query, api_key, habitat, regions, historical_threats, threats, output_format):
 	# Create temporary directory
 	with tempfile.TemporaryDirectory() as temp_dir:
 		# Construct the dynamic path using formatted strings
@@ -42,13 +42,13 @@ def iucn_query(query, api_key, habitat, regions, historical, threats, output_for
 				api_key=api_key,
 				habitat=habitat,
 				regions=regions,
-				historical=historical,
+				historical_threats=historical_threats,
 				threats=threats,
 				output_format=output_format,
 			)
 		]
 	)
-	bdp.start(elements=query, output_path=f"{dynamic_path}/downloads/{{date}}/{{module}}/{{name}}")
+	bdp.download_data(elements=query, output_path=f"{dynamic_path}/downloads/{{date}}/{{module}}/{{name}}")
 
 	# Retrieve a file path
 	dir_date = os.listdir(f"{dynamic_path}/downloads/")[0]
@@ -69,7 +69,7 @@ def test_iucn_initialization():
 
 	# Verify default parameters
 	assert iucn.habitat == False
-	assert iucn.historical == False
+	assert iucn.historical_threats == False
 	assert iucn.threats == False
 	assert iucn.output_format == "json"
 
@@ -103,7 +103,7 @@ def test_validate_regions_invalid():
 
 
 @pytest.mark.parametrize(
-	"query, regions, habitat, historical, threats, output_format",
+	"query, regions, habitat, historical_threats, threats, output_format",
 	[
 		(["Alytes muletensis"], ["global"], False, False, False, "json"),
 		(["Alytes muletensis"], ["global"], True, False, False, "json"),
@@ -111,13 +111,13 @@ def test_validate_regions_invalid():
 		(["Alytes muletensis"], ["global"], False, False, True, "json"),
 	],
 )
-def test_download(query, regions, habitat, historical, threats, output_format):
+def test_download(query, regions, habitat, historical_threats, threats, output_format):
 	with redirect_stdout(trap):
 		data = iucn_query(
 			query=query,
 			regions=regions,
 			habitat=habitat,
-			historical=historical,
+			historical_threats=historical_threats,
 			threats=threats,
 			output_format=output_format,
 			api_key=API_KEY,
@@ -142,13 +142,13 @@ def test_download(query, regions, habitat, historical, threats, output_format):
 		assert "suitability" in data["habitat"], "suitability is not in data['habitat']"
 		assert "season" in data["habitat"], "season is not in data['habitat']"
 
-	if historical:
-		assert "historical" in data, "historical is not in data"
-		assert "year" in data["historical"], "code is not in data['historical']"
-		assert "assess_year" in data["historical"], "assess_year is not in data['historical']"
-		assert "code" in data["historical"], "code is not in data['historical']"
-		assert "category" in data["historical"], "category is not in data['historical']"
-		assert "region" in data["historical"], "region is not in data['historical']"
+	if historical_threats:
+		assert "historical_threats" in data, "historical_threats is not in data"
+		assert "year" in data["historical_threats"], "code is not in data['historical_threats']"
+		assert "assess_year" in data["historical_threats"], "assess_year is not in data['historical_threats']"
+		assert "code" in data["historical_threats"], "code is not in data['historical_threats']"
+		assert "category" in data["historical_threats"], "category is not in data['historical_threats']"
+		assert "region" in data["historical_threats"], "region is not in data['historical_threats']"
 
 	if threats:
 		assert "threats" in data, "threats is not in data"

@@ -13,15 +13,15 @@ from biodumpy.inputs import ZooBank
 trap = io.StringIO()
 
 
-def zoobank_query(query, info, dataset_size):
+def zoobank_query(query, info_only, dataset_size):
 	# Create temporary directory
 	with tempfile.TemporaryDirectory() as temp_dir:
 		# Construct the dynamic path using formatted strings
 		dynamic_path = os.path.join(temp_dir)
 
 	# Start biodumpy function
-	bdp = Biodumpy([ZooBank(bulk=False, dataset_size=dataset_size, info=info)])
-	bdp.start(elements=query, output_path=f"{dynamic_path}/downloads/{{date}}/{{module}}/{{name}}")
+	bdp = Biodumpy([ZooBank(bulk=False, dataset_size=dataset_size, info_only=info_only)])
+	bdp.download_data(elements=query, output_path=f"{dynamic_path}/downloads/{{date}}/{{module}}/{{name}}")
 
 	# Retrieve a file path
 	dir_date = os.listdir(f"{dynamic_path}/downloads/")[0]
@@ -43,7 +43,7 @@ def test_zoobank_initialization():
 	# Objective: Verify that when a ZOOBANK object is created without passing any arguments, it initializes with the
 	# correct default values.
 	assert zoobank.dataset_size == "small"
-	assert zoobank.info == False
+	assert zoobank.info_only == False
 	assert zoobank.output_format == "json"
 
 	# Objective: Verify that the class correctly raises a ValueError when an invalid value is provided for the
@@ -58,7 +58,7 @@ def test_zoobank_initialization():
 
 
 @pytest.mark.parametrize(
-	"query, info, dataset_size",
+	"query, info_only, dataset_size",
 	[
 		(["Bufotes viridis"], False, "small"),
 		(["Bufotes viridis"], False, "large"),
@@ -66,14 +66,14 @@ def test_zoobank_initialization():
 		(["Bufotes viridis"], True, "large"),
 	],
 )
-def test_download_syn(query, info, dataset_size):
+def test_download_syn(query, info_only, dataset_size):
 	with redirect_stdout(trap):
-		data = zoobank_query(query=query, info=info, dataset_size=dataset_size)
+		data = zoobank_query(query=query, info_only=info_only, dataset_size=dataset_size)
 
 	# Check if data is not empty
 	assert len(data) > 0, "data length is 0"
 
-	if info:
+	if info_only:
 		data = data[0]
 		assert "Abbreviation" in data[0], "Abbreviation is not in the data"
 		assert "Identifier" in data[0], "Identifier is not in the data"

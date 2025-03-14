@@ -13,15 +13,15 @@ from biodumpy.inputs import OBIS
 trap = io.StringIO()
 
 
-def obis_query(query, occ, geometry, areaid):
+def obis_query(query, occurrences, geometry, areaid):
 	# Create temporary directory
 	with tempfile.TemporaryDirectory() as temp_dir:
 		# Construct the dynamic path using formatted strings
 		dynamic_path = os.path.join(temp_dir)
 
 	# Start biodumpy function
-	bdp = Biodumpy([OBIS(output_format="json", bulk=False, occ=occ, geometry=geometry, areaid=areaid)])
-	bdp.start(elements=query, output_path=f"{dynamic_path}/downloads/{{date}}/{{module}}/{{name}}")
+	bdp = Biodumpy([OBIS(output_format="json", bulk=False, occurrences=occurrences, geometry=geometry, areaid=areaid)])
+	bdp.download_data(elements=query, output_path=f"{dynamic_path}/downloads/{{date}}/{{module}}/{{name}}")
 
 	# Retrieve a file path
 	dir_date = os.listdir(f"{dynamic_path}/downloads/")[0]
@@ -41,7 +41,7 @@ def test_obis_initialization():
 	obis = OBIS()
 
 	# Verify default parameters
-	assert obis.occ == False
+	assert obis.occurrences == False
 	assert obis.geometry is None
 	assert obis.areaid is None
 	assert obis.bulk == False
@@ -52,12 +52,12 @@ def test_obis_initialization():
 	with pytest.raises(ValueError, match='Invalid output_format. Expected "json".'):
 		OBIS(output_format="xml")
 
-	with pytest.raises(ValueError, match='"If "occ" is False, "areaid" and "geometry" cannot be set."'):
-		OBIS(occ=False, areaid=33322, geometry="abc")
+	with pytest.raises(ValueError, match='"If "occurrences" is False, "areaid" and "geometry" cannot be set."'):
+		OBIS(occurrences=False, areaid=33322, geometry="abc")
 
 
 @pytest.mark.parametrize(
-	"query, occ, geometry, areaid",
+	"query, occurrences, geometry, areaid",
 	[
 		(["Pinna nobilis"], False, None, None),
 		(["Pinna nobilis"], True, "POLYGON((0.248 37.604, 6.300 37.604, 6.300 41.472, 0.248 41.472, 0.248 37.604))", None),
@@ -65,15 +65,15 @@ def test_obis_initialization():
 		(["Pinna nobilis"], True, "POLYGON((0.248 37.604, 6.300 37.604, 6.300 41.472, 0.248 41.472, 0.248 37.604))", 33322),
 	],
 )
-def test_download(query, occ, geometry, areaid):
+def test_download(query, occurrences, geometry, areaid):
 	with redirect_stdout(trap):
-		data = obis_query(query=query, occ=occ, geometry=geometry, areaid=areaid)
+		data = obis_query(query=query, occurrences=occurrences, geometry=geometry, areaid=areaid)
 
 	# Check if data is not empty
 	assert len(data) > 0, "data length is 0"
 
 	# Check the main info in an OBIS JSON file
-	if occ is False:
+	if occurrences is False:
 		assert "taxonID" in data[0], "taxonID is not in data"
 		assert "scientificName" in data[0], "scientificName is not in data"
 	else:

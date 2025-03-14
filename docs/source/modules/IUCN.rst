@@ -61,7 +61,7 @@ IUCN Red List API v3 (`IUCN_API`_).
 
     # Set the module and start the download
     bdp = Biodumpy([IUCN(api_key=api_key, bulk=True, region=regions)])
-    bdp.start(taxa, output_path=output_path)
+    bdp.download_data(taxa, output_path=output_path)
 
 
 Retrieve IUCN habitat information
@@ -72,18 +72,18 @@ Users can retrieve information about IUCN species habitat setting the parameter 
 .. code-block:: python
 
     bdp = Biodumpy([IUCN(api_key=api_key, bulk=True, region=regions, habitat=True)])
-    bdp.start(taxa, output_path=output_path)
+    bdp.download_data(taxa, output_path=output_path)
 
 
 Retrieve IUCN historical assessments
 ------------------------------------
 
-To obtain the historical assessments of the species, users can set the parameter ``historical`` to *True*.
+To obtain the historical assessments of the species, users can set the parameter ``historical_threats`` to *True*.
 
 .. code-block:: python
 
-    bdp = Biodumpy([IUCN(api_key=api_key, bulk=True, region=regions, historical=True)])
-    bdp.start(taxa, output_path=output_path)
+    bdp = Biodumpy([IUCN(api_key=api_key, bulk=True, region=regions, historical_threats=True)])
+    bdp.download_data(taxa, output_path=output_path)
 
 
 Retrieve IUCN threat information
@@ -94,7 +94,7 @@ Threaths information about a species is downloadable setting the parameter ``thr
 .. code-block:: python
 
     bdp = Biodumpy([IUCN(api_key=api_key, bulk=True, region=regions, threats=True)])
-    bdp.start(taxa, output_path=output_path)
+    bdp.download_data(taxa, output_path=output_path)
 
 
 Reference link/s

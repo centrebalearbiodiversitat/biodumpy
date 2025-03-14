@@ -12,12 +12,12 @@ class OBIS(Input):
 	----------
 	query : list
 	    The list of taxa to query.
-	occ : bool, optional
+	occurrences : bool, optional
 	    If True, the function also returns the occurrences of a taxon. Default is False.
 	geometry : str, optional
 	    A spatial polygon to filter occurrences within a specified area. Default is an empty string.
 	area : int, optional
-	    A marine area to filter occurrences. Default is an empty string.
+	    Filter occurrences by a marine area. Default is an empty string.
 	bulk : bool, optional
 		If True, the function creates a bulk file. For further information, see the documentation of the Biodumpy package.
 		Default is False.
@@ -31,22 +31,22 @@ class OBIS(Input):
 	# Taxa list
 	>>> taxa = ['Pinna nobilis', 'Delphinus delphis', 'Plerogyra sinuosa']
 	# Set the module and start the download
-	>>> bdp = Biodumpy([OBIS(bulk=False, occ=True)])
-	>>> bdp.start(taxa, output_path='./downloads/{date}/{module}_occ/{name}')
+	>>> bdp = Biodumpy([OBIS(bulk=False, occurrences=True)])
+	>>> bdp.download_data(taxa, output_path='./downloads/{date}/{module}_occ/{name}')
 	"""
 
-	def __init__(self, occ: bool = False, geometry: str = None, areaid: int = None, output_format: str = "json", bulk: bool = False):
+	def __init__(self, occurrences: bool = False, geometry: str = None, areaid: int = None, output_format: str = "json", bulk: bool = False):
 		super().__init__(output_format, bulk)
-		self.occ = occ
+		self.occurrences = occurrences
 		self.geometry = geometry
 		self.areaid = areaid
 
 		if output_format != "json":
 			raise ValueError('Invalid output_format. Expected "json".')
 
-		# if occ is False, areaid and pylogon cannot both be True
-		if not self.occ and (self.areaid is not None or self.geometry):
-			raise ValueError('"If "occ" is False, "areaid" and "geometry" cannot be set."')
+		# if occurrences is False, areaid and pylogon cannot both be True
+		if not self.occurrences and (self.areaid is not None or self.geometry):
+			raise ValueError('"If "occurrences" is False, "areaid" and "geometry" cannot be set."')
 
 	def _download(self, query, **kwargs) -> list:
 		payload = []
@@ -58,7 +58,7 @@ class OBIS(Input):
 		if response.content:
 			payload = response.json()["results"]
 
-			if self.occ and len(payload) > 0:
+			if self.occurrences and len(payload) > 0:
 				tax_key = payload[0]["taxonID"]
 				payload = self._download_obis_occ(taxon_key=tax_key, geometry=self.geometry, areaid=self.areaid)
 

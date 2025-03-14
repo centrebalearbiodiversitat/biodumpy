@@ -21,7 +21,7 @@ def bold_query(query, summary, fasta, output_format):
 
 	# Start biodumpy function
 	bdp = Biodumpy([BOLD(bulk=True, summary=summary, fasta=fasta, output_format=output_format)])
-	bdp.start(elements=query, output_path=f"{dynamic_path}/downloads/{{date}}/{{module}}/{{name}}")
+	bdp.download_data(elements=query, output_path=f"{dynamic_path}/downloads/{{date}}/{{module}}/{{name}}")
 
 	# Retrieve a file path
 	dir_date = os.listdir(f"{dynamic_path}/downloads/")[0]

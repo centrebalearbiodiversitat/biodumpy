@@ -46,8 +46,8 @@ dataset size is selected.
 
     # Set the module and start the download
     # Start the download
-    bdp = Biodumpy([ZooBank(bulk=False, dataset_size='small', info=False)])
-    bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}')
+    bdp = Biodumpy([ZooBank(bulk=False, dataset_size='small', info_only=False)])
+    bdp.download_data(taxa, output_path='./downloads/{date}/{module}/{name}')
 
 
 Reference link/s

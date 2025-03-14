@@ -15,7 +15,7 @@ trap = io.StringIO()
 gbif_backbone = "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c"
 
 
-def gbif_query(query, accepted_only, occ, geometry):
+def gbif_query(query, accepted_only, occurrences, geometry):
 	# Create temporary directory
 	with tempfile.TemporaryDirectory() as temp_dir:
 		# Construct the dynamic path using formatted strings
@@ -30,12 +30,12 @@ def gbif_query(query, accepted_only, occ, geometry):
 				limit=20,
 				bulk=False,
 				accepted_only=accepted_only,
-				occ=occ,
+				occurrences=occurrences,
 				geometry=geometry,
 			)
 		]
 	)
-	bdp.start(elements=query, output_path=f"{dynamic_path}/downloads/{{date}}/{{module}}/{{name}}")
+	bdp.download_data(elements=query, output_path=f"{dynamic_path}/downloads/{{date}}/{{module}}/{{name}}")
 
 	# Retrieve a file path
 	dir_date = os.listdir(f"{dynamic_path}/downloads/")[0]
@@ -58,7 +58,7 @@ def test_gbif_initialization():
 	assert gbif.dataset_key == "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c"
 	assert gbif.limit == 20
 	assert gbif.accepted == True
-	assert gbif.occ == False
+	assert gbif.occurrences == False
 	assert gbif.geometry is None
 	assert gbif.bulk == False
 	assert gbif.output_format == "json"
@@ -66,7 +66,7 @@ def test_gbif_initialization():
 	# Objective: Verify that the class raises a ValueError when an invalid value is provided for the
 	# accepted_only parameter.
 	with pytest.raises(ValueError, match="Invalid accepted_only. Expected True."):
-		GBIF(occ=True, accepted_only=False)
+		GBIF(occurrences=True, accepted_only=False)
 
 	# Objective: Verify that the class raises a ValueError when an invalid value is provided for the
 	# output_format parameter.
@@ -75,26 +75,26 @@ def test_gbif_initialization():
 
 
 @pytest.mark.parametrize(
-	"query, accepted_only, occ, geometry",
+	"query, accepted_only, occurrences, geometry",
 	[
-		(["Alytes muletensis (Sanchíz & Adrover, 1979)"], True, False, None),  # accepted_only=True, occ=False, geometry...
+		(["Alytes muletensis (Sanchíz & Adrover, 1979)"], True, False, None),  # accepted_only=True, occurrences=False, geometry...
 		(
 			["Alytes muletensis (Sanchíz & Adrover, 1979)"],
 			True,
 			True,
 			"POLYGON((0.248 37.604, 6.300 37.604, 6.300 41.472, 0.248 41.472, 0.248 37.604))",
-		),  # accepted_only=True, occ=True, geometry...
+		),  # accepted_only=True, occurrences=True, geometry...
 	],
 )
-def test_download(query, accepted_only, occ, geometry):
+def test_download(query, accepted_only, occurrences, geometry):
 	with redirect_stdout(trap):
-		data = gbif_query(query=query, accepted_only=accepted_only, occ=occ, geometry=geometry)
+		data = gbif_query(query=query, accepted_only=accepted_only, occurrences=occurrences, geometry=geometry)
 
 	# Check if data is not empty
 	assert len(data) > 0, "data length is 0"
 
 	# Check the main info in a GBIF JSON file
-	if occ is False:
+	if occurrences is False:
 		assert "key" in data[0], "key is not in data"
 		assert "scientificName" in data[0], "scientificName is not in data"
 	else:

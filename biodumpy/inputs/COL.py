@@ -11,7 +11,7 @@ class COL(Input):
 	----------
 	query : list
 	    The list of taxa to query.
-	check_syn : bool, optional
+	accepted_only : bool, optional
 	    If True, the function returns only the accepted nomenclature of a taxon.
 	    See Detail section for further information.
 	    Default is False.
@@ -21,14 +21,13 @@ class COL(Input):
 		Default is False.
 	output_format : string, optional
 		The format of the output file.
-		The options available are: 'json', 'fasta', 'pdf'.
-		Default is 'json'.
+		The options available are: 'json', 'fasta', 'pdf'. Default is 'json'.
 
 	Details
 	-------
-	When check_syn is set to True, the resulting JSON will include only the nomenclature of the accepted taxon.
-	For instance, if check_syn is True, the output for the species Bufo roseus will only show the nomenclature for
-	Bufotes viridis. Conversely, if check_syn is set to False, the JSON will include the nomenclature for both
+	When accepted_only is set to True, the resulting JSON will include only the nomenclature of the accepted taxon.
+	For instance, if accepted_only is True, the output for the species Bufo roseus will only show the nomenclature for
+	Bufotes viridis. Conversely, if accepted_only is set to False, the JSON will include the nomenclature for both
 	Bufo roseus and Bufotes viridis.
 
 	Example
@@ -38,15 +37,15 @@ class COL(Input):
 	# List oF taxa
 	>>> taxa = ['Alytes muletensis', 'Bufotes viridis', 'Hyla meridionalis', 'Anax imperator', 'Bufo roseus', 'Stollia betae']
 	# Start the download
-	>>> bdp = Biodumpy([COL(bulk=True, check_syn=False)])
-	>>> bdp.start(taxa, output_path='./biodumpy/downloads/{date}/{module}/{name}')
+	>>> bdp = Biodumpy([COL(bulk=True, accepted_only=False)])
+	>>> bdp.download_data(taxa, output_path='./biodumpy/downloads/{date}/{module}/{name}')
 	"""
 
 	ACCEPTED_TERMS = ["accepted", "provisionally accepted"]
 
-	def __init__(self, output_format: str = "json", bulk: bool = False, check_syn: bool = False):
+	def __init__(self, output_format: str = "json", bulk: bool = False, accepted_only: bool = False):
 		super().__init__(output_format, bulk)
-		self.check_syn = check_syn
+		self.accepted_only = accepted_only
 
 		if output_format != "json":
 			raise ValueError("Invalid output_format. Expected 'json'.")
@@ -82,7 +81,7 @@ class COL(Input):
 			status = usage.get("status") if usage else None
 
 			classification = result[0].get("classification")
-			if self.check_syn and status not in COL.ACCEPTED_TERMS:
+			if self.accepted_only and status not in COL.ACCEPTED_TERMS:
 				synonym_id = usage.get("id") if usage else None
 				classification = [item for item in classification if item["id"] != synonym_id] if classification else None
 

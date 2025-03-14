@@ -44,8 +44,8 @@ Anthozoa. This function utilizes the OBIS API's endpoint `/taxon/`_.
     taxa = ['Delphinus delphis', 'Pinna nobilis', 'Plerogyra sinuosa']
 
     # Set the module and start the download
-    bdp = Biodumpy([OBIS(bulk=False, occ=False)])
-    bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}')
+    bdp = Biodumpy([OBIS(bulk=False, occurrences=False)])
+    bdp.download_data(taxa, output_path='./downloads/{date}/{module}/{name}')
 
 
 Extract main information from downloaded file
@@ -87,7 +87,7 @@ Retrieve occurrences and associated metadata from OBIS
 ------------------------------------------------------
 
 The ``OBIS`` module provides also the ability to download occurrences for a specific taxon. By setting the parameter
-``occ`` to *True*, users can enable the download of these occurrences.
+``occurrences`` to *True*, users can enable the download of these occurrences.
 Additionally, the module supports filtering occurrences based on a specified geographic region using either the
 ``geometry`` or ``areaid`` parameters. These parameters can be used separately or together.
 When a ``geometry`` or ``areaid`` are provided, only occurrences that fall within the defined polygons are included in the
@@ -107,20 +107,20 @@ result. Here we provide an example to download and extract the main information 
     taxa = ['Delphinus delphis', 'Pinna nobilis', 'Plerogyra sinuosa']
 
     # Set the module and start the download occurrences
-    bdp = Biodumpy([OBIS(bulk=False, occ=True)])
-    bdp.start(taxa, output_path='./downloads/{date}/{module}_occ/{name}')
+    bdp = Biodumpy([OBIS(bulk=False, occurrences=True)])
+    bdp.download_data(taxa, output_path='./downloads/{date}/{module}_occ/{name}')
 
     # Set the module and start the download occurrences within a polygon
-    bdp = Biodumpy([OBIS(bulk=False, occ=True, geometry=poly)])
-    bdp.start(taxa, output_path='./downloads/{date}/{module}_poly/{name}')
+    bdp = Biodumpy([OBIS(bulk=False, occurrences=True, geometry=poly)])
+    bdp.download_data(taxa, output_path='./downloads/{date}/{module}_poly/{name}')
 
     # Set the module and start the download occurrences within an area
-    bdp = Biodumpy([OBIS(bulk=False, occ=True, geometry=None, areaid=areaid)])
-    bdp.start(taxa, output_path='./downloads/{date}/{module}_area/{name}')
+    bdp = Biodumpy([OBIS(bulk=False, occurrences=True, geometry=None, areaid=areaid)])
+    bdp.download_data(taxa, output_path='./downloads/{date}/{module}_area/{name}')
 
     # Set the module and start the download occurrences within a polygon inside an area
-    bdp = Biodumpy([OBIS(bulk=False, occ=True, geometry=poly, areaid=areaid)])
-    bdp.start(taxa, output_path='./downloads/{date}/{module}_area_poly/{name}')
+    bdp = Biodumpy([OBIS(bulk=False, occurrences=True, geometry=poly, areaid=areaid)])
+    bdp.download_data(taxa, output_path='./downloads/{date}/{module}_area_poly/{name}')
 
 
 Reference link/s

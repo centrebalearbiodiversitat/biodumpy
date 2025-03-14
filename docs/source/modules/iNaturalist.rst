@@ -42,7 +42,7 @@ This function is based on the iNaturalist v1 API's endpoint `v1/taxa`_.
     ]
     # Start the download
     bdp = Biodumpy([INaturalist(bulk=True)])
-    bdp.start(taxa, output_path='./biodumpy/downloads/{date}/{module}/{name}')
+    bdp.download_data(taxa, output_path='./biodumpy/downloads/{date}/{module}/{name}')
 
 
 To view the photo, users can append the 'image_id' value at the end of the following link: https://inaturalist-open-data.s3.amazonaws.com/photos/ .

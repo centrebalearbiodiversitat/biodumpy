@@ -42,7 +42,7 @@ class INaturalist(Input):
 	>>> taxa = ['Alytes muletensis', 'Bufotes viridis', 'Hyla meridionalis', 'Anax imperator', 'Bufo roseus', 'Stollia betae']
 	# Start the download
 	>>> bdp = Biodumpy([INaturalist(bulk=True)])
-	>>> bdp.start(taxa, output_path='./biodumpy/downloads/{date}/{module}/{name}')
+	>>> bdp.download_data(taxa, output_path='./biodumpy/downloads/{date}/{module}/{name}')
 	"""
 
 	def __init__(

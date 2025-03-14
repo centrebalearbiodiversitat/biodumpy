@@ -15,10 +15,10 @@ class IUCN(Input):
 	    Your IUCN API key.
 	habitat : str
 	    The name of an IUCN habitat.
-	historical : bool, optional
-	    If True, the function returns also the historical threats of a taxon. Default is False.
 	threats : bool, optional
 	    If True, the function returns also the threat list of a taxon. Default is False.
+	historical_threats : bool, optional
+	    If True, the function returns also the historical threats of a taxon. Default is False.
 	regions : list, optional
 	    The list of specific IUCN regions. For further information, see the IUCN API documentation. Default is an empty list.
 	bulk : bool, optional
@@ -39,14 +39,14 @@ class IUCN(Input):
 	# Select the regions
 	>>> regions = ['global', 'europe']
 	>>> bdp = Biodumpy([IUCN(api_key=api_key, bulk=True, regions=regions)])
-	>>> bdp.start(taxa, output_path=output_path)
+	>>> bdp.download_data(taxa, output_path=output_path)
 	"""
 
 	def __init__(
 		self,
 		api_key: str,
 		habitat: bool = False,
-		historical: bool = False,
+		historical_threats: bool = False,
 		threats: bool = False,
 		regions: list = None,
 		output_format: str = "json",
@@ -58,7 +58,7 @@ class IUCN(Input):
 		self.api_key = api_key
 		self.habitat = habitat
 		self.regions = regions
-		self.historical = historical
+		self.historical_threats = historical_threats
 		self.threats = threats
 
 		iucn_regions = [
@@ -100,11 +100,11 @@ class IUCN(Input):
 					)
 					taxon_info.update({"habitat": habitat_info})
 
-				if self.historical:
+				if self.historical_threats:
 					habitat_info = self._icun_request(
 						f"https://apiv3.iucnredlist.org/api/v3/species/history/id/{taxon_id}/region/{region}?token={self.api_key}"
 					)
-					taxon_info.update({"historical": habitat_info})
+					taxon_info.update({"historical_threats": habitat_info})
 
 				if self.threats:
 					habitat_info = self._icun_request(

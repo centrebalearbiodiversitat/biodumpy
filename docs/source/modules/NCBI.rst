@@ -40,7 +40,7 @@ the type of query search. This function is based on biopython `Entrez`_ module.
 
     # Start the download
     bdp = Biodumpy([NCBI(bulk=False, mail="hola@quetal.com", db="nucleotide", rettype="gb", query_type='[Organism]')])
-    bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}')
+    bdp.download_data(taxa, output_path='./downloads/{date}/{module}/{name}')
 
 
 Users can refine their search by adjusting the ``query_type`` parameter. For instance, if you want to download sequences
@@ -57,7 +57,7 @@ This allows you to combine multiple search criteria to better target the specifi
     # Start the download
     bdp = Biodumpy([NCBI(bulk=False, mail="hola@quetal.com", db="nucleotide",
         rettype="gb", query_type='[Organism] AND "COI" [Gene]')])
-    bdp.start(taxa, output_path='./downloads/{date}/{module}_gene/{name}')
+    bdp.download_data(taxa, output_path='./downloads/{date}/{module}_gene/{name}')
 
 
 Download NCBI a summary of metadata
@@ -82,7 +82,7 @@ When enabled, the resulting JSON will include the following details:
     # Start the download
     bdp = Biodumpy([NCBI(bulk=False, mail="hola@quetal.com", db="nucleotide",
         rettype="gb", query_type='[Organism]', summary=True)])
-    bdp.start(taxa, output_path='./downloads/{date}/{module}_summary/{name}')
+    bdp.download_data(taxa, output_path='./downloads/{date}/{module}_summary/{name}')
 
 
 Downloading data in FASTA format
@@ -102,7 +102,7 @@ example demonstrating how to download FASTA files.
     # Start the download
     bdp = Biodumpy([NCBI(bulk=False, mail="hola@quetal.com", db="nucleotide", rettype="fasta",
         query_type='[Organism]', summary=True, output_format='fasta')])
-    bdp.start(taxa, output_path='./downloads/{date}/{module}_fasta/{name}')
+    bdp.download_data(taxa, output_path='./downloads/{date}/{module}_fasta/{name}')
 
 
 
@@ -122,7 +122,7 @@ It is possible combine this approach also to download summary JSON or FASTA file
 
     # Start the download
     bdp = Biodumpy([NCBI(bulk=True, mail="hola@quetal.com", db="nucleotide", rettype="gb", query_type = None, by_id=True)])
-    bdp.start(acc_numb, output_path='./downloads/{date}/{module}_acc_num/{name}')
+    bdp.download_data(acc_numb, output_path='./downloads/{date}/{module}_acc_num/{name}')
 
 
 Reference link

@@ -58,8 +58,8 @@ This function utilizes the GBIF API's endpoint `species/search`_.
             'Hyla meridionalis Boettger, 1874', 'Anax imperator Leach, 1815']
 
     # Set the module and start the download
-    bdp = Biodumpy([GBIF(dataset_key=gbif_backbone, limit=20, bulk=False, accepted_only=True, occ=False)])
-    bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}')
+    bdp = Biodumpy([GBIF(dataset_key=gbif_backbone, limit=20, bulk=False, accepted_only=True, occurrences=False)])
+    bdp.download_data(taxa, output_path='./downloads/{date}/{module}/{name}')
 
 
 Extract main information from downloaded file
@@ -101,7 +101,7 @@ Retrieve occurrences and associated metadata from GBIF
 ------------------------------------------------------
 
 The ``GBIF`` module provides also the ability to download occurrences for a specific taxon. By setting the parameter
-``occ`` to *True*, users can enable the download of these occurrences.
+``occurrences`` to *True*, users can enable the download of these occurrences.
 Additionally, the module supports filtering occurrences based on a specified geographic region using the ``geometry``
 parameter. When a ``geometry`` is provided, only occurrences that fall within the defined polygon are included in the
 result. Here we provide an example to download and extract the main information from downloaded dataset.
@@ -123,8 +123,8 @@ result. Here we provide an example to download and extract the main information 
             'Hyla meridionalis Boettger, 1874', 'Anax imperator Leach, 1815']
 
     # Set the module and start the download
-    bdp = Biodumpy([GBIF(dataset_key=gbif_backbone, limit=20, bulk=False, accepted_only=True, occ=True, geometry=poly)])
-    bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}')
+    bdp = Biodumpy([GBIF(dataset_key=gbif_backbone, limit=20, bulk=False, accepted_only=True, occurrences=True, geometry=poly)])
+    bdp.download_data(taxa, output_path='./downloads/{date}/{module}/{name}')
 
     # Retrieve main information
     file = 'YOUR_JSON_PATH'

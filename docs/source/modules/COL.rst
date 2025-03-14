@@ -43,15 +43,15 @@ endpoint `nameusage/search?`_.
     taxa = ['Alytes muletensis', 'Bufotes viridis', 'Hyla meridionalis', 'Anax imperator']
 
     # Start the download
-    bdp = Biodumpy([COL(bulk=True, check_syn=False)])
-    bdp.start(taxa, output_path='/Users/tcanc/PycharmProjects/biodumpy/downloads/{date}/{module}/{name}')
+    bdp = Biodumpy([COL(bulk=True, accepted_only=False)])
+    bdp.download_data(taxa, output_path='/Users/tcanc/PycharmProjects/biodumpy/downloads/{date}/{module}/{name}')
 
 
 Retrieve nomenclature from COL - With synonym names
 ---------------------------------------------------
 
 In the following example, the species *Bufo roseus* is a synonym of *Bufotes viridis*.
-Here, we test the difference in the results by setting the parameter ``check_syn`` to *False* or *True*.
+Here, we test the difference in the results by setting the parameter ``accepted_only`` to *False* or *True*.
 
 .. code-block:: python
 
@@ -61,19 +61,19 @@ Here, we test the difference in the results by setting the parameter ``check_syn
     # List od taxa
     taxa = ['Bufo roseus']
 
-    # Start the download check_syn = False
-    bdp = Biodumpy([COL(bulk=False, check_syn=False)])
-    bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}_false')
+    # Start the download accepted_only = False
+    bdp = Biodumpy([COL(bulk=False, accepted_only=False)])
+    bdp.download_data(taxa, output_path='./downloads/{date}/{module}/{name}_false')
 
-    # Start the download check_syn = True
-    bdp = Biodumpy([COL(bulk=False, check_syn=True)])
-    bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}_true')
+    # Start the download accepted_only = True
+    bdp = Biodumpy([COL(bulk=False, accepted_only=True)])
+    bdp.download_data(taxa, output_path='./downloads/{date}/{module}/{name}_true')
 
 
-When the parameter ``check_syn`` is set to *False*, the ``COL`` module provides both the accepted name and the synonym at the
-species level. However, when ``check_syn`` is set to *True*, the results include only the accepted name.
+When the parameter ``accepted_only`` is set to *False*, the ``COL`` module provides both the accepted name and the synonym at the
+species level. However, when ``accepted_only`` is set to *True*, the results include only the accepted name.
 
-``check_syn = False``
+``accepted_only = False``
 
 .. code-block:: json
 
@@ -93,7 +93,7 @@ species level. However, when ``check_syn`` is set to *True*, the results include
     }
 
 
-``check_syn = True``
+``accepted_only = True``
 
 .. code-block:: json
 
@@ -128,8 +128,8 @@ the species *Stollia betae*.
     taxa = ['Stollia betae']
 
     # Start the download
-    bdp = Biodumpy([COL(bulk=False, check_syn=True)])
-    bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}')
+    bdp = Biodumpy([COL(bulk=False, accepted_only=True)])
+    bdp.download_data(taxa, output_path='./downloads/{date}/{module}/{name}')
 
 
 

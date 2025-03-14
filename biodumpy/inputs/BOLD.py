@@ -49,7 +49,7 @@ class BOLD(Input):
 	>>> taxa = ['Alytes muletensis', 'Bufotes viridis', 'Hyla meridionalis', 'Anax imperator']
 	# Set the module and start the download
 	>>> bdp = Biodumpy([BOLD(bulk=True, summary=False)])
-	>>> bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}')
+	>>> bdp.download_data(taxa, output_path='./downloads/{date}/{module}/{name}')
 	"""
 
 	def __init__(self, summary: bool = False, fasta: bool = False, output_format: str = "json", bulk: bool = False):

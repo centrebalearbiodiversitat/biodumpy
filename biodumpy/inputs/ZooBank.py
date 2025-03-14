@@ -19,7 +19,7 @@ class ZooBank(Input):
 	    scientific articles stored in ZooBank for each taxon. You can set this parameter to either 'small' or 'large'.
 	    We recommend choosing 'small' if the number of articles for a given taxon is lower than 200, or 'large' if
 	    it exceeds 200. Default is 'small'.
-	info : bool, optional
+	info_only : bool, optional
 	    If set to True, the function will download only additional article information not included in the main research,
 	    such as the DOI. Default is False.
 	bulk : bool, optional
@@ -35,14 +35,14 @@ class ZooBank(Input):
 	# Taxa list
 	>>> taxa = ['Alytes muletensis', 'Bufotes viridis', 'Hyla meridionalis', 'Anax imperator']
 	# Set the module and start the download
-	>>> bdp = Biodumpy([ZooBank(bulk=True, dataset_size='small', info=False)])
-	>>> bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}')
+	>>> bdp = Biodumpy([ZooBank(bulk=True, dataset_size='small', info_only=False)])
+	>>> bdp.download_data(taxa, output_path='./downloads/{date}/{module}/{name}')
 	"""
 
-	def __init__(self, dataset_size: str = "small", output_format: str = "json", info: bool = False, bulk: bool = False):
+	def __init__(self, dataset_size: str = "small", output_format: str = "json", info_only: bool = False, bulk: bool = False):
 		super().__init__(output_format, bulk)
 		self.dataset_size = dataset_size
-		self.info = info
+		self.info_only = info_only
 
 		if self.dataset_size not in ["small", "large"]:
 			raise ValueError("Invalid dataset_size. Expected 'small' or 'large'.")
@@ -86,7 +86,7 @@ class ZooBank(Input):
 				else:
 					print(f"Failed to retrieve data for {ref}")
 
-		if not self.info:
+		if not self.info_only:
 			return payload
 
 		referenceuuid = [item["referenceuuid"] for item in payload]

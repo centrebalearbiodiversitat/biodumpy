@@ -86,7 +86,7 @@ class NCBI(Input):
 	>>> taxa = ['Alytes muletensis', 'Hyla meridionalis', 'Anax imperator', 'Bufo roseus', 'Stollia betae']
 	# Set the module and start the download
 	>>> bdp = Biodumpy([NCBI(bulk=False, mail="hola@quetal.com", db="nucleotide", rettype="gb", query_type='[Organism]')])
-	>>> bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}')
+	>>> bdp.download_data(taxa, output_path='./downloads/{date}/{module}/{name}')
 	"""
 
 	def __init__(

@@ -45,7 +45,7 @@ This function is based on the BOLD v4 API's endpoints `API_Public/combined`_ and
 
     # Set the module and start the download
     bdp = Biodumpy([BOLD(bulk=True, summary=False)])
-    bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}')
+    bdp.download_data(taxa, output_path='./downloads/{date}/{module}/{name}')
 
 
 The previous method downloads the entire set of data for each record from BOLD. However, users can also download a
@@ -87,7 +87,7 @@ bulk. Below is an example demonstrating how to download FASTA files.
     ]
     # Set the module and start the download
     bdp = Biodumpy([BOLD(bulk=True, fasta=True, output_format='fasta')])
-    bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}')
+    bdp.download_data(taxa, output_path='./downloads/{date}/{module}/{name}')
 
 
 

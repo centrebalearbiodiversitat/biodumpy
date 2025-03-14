@@ -23,8 +23,8 @@ def col_query(syn):
 		dynamic_path = os.path.join(temp_dir)
 
 	# Start biodumpy function
-	bdp = Biodumpy([COL(bulk=True, check_syn=syn)])
-	bdp.start(query, output_path=f"{dynamic_path}/downloads/{{date}}/{{module}}/{{name}}")
+	bdp = Biodumpy([COL(bulk=True, accepted_only=syn)])
+	bdp.download_data(query, output_path=f"{dynamic_path}/downloads/{{date}}/{{module}}/{{name}}")
 
 	# Retrieve a file path
 	dir_date = os.listdir(f"{dynamic_path}/downloads/")[0]

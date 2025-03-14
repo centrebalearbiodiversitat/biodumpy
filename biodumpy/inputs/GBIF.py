@@ -13,11 +13,12 @@ class GBIF(Input):
 	    The list of taxa to query.
 	dataset_key : str
 	    GBIF dataset key. The default is set to the GBIF Backbone Taxonomy dataset key.
+	# Tal vez limit_ancestors
 	limit : int
 	    The maximum number of names to retrieve from the taxonomy backbone for a taxon. Default is 20.
 	accepted_only : bool, optional
 	    If True, the function returns only the accepted name. Default is True.
-	occ : bool, optional
+	occurrences : bool, optional
 	    If True, the function also returns the occurrences of a taxon. Default is False.
 	geometry : str, optional
 	    A spatial polygon to filter occurrences within a specified area. Default is an empty string.
@@ -35,8 +36,8 @@ class GBIF(Input):
 	# Taxa list
 	>>> taxa = ['Alytes muletensis (Sanchíz & Adrover, 1979)', 'Bufotes viridis (Laurenti, 1768)']
 	# Set the module and start the download
-	>>> bdp = Biodumpy([GBIF(dataset_key=gbif_backbone, limit=20, accepted_only=True, occ=False, bulk=False, output_format='json')])
-	>>> bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}')
+	>>> bdp = Biodumpy([GBIF(dataset_key=gbif_backbone, limit=20, accepted_only=True, occurrences=False, bulk=False, output_format='json')])
+	>>> bdp.download_data(taxa, output_path='./downloads/{date}/{module}/{name}')
 	"""
 
 	def __init__(
@@ -44,7 +45,7 @@ class GBIF(Input):
 		dataset_key: str = "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
 		limit: int = 20,
 		accepted_only: bool = True,
-		occ: bool = False,
+		occurrences: bool = False,
 		geometry: str = None,
 		output_format: str = "json",
 		bulk: bool = False,
@@ -53,13 +54,13 @@ class GBIF(Input):
 		self.dataset_key = dataset_key
 		self.limit = limit  # Limit to find name in taxonomy backbone
 		self.accepted = accepted_only
-		self.occ = occ
+		self.occurrences = occurrences
 		self.geometry = geometry
 
 		if output_format != "json":
 			raise ValueError('Invalid output_format. Expected "json".')
 
-		if occ and not accepted_only:
+		if occurrences and not accepted_only:
 			raise ValueError("Invalid accepted_only. Expected True.")
 
 	def _download(self, query, **kwargs) -> list:
@@ -77,7 +78,7 @@ class GBIF(Input):
 					filter(lambda x: x.get("taxonomicStatus") == "ACCEPTED" and str(query[0]) in x.get("scientificName", ""), payload)
 				)
 
-			if self.occ and len(payload) > 0:
+			if self.occurrences and len(payload) > 0:
 				tax_key = payload[0]["nubKey"]
 				payload = self._download_gbif_occ(taxon_key=tax_key, geometry=self.geometry)
 

@@ -34,7 +34,7 @@ class Biodumpy:
 		self.loading_bar = loading_bar
 
 	# elements must be a flat list of strings
-	def start(self, elements, output_path="downloads/{date}/{module}/{name}"):
+	def download_data(self, elements, output_path="downloads/{date}/{module}/{name}"):
 		if not isinstance(elements, list):
 			raise ValueError("Invalid query. Expected a list of taxa to query.")
 
@@ -59,20 +59,22 @@ class Biodumpy:
 					logging.error(f"Missing 'query' key for {el}")
 					raise ValueError(f"Missing 'name' key for {el}")
 
-				name = el["query"]
-				clean_name = name.replace("/", "_")
+				taxon_name = el["query"]
+				cleaned_taxon_name = taxon_name.replace("/", "_")
 				if self.debug:
-					print(f"Downloading {name}...")
+					print(f"Downloading {taxon_name}...")
 
 				for inp in self.inputs:
+					print(f"INPUT: {inp}")
 					module_name = type(inp).__name__
-					logging.info(f"biodumpy initialized with {module_name} inputs. Taxon: {name}")
+					print(f"MODULE NAME: {module_name}")
+					logging.info(f"biodumpy initialized with {module_name} inputs. Taxon: {taxon_name}")
 
 					try:
 						payload = inp._download(**el)
 						logging.info(f"Download data for {module_name} was successful.\n")
 					except Exception as e:
-						logging.error(f'[{module_name}] Failed to download data for "{name}": {str(e)} \n')
+						logging.error(f'[{module_name}] Failed to download data for "{taxon_name}": {str(e)} \n')
 						continue
 
 					if inp.bulk:
@@ -82,7 +84,7 @@ class Biodumpy:
 
 					else:
 						dump(
-							file_name=f"{output_path.format(date=current_date, module=module_name, name=clean_name)}",
+							file_name=f"{output_path.format(date=current_date, module=module_name, taxon_name=cleaned_taxon_name)}",
 							obj_list=payload,
 							output_format=inp.output_format,
 						)
@@ -95,14 +97,14 @@ class Biodumpy:
 				)
 
 			if log_handler.buffer:
-				down_path = str()
+				download_path = str()
 				for folder in output_path.split("/"):
 					if "{" in folder:
 						break
-					down_path = f"{down_path}{folder}/"
+					download_path = f"{download_path}{folder}/"
 
-				create_directory(down_path)
-				with open(f"{down_path}/dump.log", "w") as f:
+				create_directory(download_path)
+				with open(f"{download_path}/dump.log", "w") as f:
 					for record in log_handler.buffer:
 						log_entry = f"{record.levelname}: {record.getMessage()}\n"
 						f.write(log_entry)

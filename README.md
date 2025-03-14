@@ -77,7 +77,7 @@ In detail, we described:
     bdp = Biodumpy([GBIF(bulk=False, accepted_only=True)])
 
     # Start the download
-    bdp.start(taxa, output_path='YOUR_OUTPUT_PATH/downloads/{date}/{module}/{name}')
+    bdp.download_data(taxa, output_path='YOUR_OUTPUT_PATH/downloads/{date}/{module}/{name}')
 ```
 
 **Example N.2**
@@ -105,7 +105,7 @@ In detail, we described:
                     IUCN(api_key=api_key, bulk=True, region=['global'])])
 
     # Start the download
-    bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}')
+    bdp.download_data(taxa, output_path='./downloads/{date}/{module}/{name}')
 ```
 
 ## Documentation and Support

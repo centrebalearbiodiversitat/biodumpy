@@ -21,7 +21,7 @@ def inat_query(query, output_format):
 
 	# Start biodumpy function
 	bdp = Biodumpy([INaturalist(bulk=True, output_format=output_format)])
-	bdp.start(elements=query, output_path=f"{dynamic_path}/downloads/{{date}}/{{module}}/{{name}}")
+	bdp.download_data(elements=query, output_path=f"{dynamic_path}/downloads/{{date}}/{{module}}/{{name}}")
 
 	# Retrieve a file path
 	dir_date = os.listdir(f"{dynamic_path}/downloads/")[0]
