@@ -43,7 +43,7 @@ Key Features
 Contribution
 ------------
 
-``biodumpy`` is an open-source project, and contributions are welcome! If you have ideas for new features, bug fixes, or improvements, please submit an issue or pull request on our GitHub repository or contact our support team at t.cancellario@uib.eu or tomas.golomb@uib.eu.
+``biodumpy`` is an open-source project, and contributions are welcome! If you have ideas for new features, bug fixes, or improvements, please submit an issue or pull request on our GitHub repository or contact our support `✉️ here <mailto:t.cancellario@uib.eu?subject=biodumpy_documentation>`_.
 
 
 License

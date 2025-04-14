@@ -23,6 +23,13 @@ Alternatively, if you are using an IDE like `PyCharm`_ or `Visual Studio`_, you 
 
 .. _`Visual Studio`: https://code.visualstudio.com/
 
+
+.. warning::
+
+    Windows users may need to install the `Microsoft C++ Build Tools`_.
+
+.. _`Microsoft C++ Build Tools`: https://visualstudio.microsoft.com/it/visual-cpp-build-tools/
+
 Usage
 -----
 
@@ -105,4 +112,3 @@ By default, ``biodumpy`` saves the resulting file in a folder named *downloads* 
 	:align: center
 
 **Fig.1** Folder hierarchy structure with the distinction based on the bulk parameter being set to either True (A) or False (B).
-
