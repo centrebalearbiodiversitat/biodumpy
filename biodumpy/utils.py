@@ -2,6 +2,7 @@ import csv
 import json
 import os
 import re
+from copy import deepcopy
 
 
 class CustomEncoder(json.JSONEncoder):
@@ -271,3 +272,33 @@ def haplo_collapse(fasta_file):
         haplo[value]["ids"].append(key)
 
     return list(haplo.values())
+
+
+def rm_dup(data: list) -> list:
+    """
+    Removes duplicate dictionaries from a list, including those with nested structures.
+
+    This function compares each dictionary deeply (including nested lists and dicts)
+    and retains only the first occurrence of each unique dictionary.
+
+    Args:
+        data (list): A list of dictionaries to be deduplicated.
+
+    Returns:
+        list: A list containing only unique dictionaries, in their original order.
+
+    Example:
+        >>> data = [{'a': 1}, {'a': 2}, {'a': 1}]
+        >>> rm_dup(data)
+        [{'a': 1}, {'a': 2}]
+    """
+
+    unique = []  # Final list of unique dictionaries to return
+    seen = []  # Keeps track of all the dictionaries we've already encountered
+
+    for item in data:
+        if item not in seen:
+            seen.append(deepcopy(item))  # deepcopy to handle nested objects
+            unique.append(item)
+
+    return unique

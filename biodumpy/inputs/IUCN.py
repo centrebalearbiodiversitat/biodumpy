@@ -1,33 +1,31 @@
 import requests
-
 from biodumpy import Input, BiodumpyException
-
+from biodumpy.utils import rm_dup
 
 class IUCN(Input):
 	"""
-	Query the IUCN Red List API for information about a specific species in a given region.
+	Query the IUCN Red List API for information about a species.
+
+	Note
+	----
+	This function currently operates only at the species level. An internal automated process handles the splitting of genus and species names from the input.
 
 	Parameters
 	----------
 	query : list
 	    The list of taxa to query.
-	api_key : str
-	    Your IUCN API key.
-	habitat : str
-	    The name of an IUCN habitat.
-	regions : list, optional
-	    The list of specific IUCN regions. For further information, see the IUCN API documentation. Default is an empty list.
-	historical : bool, optional
-	    If True, the function returns also the historical threats of a taxon. Default is False.
-	threats : bool, optional
-	    If True, the function returns also the threat list of a taxon. Default is False.
-	citation : bool, optional
-	    If True, the function returns the citation for a given species assessment.
-	weblink : bool, optional
-	    If True, the function returns the link to redirect to the Red List website page for this species.
+	authorization : str
+    	Your IUCN API key for authentication.
+	assess_details : bool
+    	If True, the function downloads detailed assessments for each species, including threats, habitats, conservation actions, etc..
+	latest : bool
+		If True, retrieves only the latest assessment for each species.
+	scope : list
+		Optional list of IUCN assessment scopes to filter the results (e.g., ['Global', 'Europe']).
+		Defaults to ['Global'].
 	bulk : bool, optional
-	    If True, the function creates a bulk file. For further information, see the documentation of the Biodumpy package.
-	    Default is False.
+		If True, the function creates a bulk file. For further information, see the documentation of the Biodumpy package.
+		Default is False.
 	output_format : string, optional
 	    The format of the output file. The options available are: 'json', 'fasta', 'pdf'. Default is 'json'.
 
@@ -40,104 +38,132 @@ class IUCN(Input):
 	# Taxa list
 	>>> taxa = ['Alytes muletensis', 'Bufotes viridis', 'Hyla meridionalis']
 	# Select the regions
-	>>> regions = ['global', 'europe']
-	>>> bdp = Biodumpy([IUCN(api_key=api_key, bulk=True, regions=regions)])
+	>>> regions = ['Global', 'Europe']
+	>>> bdp = Biodumpy([IUCN(authorization=api_key, bulk=True, scope=regions)])
 	>>> bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}')
 	"""
 
 	def __init__(
 		self,
-		api_key: str,
-		habitat: bool = False,
-		regions: list = None,
-		historical: bool = False,
-		threats: bool = False,
-		citation: bool = False,
-		weblink: bool = False,
+		authorization: str = None,
+		assess_details: bool = False,
+		latest: bool = False,
+		scope: list = None,
 		output_format: str = "json",
-		bulk: bool = False,
+		bulk: bool = False
 	):
 		super().__init__(output_format, bulk)
-		if regions is None:
-			regions = ["global"]
-		self.api_key = api_key
-		self.habitat = habitat
-		self.regions = regions
-		self.historical = historical
-		self.threats = threats
-		self.citation = citation
-		self.weblink = weblink
+		self.authorization = authorization
+		self.assess_details = assess_details
+		self.latest = latest
+		if scope is None:
+			self.scope = ["Global"]
+		else:
+			self.scope = scope
 
-		iucn_regions = [
-			"northern_africa",
-			"global",
-			"pan-africa",
-			"central_africa",
-			"eastern_africa",
-			"northeastern_africa",
-			"western_africa",
-			"southern_africa",
-			"mediterranean",
-			"europe",
+		iucn_scope = [
+			"Global",
+			"Europe",
+			"Mediterranean",
+			"Western Africa",
+			"S. Africa FW",
+			"Pan-Africa",
+			"Central Africa",
+			"Northeastern Africa",
+			"Eastern Africa",
+			"Northern Africa",
+			"Gulf of Mexico",
+			"Caribbean",
+			"Persian Gulf",
+			"Arabian Sea"
 		]
 
 		if output_format != "json":
 			raise ValueError("Invalid output_format. Expected 'json'.")
 
-		for regions in self.regions:
-			if regions not in iucn_regions:
-				raise ValueError(f"Choose an IUCN region from the following options: {iucn_regions}.")
+		for scope in self.scope:
+			if scope not in iucn_scope:
+				raise ValueError(f"Choose an IUCN scope from the following options: {iucn_scope}.")
 
 	def _download(self, query, **kwargs) -> list:
 		payload = []
 
-		for region in self.regions:
-			taxon_info = self._icun_request(f"https://apiv3.iucnredlist.org/api/v3/species/{query}/region/{region}?token={self.api_key}")
+		# Start the function
+		taxon = query.split()
+		genus = taxon[0]
+		species = taxon[1]
+		infra_name = None
+		subpopulation_name = None
 
-			if not taxon_info or taxon_info[0].get("taxonid") is None:
-				continue
+		if len(taxon) > 2:
+			while True:
+				infra_check = input(f"Is the taxon '{taxon}' a subspecies? Enter 1 (yes) or 0 (no): ")
+				if infra_check in ('1', '0'):
+					if infra_check == '1':
+						infra_name = taxon[2]
+					else:
+						subpopulation_name = taxon[2]
+					break
+				print("Please enter only 1 or 0.")
 
-			taxon_info = taxon_info[0]
-			payload.append(taxon_info)
-			taxon_id = taxon_info["taxonid"]
+		# General query to obtain the taxon ID
+		taxon_info = None
+		if infra_name is None and subpopulation_name is None:
+			taxon_info = self._icun_request(
+				query_path=f"https://api.iucnredlist.org/api/v4/taxa/scientific_name?genus_name={genus}&species_name={species}")
+		if infra_name:
+			taxon_info = self._icun_request(
+				query_path=f"https://api.iucnredlist.org/api/v4/taxa/scientific_name?genus_name={genus}&species_name={species}&infra_name={infra_name}")
+		elif subpopulation_name:
+			taxon_info = self._icun_request(
+				query_path=f"https://api.iucnredlist.org/api/v4/taxa/scientific_name?genus_name={genus}&species_name={species}&subpopulation_name={subpopulation_name}")
 
-			if taxon_info:
-				if self.habitat:
-					habitat_info = self._icun_request(f"https://apiv3.iucnredlist.org/api/v3/habitats/species/id/{taxon_id}/region/{region}?token={self.api_key}")
-					taxon_info.update({"habitat": habitat_info})
 
-				if self.historical:
-					historical_info = self._icun_request(f"https://apiv3.iucnredlist.org/api/v3/species/history/id/{taxon_id}/region/{region}?token={self.api_key}")
-					taxon_info.update({"historical": historical_info})
+		# Create filters
+		taxon_assessment = taxon_info.get("assessments")
 
-				if self.threats:
-					threats_info = self._icun_request(f"https://apiv3.iucnredlist.org/api/v3/threats/species/id/{taxon_id}/region/{region}?token={self.api_key}")
-					taxon_info.update({"threats": threats_info})
+		# Latest: Extract the records with the newest assessment
+		if self.latest:
+			taxon_assessment[:] = [item for item in taxon_assessment if item.get("latest")]
 
-				if self.citation:
-					citation_info = self._icun_request(f"https://apiv3.iucnredlist.org/api/v3/species/citation/id/{taxon_id}/region/{region}?token={self.api_key}")
-					taxon_info.update({"citation": citation_info})
+		# Filter the regions included in the region parameter
+		if self.scope:
+			# Create a scope-string key with all the scopes, avoiding the dictionary
+			for item in taxon_assessment:
+				item['scope'] = ";".join([s['description']['en'] for s in item.get("scopes", [])])
 
-				if self.weblink:
-					weblink_info = f"https://apiv3.iucnredlist.org/api/v3/taxonredirect/{taxon_id}/{region}"
-					taxon_info.update({"weblink": weblink_info})
+			taxon_assessment[:] = [
+				item for item in taxon_assessment
+				# if any(r in item['scope'] for r in self.scope)
+				if any(r == s for s in item['scope'].split(';') for r in self.scope)
+			]
+
+		# Remove duplicates
+		taxon_assessment = rm_dup(taxon_assessment)
+
+		if self.assess_details:
+			assessment_list = []
+			for item in taxon_assessment:
+				assessment_id = item.get('assessment_id')
+				print(f'Downloading {assessment_id}...')
+				assess = (self._icun_request(query_path=f"https://api.iucnredlist.org/api/v4/assessment/{assessment_id}"))
+				assess.pop('taxon', None)  # Drop the taxon key
+				assessment_list.append(assess)
+
+			payload.append({
+				'taxon': taxon_info.get('taxon'),
+				'assessment': assessment_list
+			})
+		else:
+			payload.append({
+				'taxon': taxon_info.get('taxon'),
+				'assessment': taxon_assessment
+			})
 
 		return payload
 
 	def _icun_request(self, query_path):
-		"""
-		Query the IUCN Red List API for information about a specific species in a given region.
-
-		Parameters:
-			query_path: str The path to the IUCN Red List API properly formatted.
-
-		Returns:
-			dict: A dictionary containing information about the species in the specified region if found.
-
-		Example:
-			result = icun_request(f"https://apiv3.iucnredlist.org/api/v3/habitats/species/id/{taxon_id}/region/{region}?token={self.api_key}")
-		"""
-		response = requests.get(query_path)
+		response = requests.get(query_path, headers={"Authorization": self.authorization})
 
 		if response.status_code != 200:
 			raise BiodumpyException(f"Error {response.status_code}")
@@ -145,10 +171,10 @@ class IUCN(Input):
 		if response.content:
 			response = response.json()
 
-			if not (len(response.get("result", [])) == 0 or (response.get("value") == "0")):
-				result = response.get("result", [])
-				if "region_identifier" in response:
-					for r in result:
-						r.update({"region": response["region_identifier"]})
+			# if len(response) > 0:
+			# 	return response
 
-				return result
+			if response:
+				return response
+			else:
+				raise BiodumpyException("Empty response from IUCN API.")
