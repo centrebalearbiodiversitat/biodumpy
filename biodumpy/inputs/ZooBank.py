@@ -1,7 +1,8 @@
 import requests
-
+import time
 from bs4 import BeautifulSoup
 from tqdm import tqdm
+
 from biodumpy import Input, BiodumpyException
 
 
@@ -18,15 +19,21 @@ class ZooBank(Input):
 	    This parameter is useful for managing the download of bibliographic information based on the number of
 	    scientific articles stored in ZooBank for each taxon. You can set this parameter to either 'small' or 'large'.
 	    We recommend choosing 'small' if the number of articles for a given taxon is lower than 200, or 'large' if
-	    it exceeds 200. Default is 'small'.
+	    it exceeds 200.
+	    Default is 'small'.
 	info : bool, optional
 	    If set to True, the function will download additional article information not included in the main research,
-	    such as the DOI. Default is False.
-	bulk : bool, optional
-	    If True, the function creates a bulk file. For further information, see the documentation of the Biodumpy
-	    package. Default is False.
+	    such as the DOI.
+	    Default is False.
+	sleep: float
+		Time in seconds to wait between consecutive API requests.
+		Default is 0.5 seconds.
 	output_format : str, optional
 	    The format of the output file. The available option is 'json'. Default is 'json'.
+	bulk : bool, optional
+		If True, the function creates a bulk file.
+		For further information, see the documentation of the biodumpy package.
+		Default is False.
 
 	Example
 	-------
@@ -42,13 +49,16 @@ class ZooBank(Input):
 	def __init__(
 			self,
 			dataset_size: str = "small",
-			output_format: str = "json",
 			info: bool = False,
+			sleep: float = 0.5,
+			output_format: str = "json",
 			bulk: bool = False
 	):
+
 		super().__init__(output_format, bulk)
 		self.dataset_size = dataset_size
 		self.info = info
+		self.sleep = sleep
 
 		if self.dataset_size not in ["small", "large"]:
 			raise ValueError("Invalid dataset_size. Expected 'small' or 'large'.")
@@ -57,6 +67,7 @@ class ZooBank(Input):
 			raise ValueError("Invalid output_format. Expected 'json'.")
 
 	def _download(self, query, **kwargs) -> list:
+
 		payload = []
 
 		if self.dataset_size == "small":
@@ -102,5 +113,7 @@ class ZooBank(Input):
 					payload[index]["info"] = response_id_json
 				except requests.exceptions.JSONDecodeError as e:
 					print(f"Failed to parse JSON with reference uid{refuid}:", e)
+
+		time.sleep(self.sleep)
 
 		return payload

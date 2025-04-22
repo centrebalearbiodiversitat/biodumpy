@@ -2,6 +2,7 @@ import pytest
 import tempfile
 import os
 import json
+import time
 
 import io
 from contextlib import redirect_stdout
@@ -58,13 +59,16 @@ def test_bold_initialization():
 	"query, summary, output_format",
 	[
 		(["Alytes muletensis"], True, "json"),
+		(["Alytes muletensis"], True, "json"),
 		(["Alytes muletensis"], False, "json"),
 		(["Alytes muletensis"], False, "fasta")
-	],
+	]
 )
 def test_download(query, summary, output_format):
+
 	with redirect_stdout(trap):
 		data = bold_query(query=query, summary=summary, output_format=output_format)
+
 
 	# Check if data is not empty
 	assert len(data) > 0, "data length is 0"

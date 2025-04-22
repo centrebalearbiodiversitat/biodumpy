@@ -27,9 +27,12 @@ Retrieve IUCN information
 
 Users can download IUCN information for a specific taxon and select one or more IUCN regions to filter the data based on specific geographic delimitations within the IUCN.
 
+In the new version of the IUCN API (v4), the species taxonomy endpoint no longer accepts the full species name (e.g., *Alytes muletensis*) as a single string. Instead, the name must be split into genus and specific epithet. This separation is handled automatically by the IUCN module, which by default assumes the first word is the genus and the second is the specific epithet.
+If the taxon is a subspecies or subpopulation, you must explicitly specify this. A message will be displayed in the terminal during the download process to indicate the status.
+
 .. note::
 
-    The taxonomy list should include only the taxon names, excluding any authorship information. If the taxon is a subspecies or subpopulation, you must explicitly specify whether it is a subspecies. A message will be displayed in the terminal during the download.
+    The taxonomy list should include only the taxon names, excluding any authorship information.
 
 
 .. code-block:: python

@@ -102,6 +102,16 @@ An important parameter common to all modules is ``bulk``. This parameter control
 - If ``bulk`` is *False*, the information for each taxon is saved in a separate file. This option is useful for detailed analysis, when individual taxon files are required or when the amount of data for each taxon is large.
 
 
+The ``sleep`` parameter
+-----------------------
+Another important parameter available across all modules is ``sleep``. This parameter controls the delay between successive data retrieval requests, allowing users to manage the pace of data downloading and avoid overloading remote servers or triggering rate limits.
+
+- If ``sleep`` is set to a higher value (e.g., 1 or more seconds), the system introduces a pause between requests. This is recommended when downloading large datasets or accessing APIs with strict rate limits, as it reduces the risk of connection errors or temporary bans.
+
+- If ``sleep`` is set to a lower value (e.g., 0 or 0.1 seconds), the requests are made with minimal delay. This option is suitable for small or local datasets where speed is a priority and server restrictions are not a concern.
+
+By default, ``sleep`` is set to 0.5 seconds. However, we encourage users to adjust this parameter based on the API’s rate policies to ensure responsible data access and avoid overloading external servers.
+
 Save result location
 --------------------
 

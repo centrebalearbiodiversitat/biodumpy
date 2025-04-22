@@ -1,4 +1,5 @@
 import requests
+import time
 
 from biodumpy import Input, BiodumpyException
 
@@ -12,20 +13,23 @@ class COL(Input):
 	query : list
 	    The list of taxa to query.
 	dataset_key : int
-		The dataset key to query.
+		The dataset key to query. Please visit https://www.catalogueoflife.org/data/metadata to check the latest ChecklistBank release.
 		Default is 9923.
 	check_syn : bool, optional
 	    If True, the function returns only the accepted nomenclature of a taxon.
 	    See Detail section for further information.
 	    Default is False.
-	bulk : bool, optional
-		If True, the function creates a bulk file.
-		For further information, see the documentation of the Biodumpy package.
-		Default is False.
+	sleep: float
+		Time in seconds to wait between consecutive API requests.
+		Default is 0.5 seconds.
 	output_format : string, optional
 		The format of the output file.
 		The options available are: 'json', 'fasta', 'pdf'.
 		Default is 'json'.
+	bulk : bool, optional
+		If True, the function creates a bulk file.
+		For further information, see the documentation of the biodumpy package.
+		Default is False.
 
 	Details
 	-------
@@ -51,12 +55,14 @@ class COL(Input):
 			self,
 			check_syn: bool = False,
 			dataset_key: int = 9923,
-			bulk: bool = False,
+			sleep: float = 0.5,
 			output_format: str = "json",
+			bulk: bool = False
 	):
 		super().__init__(output_format, bulk)
 		self.check_syn = check_syn
 		self.dataset_key = dataset_key
+		self.sleep = sleep
 
 		if output_format != "json":
 			raise ValueError("Invalid output_format. Expected 'json'.")
@@ -104,5 +110,7 @@ class COL(Input):
 				classification = [item for item in classification if item["id"] != synonym_id] if classification else None
 
 			payload = [{"origin_taxon": query, "taxon_id": id, "status": status, "usage": usage, "classification": classification}]
+
+		time.sleep(self.sleep)
 
 		return payload

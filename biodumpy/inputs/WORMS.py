@@ -1,71 +1,87 @@
 import requests
+import time
 
 from biodumpy import Input, BiodumpyException
 
 
 class WORMS(Input):
-	"""
-	Query the World Register of Marine Species (WoRMS) database to retrieve nomenclature and distribution information
-	of a list of taxa.
+    """
+    Query the World Register of Marine Species (WoRMS) database to retrieve nomenclature and distribution information
+    of a list of taxa.
 
-	Parameters
-	----------
-	query : list
-	    The list of taxa to query.
-	marine_only : bool, optional
-	    If True, the function searches only for marine taxa.
-	    Default is False.
-	distribution : bool, optional
-	    If True, the function also returns the WORMS distribution for the taxon.
-	    Default is False.
-	bulk : bool, optional
-	    If True, the function creates a bulk file.
-	    For further information, see the documentation of the Biodumpy package.
-	    Default is False.
-	output_format : string, optional
-	    The format of the output file. The options available are: 'json', 'fasta', 'pdf'.
-	    Default is 'json'.
+    Parameters
+    ----------
+    query : list
+        The list of taxa to query.
+    marine_only : bool, optional
+        If True, the function searches only for marine taxa.
+        Default is False.
+    distribution : bool, optional
+        If True, the function also returns the WORMS distribution for the taxon.
+        Default is False.
+    sleep: float
+        Time in seconds to wait between consecutive API requests.
+        Default is 0.5 seconds.
+    output_format : string, optional
+        The format of the output file. The options available are: 'json', 'fasta', 'pdf'.
+        Default is 'json'.
+    bulk : bool, optional
+		If True, the function creates a bulk file.
+		For further information, see the documentation of the biodumpy package.
+		Default is False.
 
-	Example
-	-------
-	>>> from biodumpy import Biodumpy
-	>>> from biodumpy.inputs import WORMS
-	# List of taxa
-	>>> taxa = ['Pinna nobilis', 'Delphinus delphis', 'Plerogyra sinuosa']
-	# Start the download
-	>>> bdp = Biodumpy([WORMS(bulk=True, marine_only=True)])
-	>>> bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}')
-	"""
+    Example
+    -------
+    >>> from biodumpy import Biodumpy
+    >>> from biodumpy.inputs import WORMS
+    # List of taxa
+    >>> taxa = ['Pinna nobilis', 'Delphinus delphis', 'Plerogyra sinuosa']
+    # Start the download
+    >>> bdp = Biodumpy([WORMS(bulk=True, marine_only=True)])
+    >>> bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}')
+    """
 
-	def __init__(self, marine_only: bool = False, distribution: bool = False, output_format: str = "json", bulk: bool = False):
-		super().__init__(output_format, bulk)
-		self.marine_only = marine_only
-		self.distribution = distribution
+    def __init__(self,
+                 marine_only: bool = False,
+                 distribution: bool = False,
+                 sleep: float = 0.5,
+                 output_format: str = "json",
+                 bulk: bool = False
+                 ):
 
-		if output_format != "json":
-			raise ValueError("Invalid output_format. Expected 'json'.")
+        super().__init__(output_format, bulk)
+        self.marine_only = marine_only
+        self.distribution = distribution
+        self.sleep = sleep
 
-	def _download(self, query, **kwargs) -> list:
-		payload = []
+        if output_format != "json":
+            raise ValueError("Invalid output_format. Expected 'json'.")
 
-		# Download taxon aphia
-		aphia = self._worms_request(f"https://www.marinespecies.org/rest/AphiaIDByName/{query}?marine_only={str(self.marine_only).lower()}")
-		if not aphia:
-			raise BiodumpyException(f"{query} - Aphia not found.")
+    def _download(self, query, **kwargs) -> list:
+        payload = []
 
-		# Retrieve nomenclature
-		response = self._worms_request(f"https://www.marinespecies.org/rest/AphiaRecordByAphiaID/{aphia}")
+        # Download taxon aphia
+        aphia = self._worms_request(
+            f"https://www.marinespecies.org/rest/AphiaIDByName/{query}?marine_only={str(self.marine_only).lower()}")
+        if not aphia:
+            raise BiodumpyException(f"{query} - Aphia not found.")
 
-		if self.distribution:
-			response["distribution"] = self._worms_request(f"https://www.marinespecies.org/rest/AphiaDistributionsByAphiaID/{aphia}")
+        # Retrieve nomenclature
+        response = self._worms_request(f"https://www.marinespecies.org/rest/AphiaRecordByAphiaID/{aphia}")
 
-		payload.append(response)
+        if self.distribution:
+            response["distribution"] = self._worms_request(
+                f"https://www.marinespecies.org/rest/AphiaDistributionsByAphiaID/{aphia}")
 
-		return payload
+        payload.append(response)
 
-	def _worms_request(self, url) -> list:
-		response = requests.get(url)
-		if response.status_code != 200:
-			raise BiodumpyException(f"Occurrences request. Error {response.status_code}")
+        time.sleep(self.sleep)
 
-		return response.json()
+        return payload
+
+    def _worms_request(self, url) -> list:
+        response = requests.get(url)
+        if response.status_code != 200:
+            raise BiodumpyException(f"Occurrences request. Error {response.status_code}")
+
+        return response.json()

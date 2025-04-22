@@ -1,10 +1,11 @@
 import requests
+import time
 
 from biodumpy import Input, BiodumpyException
 
 
 class BOLD(Input):
-	"""
+    """
 	Query the Barcode of Life Data System (BOLD) database to retrieve taxon genetic or occurrence data.
 
 	Parameters
@@ -12,14 +13,19 @@ class BOLD(Input):
 	query : list
 	    The list of taxa to query.
 	summary : bool, optional
-	    If True, the function returns a summary of the downloaded metadata instead of the full records. Default is False.
-	bulk : bool, optional
-		If True, the function creates a bulk file.
-		For further information, see the documentation of the Biodumpy package. Default is False.
+	    If True, the function returns a summary of the downloaded metadata instead of the full records.
+	    Default is False.
+	sleep: float
+		Time in seconds to wait between consecutive API requests.
+		Default is 0.5 seconds.
 	output_format : string, optional
 		The format of the output file.
 		The options available are: 'json', 'fasta'.
 		Default is 'json'.
+	bulk : bool, optional
+		If True, the function creates a bulk file.
+		For further information, see the documentation of the biodumpy package.
+		Default is False.
 
 	Details
 	-------
@@ -47,80 +53,95 @@ class BOLD(Input):
 	>>> bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}')
 	"""
 
-	def __init__(self, summary: bool = False, output_format: str = "json", bulk: bool = False):
-		super().__init__(output_format, bulk)
-		self.summary = summary
-		# self.fasta = fasta
+    def __init__(self,
+                 summary: bool = False,
+                 sleep: float = 0.5,
+                 output_format: str = "json",
+                 bulk: bool = False
+                 ):
 
-		# if self.fasta and output_format != "fasta":
-		# 	raise ValueError("Invalid output_format. Expected fasta.")
+        super().__init__(output_format, bulk)
+        self.summary = summary
+        self.sleep = sleep
+        # self.fasta = fasta
 
-		if output_format not in {"json", "fasta"}:
-			raise ValueError('Invalid output_format. Expected "json" or "fasta".')
+        # if self.fasta and output_format != "fasta":
+        # 	raise ValueError("Invalid output_format. Expected fasta.")
 
-	def _download(self, query, **kwargs) -> list:
-		# if self.fasta:
-		if self.output_format == "fasta":
-			response = requests.get(f"http://v4.boldsystems.org/index.php/API_Public/sequence?taxon={query}")
+        if output_format not in {"json", "fasta"}:
+            raise ValueError('Invalid output_format. Expected "json" or "fasta".')
 
-			if response.status_code != 200:
-				raise BiodumpyException(f"Fasta sequence request. Error {response.status_code}")
+    def _download(self, query, **kwargs) -> list:
 
-			if response.content:
-				response = response.content
-				data_str = response.decode()
+        # if self.fasta:
+        if self.output_format == "fasta":
+            response = requests.get(f"http://v4.boldsystems.org/index.php/API_Public/sequence?taxon={query}")
 
-				# Split the data by '>'
-				fasta_entries = [f">{entry}" for entry in data_str.split(">") if entry]
+            if response.status_code != 200:
+                raise BiodumpyException(f"Fasta sequence request. Error {response.status_code}")
 
-				return fasta_entries
+            if response.content:
+                response = response.content
+                data_str = response.decode()
 
-		else:
-			response = requests.get(f"http://v4.boldsystems.org/index.php/API_Public/combined?taxon={query}&format=json")
+                # Split the data by '>'
+                fasta_entries = [f">{entry}" for entry in data_str.split(">") if entry]
 
-			payload = []
+                time.sleep(self.sleep)
 
-			if response.status_code != 200:
-				raise BiodumpyException(f"Combined data request. Error {response.status_code}")
+                return fasta_entries
 
-			if response.content:
-				results = response.json()
-				if self.summary:
-					results_summary = results.get("bold_records", {}).get("records", [])
-					for entry in results_summary:
-						entry_summary = results_summary[entry]
+        else:
+            response = requests.get(
+                f"http://v4.boldsystems.org/index.php/API_Public/combined?taxon={query}&format=json")
 
-						# Extract the necessary fields with default None values if keys are missing.
-						# Sequence could contain more than one marker code.
-						sequences = entry_summary.get("sequences", {}).get("sequence", [])
-						markercodes = [seq.get("markercode") for seq in sequences if "markercode" in seq]
-						genbank_accession = [seq.get("genbank_accession") for seq in sequences if "genbank_accession" in seq]
+            payload = []
 
-						# Retrieve taxonomy
-						taxonomy = entry_summary.get("taxonomy", {})
-						taxon_name = taxonomy.get(list(taxonomy.keys())[-1], {}).get("taxon", {}).get("name")
+            if response.status_code != 200:
+                raise BiodumpyException(f"Combined data request. Error {response.status_code}")
 
-						# Retrieve collection event metadata
-						collection_event = entry_summary.get("collection_event", {})
-						coordinates = collection_event.get("coordinates", {})
+            if response.content:
+                results = response.json()
+                if self.summary:
+                    results_summary = results.get("bold_records", {}).get("records", [])
+                    for entry in results_summary:
+                        entry_summary = results_summary[entry]
 
-						payload.append(
-							{
-								"record_id": entry_summary.get("record_id"),
-								"processid": entry_summary.get("processid"),
-								"bin_uri": entry_summary.get("bin_uri"),
-								"taxon": taxon_name,
-								"country": collection_event.get("country"),
-								"province_state": collection_event.get("province_state"),
-								"region": collection_event.get("region"),
-								"lat": coordinates.get("lat") if coordinates else None,
-								"lon": coordinates.get("lon") if coordinates else None,
-								"markercode": "/".join(markercodes) if markercodes else None,
-								"genbank_accession": genbank_accession[0] if genbank_accession else None,
-							}
-						)
-				else:
-					res = results["bold_records"]["records"] if "bold_records" in results and "records" in results["bold_records"] else []
-					payload = list(res.values())
+                        # Extract the necessary fields with default None values if keys are missing.
+                        # Sequence could contain more than one marker code.
+                        sequences = entry_summary.get("sequences", {}).get("sequence", [])
+                        markercodes = [seq.get("markercode") for seq in sequences if "markercode" in seq]
+                        genbank_accession = [seq.get("genbank_accession") for seq in sequences if
+                                             "genbank_accession" in seq]
 
-			return payload
+                        # Retrieve taxonomy
+                        taxonomy = entry_summary.get("taxonomy", {})
+                        taxon_name = taxonomy.get(list(taxonomy.keys())[-1], {}).get("taxon", {}).get("name")
+
+                        # Retrieve collection event metadata
+                        collection_event = entry_summary.get("collection_event", {})
+                        coordinates = collection_event.get("coordinates", {})
+
+                        payload.append(
+                            {
+                                "record_id": entry_summary.get("record_id"),
+                                "processid": entry_summary.get("processid"),
+                                "bin_uri": entry_summary.get("bin_uri"),
+                                "taxon": taxon_name,
+                                "country": collection_event.get("country"),
+                                "province_state": collection_event.get("province_state"),
+                                "region": collection_event.get("region"),
+                                "lat": coordinates.get("lat") if coordinates else None,
+                                "lon": coordinates.get("lon") if coordinates else None,
+                                "markercode": "/".join(markercodes) if markercodes else None,
+                                "genbank_accession": genbank_accession[0] if genbank_accession else None,
+                            }
+                        )
+                else:
+                    res = results["bold_records"]["records"] if "bold_records" in results and "records" in results[
+                        "bold_records"] else []
+                    payload = list(res.values())
+
+            time.sleep(self.sleep)
+
+            return payload

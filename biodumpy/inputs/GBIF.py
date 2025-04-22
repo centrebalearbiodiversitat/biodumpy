@@ -1,4 +1,5 @@
 import requests
+import time
 
 from biodumpy import Input, BiodumpyException
 
@@ -12,7 +13,7 @@ class GBIF(Input):
 	query : list
 	    The list of taxa to query.
 	dataset_key : str
-	    GBIF dataset key. The default is set to the GBIF Backbone Taxonomy dataset key.
+	    GBIF dataset key. The default is set to the GBIF Backbone Taxonomy dataset key (d7dddbf4-2cf0-4f39-9b2a-bb099caae36c).
 	limit : int
 	    The maximum number of names to retrieve from the taxonomy backbone for a taxon.
 	    Default is 20.
@@ -25,12 +26,16 @@ class GBIF(Input):
 	geometry : str, optional
 	    A spatial polygon to filter occurrences within a specified area.
 	    Default is an empty string.
-	bulk : bool, optional
-	    If True, the function creates a bulk file. For further information, see the documentation of the Biodumpy package.
-	    Default is False.
+	sleep: float
+		Time in seconds to wait between consecutive API requests.
+		Default is 0.5 seconds.
 	output_format : str, optional
 	    The format of the output file. The options available are: 'json', 'fasta', 'pdf'.
 	    Default is 'json'.
+	bulk : bool, optional
+		If True, the function creates a bulk file.
+		For further information, see the documentation of the biodumpy package.
+		Default is False.
 
 	Details
 	-------
@@ -58,8 +63,9 @@ class GBIF(Input):
 		accepted_only: bool = True,
 		occ: bool = False,
 		geometry: str = None,
+		sleep: float = 0.5,
 		output_format: str = "json",
-		bulk: bool = False,
+		bulk: bool = False
 	):
 		super().__init__(output_format, bulk)
 		self.dataset_key = dataset_key
@@ -67,6 +73,7 @@ class GBIF(Input):
 		self.accepted = accepted_only
 		self.occ = occ
 		self.geometry = geometry
+		self.sleep = sleep
 
 		if output_format != "json":
 			raise ValueError('Invalid output_format. Expected "json".')
@@ -133,6 +140,8 @@ class GBIF(Input):
 				if self.occ and len(payload) > 0:
 					# A taxon key from the GBIF backbone. All included (child) and synonym taxa are included in the search, so a search for Aves with taxonKey=212 (i.e. /occurrence/search?taxonKey=212) will match all birds, no matter which species.Parameter may be repeated.
 					payload = self._download_gbif_occ(taxon_key=payload["key"], geometry=self.geometry)
+
+		time.sleep(self.sleep)
 
 		return payload
 

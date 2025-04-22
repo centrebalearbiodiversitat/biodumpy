@@ -14,6 +14,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Function ``rm_dup`` to remove duplicate dictionaries from a list, including nested structures.
 - ``dataset_key`` parameter in the COL module.
 - ``taxonomy`` and ``taxonomy_only`` parameters in the NCBI module for more refined queries.
+- ``sleep`` parameter in each module.
 - New documentation sections: "The adaptation of biodumpy to R" and "Bibliography".
 - Test coverage to ensure more robust and reliable code.
 

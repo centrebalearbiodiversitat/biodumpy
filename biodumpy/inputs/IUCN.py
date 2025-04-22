@@ -1,4 +1,6 @@
 import requests
+import time
+
 from biodumpy import Input, BiodumpyException
 from biodumpy.utils import rm_dup
 
@@ -23,11 +25,15 @@ class IUCN(Input):
 	scope : list
 		Optional list of IUCN assessment scopes to filter the results (e.g., ['Global', 'Europe']).
 		Defaults to ['Global'].
-	bulk : bool, optional
-		If True, the function creates a bulk file. For further information, see the documentation of the Biodumpy package.
-		Default is False.
+	sleep: float
+		Time in seconds to wait between consecutive API requests.
+		Default is 0.5 seconds.
 	output_format : string, optional
 	    The format of the output file. The options available are: 'json', 'fasta', 'pdf'. Default is 'json'.
+	bulk : bool, optional
+		If True, the function creates a bulk file.
+		For further information, see the documentation of the biodumpy package.
+		Default is False.
 
 	Example
 	-------
@@ -49,6 +55,7 @@ class IUCN(Input):
 		assess_details: bool = False,
 		latest: bool = False,
 		scope: list = None,
+		sleep: float = 0.5,
 		output_format: str = "json",
 		bulk: bool = False
 	):
@@ -60,6 +67,7 @@ class IUCN(Input):
 			self.scope = ["Global"]
 		else:
 			self.scope = scope
+		self.sleep = sleep
 
 		iucn_scope = [
 			"Global",
@@ -145,7 +153,7 @@ class IUCN(Input):
 			assessment_list = []
 			for item in taxon_assessment:
 				assessment_id = item.get('assessment_id')
-				print(f'Downloading {assessment_id}...')
+				# print(f'Downloading {assessment_id}...')
 				assess = (self._icun_request(query_path=f"https://api.iucnredlist.org/api/v4/assessment/{assessment_id}"))
 				assess.pop('taxon', None)  # Drop the taxon key
 				assessment_list.append(assess)
@@ -159,6 +167,8 @@ class IUCN(Input):
 				'taxon': taxon_info.get('taxon'),
 				'assessment': taxon_assessment
 			})
+
+		time.sleep(self.sleep)
 
 		return payload
 

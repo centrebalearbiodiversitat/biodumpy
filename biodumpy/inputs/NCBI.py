@@ -56,13 +56,16 @@ class NCBI(Input):
 	taxonomy_only : bool, optional
 		If True, the function downloads the taxonomy data from NCBI.
 		Default is False.
-	bulk : bool, optional
-	    If True, the function creates a bulk file for large downloads. For more information, refer to the Biodumpy
-	    package documentation.
-	    Default is False.
+	sleep: float
+		Time in seconds to wait between consecutive API requests.
+		Default is 0.5 seconds.
 	output_format : str, optional
 	    The format of the output file. Available options are: 'json', 'fasta', 'pdf'.
 	    Default is 'json'.
+	bulk : bool, optional
+		If True, the function creates a bulk file.
+		For further information, see the documentation of the biodumpy package.
+		Default is False.
 
 	Details
 	-------
@@ -97,6 +100,7 @@ class NCBI(Input):
 			by_id: bool = False,
 			taxonomy: bool = False,
 			taxonomy_only: bool = False,
+			sleep: float = 0.5,
 			output_format: str = 'json',
 			bulk: bool = False
 	):
@@ -113,6 +117,8 @@ class NCBI(Input):
 		self.by_id = by_id
 		self.taxonomy = taxonomy
 		self.taxonomy_only = taxonomy_only
+		self.sleep = sleep
+
 		Entrez.email = mail
 
 		if self.output_format == 'fasta' and self.rettype != 'fasta':
@@ -135,6 +141,7 @@ class NCBI(Input):
 
 
 	def _download(self, query, **kwargs) -> list:
+
 		payload = []
 
 		if self.taxonomy_only:
@@ -142,6 +149,8 @@ class NCBI(Input):
 			# Extract the required fields
 			taxonomy = [{'TaxId': item['TaxId'], 'ScientificName': item['ScientificName'], 'Rank': item['Rank']} for
 			            item in taxonomy_ncbi]
+
+			time.sleep(self.sleep)
 
 			return [taxonomy] if self.bulk else taxonomy
 
@@ -167,6 +176,8 @@ class NCBI(Input):
 		if self.taxonomy:
 			taxonomy_ncbi = self._download_taxonomy(query)
 			payload = [{"taxonomy": taxonomy_ncbi, "sequences": payload}]
+
+		time.sleep(self.sleep)
 
 		return payload
 
