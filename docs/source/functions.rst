@@ -3,6 +3,11 @@ Function
 
 .. _functions:
 
+.. automodule:: biodumpy.input
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 .. automodule:: biodumpy.inputs.BOLD
    :members:
    :undoc-members:

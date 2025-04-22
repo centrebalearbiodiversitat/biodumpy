@@ -1,5 +1,5 @@
-The adaptation of biodumpy to R
-===============================
+From Python to R
+======================
 
 Overview
 --------

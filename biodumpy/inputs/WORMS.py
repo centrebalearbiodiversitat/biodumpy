@@ -19,16 +19,6 @@ class WORMS(Input):
     distribution : bool, optional
         If True, the function also returns the WORMS distribution for the taxon.
         Default is False.
-    sleep: float
-        Time in seconds to wait between consecutive API requests.
-        Default is 0.5 seconds.
-    output_format : string, optional
-        The format of the output file. The options available are: 'json', 'fasta', 'pdf'.
-        Default is 'json'.
-    bulk : bool, optional
-		If True, the function creates a bulk file.
-		For further information, see the documentation of the biodumpy package.
-		Default is False.
 
     Example
     -------
@@ -44,17 +34,14 @@ class WORMS(Input):
     def __init__(self,
                  marine_only: bool = False,
                  distribution: bool = False,
-                 sleep: float = 0.5,
-                 output_format: str = "json",
-                 bulk: bool = False
+                 **kwargs
                  ):
 
-        super().__init__(output_format, bulk)
+        super().__init__(**kwargs)
         self.marine_only = marine_only
         self.distribution = distribution
-        self.sleep = sleep
 
-        if output_format != "json":
+        if self.output_format != "json":
             raise ValueError("Invalid output_format. Expected 'json'.")
 
     def _download(self, query, **kwargs) -> list:

@@ -110,7 +110,7 @@ Another important parameter available across all modules is ``sleep``. This para
 
 - If ``sleep`` is set to a lower value (e.g., 0 or 0.1 seconds), the requests are made with minimal delay. This option is suitable for small or local datasets where speed is a priority and server restrictions are not a concern.
 
-By default, ``sleep`` is set to 0.5 seconds. However, we encourage users to adjust this parameter based on the API’s rate policies to ensure responsible data access and avoid overloading external servers.
+By default, ``sleep`` is set to 0.1 seconds. However, we encourage users to adjust this parameter based on the API’s rate policies to ensure responsible data access and avoid overloading external servers.
 
 Save result location
 --------------------

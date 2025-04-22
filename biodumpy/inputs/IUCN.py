@@ -6,48 +6,36 @@ from biodumpy.utils import rm_dup
 
 class IUCN(Input):
 	"""
-	Query the IUCN Red List API for information about a species.
+	    Query the IUCN Red List API for information about species.
 
-	Note
-	----
-	This function currently operates only at the species level. An internal automated process handles the splitting of genus and species names from the input.
+	    Notes
+	    -----
+	    This class currently operates only at the species level. It automatically splits genus and species names from the input internally.
 
-	Parameters
-	----------
-	query : list
-	    The list of taxa to query.
-	authorization : str
-    	Your IUCN API key for authentication.
-	assess_details : bool
-    	If True, the function downloads detailed assessments for each species, including threats, habitats, conservation actions, etc..
-	latest : bool
-		If True, retrieves only the latest assessment for each species.
-	scope : list
-		Optional list of IUCN assessment scopes to filter the results (e.g., ['Global', 'Europe']).
-		Defaults to ['Global'].
-	sleep: float
-		Time in seconds to wait between consecutive API requests.
-		Default is 0.5 seconds.
-	output_format : string, optional
-	    The format of the output file. The options available are: 'json', 'fasta', 'pdf'. Default is 'json'.
-	bulk : bool, optional
-		If True, the function creates a bulk file.
-		For further information, see the documentation of the biodumpy package.
-		Default is False.
+	    Parameters
+	    ----------
+	    query : list
+	        The list of taxa (species names) to query.
+	    authorization : str
+	        Your IUCN API key used for authentication.
+	    assess_details : bool, optional
+	        If True, downloads detailed assessments for each species, including threats, habitats, conservation actions, and more. Defaults to False.
+	    latest : bool, optional
+	        If True, retrieves only the latest assessment for each species. Defaults to False.
+	    scope : list, optional
+	        List of IUCN assessment scopes to filter the results (e.g., ['Global', 'Europe']).
+	        Defaults to ['Global'].
 
-	Example
-	-------
-	>>> from biodumpy import Biodumpy
-	>>> from biodumpy.inputs import IUCN
-	# Insert your API key
-	>>> api_key = 'YOUR_API_KEY'
-	# Taxa list
-	>>> taxa = ['Alytes muletensis', 'Bufotes viridis', 'Hyla meridionalis']
-	# Select the regions
-	>>> regions = ['Global', 'Europe']
-	>>> bdp = Biodumpy([IUCN(authorization=api_key, bulk=True, scope=regions)])
-	>>> bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}')
-	"""
+	    Examples
+	    --------
+	    >>> from biodumpy import Biodumpy
+	    >>> from biodumpy.inputs import IUCN
+	    >>> api_key = 'YOUR_API_KEY'  # Insert your API key
+	    >>> taxa = ['Alytes muletensis', 'Bufotes viridis', 'Hyla meridionalis']  # Taxa list
+	    >>> regions = ['Global', 'Europe']  # Select the regions
+	    >>> bdp = Biodumpy([IUCN(authorization=api_key, bulk=True, scope=regions)])
+	    >>> bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}')
+	    """
 
 	def __init__(
 		self,
@@ -55,11 +43,9 @@ class IUCN(Input):
 		assess_details: bool = False,
 		latest: bool = False,
 		scope: list = None,
-		sleep: float = 0.5,
-		output_format: str = "json",
-		bulk: bool = False
+		**kwargs
 	):
-		super().__init__(output_format, bulk)
+		super().__init__(**kwargs)
 		self.authorization = authorization
 		self.assess_details = assess_details
 		self.latest = latest
@@ -67,7 +53,6 @@ class IUCN(Input):
 			self.scope = ["Global"]
 		else:
 			self.scope = scope
-		self.sleep = sleep
 
 		iucn_scope = [
 			"Global",
@@ -86,7 +71,7 @@ class IUCN(Input):
 			"Arabian Sea"
 		]
 
-		if output_format != "json":
+		if self.output_format != "json":
 			raise ValueError("Invalid output_format. Expected 'json'.")
 
 		for scope in self.scope:

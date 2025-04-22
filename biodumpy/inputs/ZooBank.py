@@ -25,15 +25,6 @@ class ZooBank(Input):
 	    If set to True, the function will download additional article information not included in the main research,
 	    such as the DOI.
 	    Default is False.
-	sleep: float
-		Time in seconds to wait between consecutive API requests.
-		Default is 0.5 seconds.
-	output_format : str, optional
-	    The format of the output file. The available option is 'json'. Default is 'json'.
-	bulk : bool, optional
-		If True, the function creates a bulk file.
-		For further information, see the documentation of the biodumpy package.
-		Default is False.
 
 	Example
 	-------
@@ -50,20 +41,17 @@ class ZooBank(Input):
 			self,
 			dataset_size: str = "small",
 			info: bool = False,
-			sleep: float = 0.5,
-			output_format: str = "json",
-			bulk: bool = False
+			**kwargs
 	):
 
-		super().__init__(output_format, bulk)
+		super().__init__(**kwargs)
 		self.dataset_size = dataset_size
 		self.info = info
-		self.sleep = sleep
 
 		if self.dataset_size not in ["small", "large"]:
 			raise ValueError("Invalid dataset_size. Expected 'small' or 'large'.")
 
-		if output_format != "json":
+		if self.output_format != "json":
 			raise ValueError("Invalid output_format. Expected 'json'.")
 
 	def _download(self, query, **kwargs) -> list:

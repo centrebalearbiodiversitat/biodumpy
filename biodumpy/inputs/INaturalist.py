@@ -16,16 +16,6 @@ class INaturalist(Input):
     info : bool
         If set to True, the function returns metadata about a taxon. The order parameter defaults to desc, and order_by defaults to observations_count, as proposed by the iNaturalist API endpoint (https://api.inaturalist.org/v1/docs/#!/Taxa/get_taxa). If the API returns multiple results, only the first one will be returned.
         Default is False.
-    sleep: float
-        Time in seconds to wait between consecutive API requests.
-        Default is 0.5 seconds.
-    output_format : str, optional
-        The format of the output file. The options available is: 'json'.
-        Default is 'json'.
-    bulk : bool, optional
-		If True, the function creates a bulk file.
-		For further information, see the documentation of the biodumpy package.
-		Default is False.
 
     Details
     -------
@@ -57,16 +47,13 @@ class INaturalist(Input):
 
     def __init__(self,
                  info: bool = False,
-                 sleep: float = 0.5,
-                 output_format: str = "json",
-                 bulk: bool = False
+                 **kwargs
                  ):
 
-        super().__init__(output_format, bulk)
+        super().__init__(**kwargs)
         self.info = info
-        self.sleep = sleep
 
-        if output_format != "json":
+        if self.output_format != "json":
             raise ValueError('Invalid output_format. Expected "json".')
 
     def _download(self, query, **kwargs) -> list:

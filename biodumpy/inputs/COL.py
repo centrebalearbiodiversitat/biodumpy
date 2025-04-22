@@ -19,17 +19,6 @@ class COL(Input):
 	    If True, the function returns only the accepted nomenclature of a taxon.
 	    See Detail section for further information.
 	    Default is False.
-	sleep: float
-		Time in seconds to wait between consecutive API requests.
-		Default is 0.5 seconds.
-	output_format : string, optional
-		The format of the output file.
-		The options available are: 'json', 'fasta', 'pdf'.
-		Default is 'json'.
-	bulk : bool, optional
-		If True, the function creates a bulk file.
-		For further information, see the documentation of the biodumpy package.
-		Default is False.
 
 	Details
 	-------
@@ -55,16 +44,13 @@ class COL(Input):
 			self,
 			check_syn: bool = False,
 			dataset_key: int = 9923,
-			sleep: float = 0.5,
-			output_format: str = "json",
-			bulk: bool = False
+			**kwargs
 	):
-		super().__init__(output_format, bulk)
+		super().__init__(**kwargs)
 		self.check_syn = check_syn
 		self.dataset_key = dataset_key
-		self.sleep = sleep
 
-		if output_format != "json":
+		if self.output_format != "json":
 			raise ValueError("Invalid output_format. Expected 'json'.")
 
 	def _download(self, query, **kwargs) -> list:

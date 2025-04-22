@@ -15,17 +15,6 @@ class BOLD(Input):
 	summary : bool, optional
 	    If True, the function returns a summary of the downloaded metadata instead of the full records.
 	    Default is False.
-	sleep: float
-		Time in seconds to wait between consecutive API requests.
-		Default is 0.5 seconds.
-	output_format : string, optional
-		The format of the output file.
-		The options available are: 'json', 'fasta'.
-		Default is 'json'.
-	bulk : bool, optional
-		If True, the function creates a bulk file.
-		For further information, see the documentation of the biodumpy package.
-		Default is False.
 
 	Details
 	-------
@@ -55,20 +44,17 @@ class BOLD(Input):
 
     def __init__(self,
                  summary: bool = False,
-                 sleep: float = 0.5,
-                 output_format: str = "json",
-                 bulk: bool = False
+                 **kwargs
                  ):
 
-        super().__init__(output_format, bulk)
+        super().__init__(**kwargs)
         self.summary = summary
-        self.sleep = sleep
         # self.fasta = fasta
 
         # if self.fasta and output_format != "fasta":
         # 	raise ValueError("Invalid output_format. Expected fasta.")
 
-        if output_format not in {"json", "fasta"}:
+        if self.output_format not in {"json", "fasta"}:
             raise ValueError('Invalid output_format. Expected "json" or "fasta".')
 
     def _download(self, query, **kwargs) -> list:

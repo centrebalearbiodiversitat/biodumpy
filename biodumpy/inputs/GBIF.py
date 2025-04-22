@@ -26,16 +26,6 @@ class GBIF(Input):
 	geometry : str, optional
 	    A spatial polygon to filter occurrences within a specified area.
 	    Default is an empty string.
-	sleep: float
-		Time in seconds to wait between consecutive API requests.
-		Default is 0.5 seconds.
-	output_format : str, optional
-	    The format of the output file. The options available are: 'json', 'fasta', 'pdf'.
-	    Default is 'json'.
-	bulk : bool, optional
-		If True, the function creates a bulk file.
-		For further information, see the documentation of the biodumpy package.
-		Default is False.
 
 	Details
 	-------
@@ -63,19 +53,16 @@ class GBIF(Input):
 		accepted_only: bool = True,
 		occ: bool = False,
 		geometry: str = None,
-		sleep: float = 0.5,
-		output_format: str = "json",
-		bulk: bool = False
+		**kwargs
 	):
-		super().__init__(output_format, bulk)
+		super().__init__(**kwargs)
 		self.dataset_key = dataset_key
 		self.limit = limit  # Limit to find name in taxonomy backbone
 		self.accepted = accepted_only
 		self.occ = occ
 		self.geometry = geometry
-		self.sleep = sleep
 
-		if output_format != "json":
+		if self.output_format != "json":
 			raise ValueError('Invalid output_format. Expected "json".')
 
 	def _download(self, query, **kwargs) -> list:
