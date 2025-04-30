@@ -1,8 +1,7 @@
 import requests
-import time
+
 from bs4 import BeautifulSoup
 from tqdm import tqdm
-
 from biodumpy import Input, BiodumpyException
 
 
@@ -43,7 +42,6 @@ class ZooBank(Input):
 			info: bool = False,
 			**kwargs
 	):
-
 		super().__init__(**kwargs)
 		self.dataset_size = dataset_size
 		self.info = info
@@ -55,7 +53,6 @@ class ZooBank(Input):
 			raise ValueError("Invalid output_format. Expected 'json'.")
 
 	def _download(self, query, **kwargs) -> list:
-
 		payload = []
 
 		if self.dataset_size == "small":
@@ -93,7 +90,7 @@ class ZooBank(Input):
 
 		if self.info and referenceuuid != [""]:
 			for refuid in referenceuuid:
-				index = next((i for i, entry in enumerate(payload) if entry.get('referenceuuid') == refuid), None)
+				index = next((i for i, entry in enumerate(payload) if entry.get("referenceuuid") == refuid), None)
 
 				response_id = requests.get(f"https://zoobank.org/Identifiers.json/{refuid}")
 				try:
@@ -101,7 +98,5 @@ class ZooBank(Input):
 					payload[index]["info"] = response_id_json
 				except requests.exceptions.JSONDecodeError as e:
 					print(f"Failed to parse JSON with reference uid{refuid}:", e)
-
-		time.sleep(self.sleep)
 
 		return payload

@@ -69,15 +69,7 @@ class GBIF(Input):
 		payload = []
 
 		# Search taxonomy
-		response = requests.get(
-			f"https://api.gbif.org/v1/species?",
-				params={
-					"datasetKey": self.dataset_key,
-					"name": query,
-					"limit": self.limit,
-					"offset": 0
-				}
-		)
+		response = requests.get(f"https://api.gbif.org/v1/species?", params={"datasetKey": self.dataset_key, "name": query, "limit": self.limit, "offset": 0})
 
 		if response.status_code != 200:
 			raise BiodumpyException(f"Taxonomy request. Error {response.status_code}")
@@ -108,7 +100,6 @@ class GBIF(Input):
 				except ValueError:
 					print("Invalid input, please enter a number.")
 
-
 			if self.accepted:
 				if payload[0].get("taxonomicStatus") != "ACCEPTED":
 					acceptedKey = payload[0].get("acceptedKey")
@@ -135,13 +126,7 @@ class GBIF(Input):
 	def _download_gbif_occ(self, taxon_key: int = None, accepted_taxon_key: int = None, geometry: str = None):
 		response_occ = requests.get(
 			f"https://api.gbif.org/v1/occurrence/search",
-			params={
-				"taxonKey": taxon_key,
-				"acceptedTaxonKey": accepted_taxon_key,
-				"occurrenceStatus": "PRESENT",
-				"geometry": geometry,
-				"limit": 300
-			}
+			params={"taxonKey": taxon_key, "acceptedTaxonKey": accepted_taxon_key, "occurrenceStatus": "PRESENT", "geometry": geometry, "limit": 300},
 		)
 
 		if response_occ.status_code != 200:
@@ -165,14 +150,7 @@ class GBIF(Input):
 				while offset < total_records:
 					response_occ = requests.get(
 						f"https://api.gbif.org/v1/occurrence/search",
-						params={
-							"taxonKey": taxon_key,
-							"acceptedTaxonKey": accepted_taxon_key,
-							"occurrenceStatus": "PRESENT",
-							"geometry": geometry,
-							"limit": 300,
-							"offset": offset
-						}
+						params={"taxonKey": taxon_key, "acceptedTaxonKey": accepted_taxon_key, "occurrenceStatus": "PRESENT", "geometry": geometry, "limit": 300, "offset": offset},
 					)
 
 					data = response_occ.json()

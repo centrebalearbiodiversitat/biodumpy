@@ -1,5 +1,4 @@
 import requests
-import time
 
 from tqdm import tqdm
 from biodumpy import Input, BiodumpyException
@@ -31,17 +30,11 @@ class OBIS(Input):
     >>> bdp.start(taxa, output_path='./downloads/{date}/{module}_occ/{name}')
     """
 
-    def __init__(self,
-                 occ: bool = False,
-                 geometry: str = None,
-                 areaid: int = None,
-                 **kwargs
-                 ):
-
-        super().__init__(**kwargs)
-        self.occ = occ
-        self.geometry = geometry
-        self.areaid = areaid
+	def __init__(self, occ: bool = False, geometry: str = None, areaid: int = None, **kwargs):
+		super().__init__(**kwargs)
+		self.occ = occ
+		self.geometry = geometry
+		self.areaid = areaid
 
         if self.output_format != "json":
             raise ValueError('Invalid output_format. Expected "json".')
@@ -63,8 +56,6 @@ class OBIS(Input):
             if self.occ and len(payload) > 0:
                 tax_key = payload[0]["taxonID"]
                 payload = self._download_obis_occ(taxon_key=tax_key, geometry=self.geometry, areaid=self.areaid)
-
-        time.sleep(self.sleep)
 
         return payload
 

@@ -49,13 +49,7 @@ def test_worms_initialization():
 
 
 # Add query in pytest.mark.parametrize. We can create a different query for accepted and synonym taxa.
-@pytest.mark.parametrize(
-	"query, distribution, marine_only",
-	[
-		(["Pinna nobilis"], False, False),
-		(["Pinna nobilis"], True, True)
-	]
-)
+@pytest.mark.parametrize("query, distribution, marine_only", [(["Pinna nobilis"], False, False), (["Pinna nobilis"], True, True)])
 def test_download_syn(query, distribution, marine_only):
 	with redirect_stdout(trap):
 		data = worms_query(query=query, marine_only=marine_only, distribution=distribution)
@@ -75,8 +69,8 @@ def test_download_syn(query, distribution, marine_only):
 	assert data["authority"] == "Linnaeus, 1758", "authority is not Linnaeus, 1758"
 	assert "status" in data, "status is not in data"
 	assert data["status"] == "accepted", "status is not accepted"
-	assert 'unacceptreason' in data, "unacceptreason is not in data"
-	assert 'taxonRankID' in data, "taxonRankID is not in data"
+	assert "unacceptreason" in data, "unacceptreason is not in data"
+	assert "taxonRankID" in data, "taxonRankID is not in data"
 	assert data["taxonRankID"] == 220, "taxonRankID is not accepted"
 	assert "rank" in data, "rank is not in data"
 	assert data["rank"] == "Species", "authority is not Species"
@@ -86,7 +80,7 @@ def test_download_syn(query, distribution, marine_only):
 	assert data["valid_name"] == "Pinna nobilis", "valid_name is not Pinna nobilis"
 	assert "valid_authority" in data, "valid_authority is not in data"
 	assert data["valid_authority"] == "Linnaeus, 1758", "valid_authority is not Linnaeus, 1758"
-	assert 'parentNameUsageID' in data, "parentNameUsageID is not in data"
+	assert "parentNameUsageID" in data, "parentNameUsageID is not in data"
 	assert data["parentNameUsageID"] == 138352, "parentNameUsageID is not 138352"
 	assert "kingdom" in data, "kingdom is not in data"
 	assert data["kingdom"] == "Animalia", "kingdom is not Animalia"
@@ -101,7 +95,7 @@ def test_download_syn(query, distribution, marine_only):
 	assert "genus" in data, "genus is not in data"
 	assert data["genus"] == "Pinna", "genus is not Pinna"
 	assert "citation" in data, "citation is not in data"
-	assert 'lsid' in data, "lsid is not in data"
+	assert "lsid" in data, "lsid is not in data"
 	assert "isMarine" in data, "isMarine is not in data"
 	assert data["isMarine"] == 1, "isMarine is not 1"
 	assert "isBrackish" in data, "isBrackish is not in data"
@@ -112,9 +106,9 @@ def test_download_syn(query, distribution, marine_only):
 	assert data["isTerrestrial"] == 0, "isTerrestrial is 0"
 	assert "isExtinct" in data, "isExtinct is not in data"
 	assert data["isExtinct"] is None, "isExtinct is not None"
-	assert 'match_type' in data, "match_type is not in data"
+	assert "match_type" in data, "match_type is not in data"
 	assert data["match_type"] == "exact", "match_type is not exact"
-	assert 'modified' in data, "modified is not in data"
+	assert "modified" in data, "modified is not in data"
 
 	if distribution:
 		assert "distribution" in data, "distribution is not in data"
@@ -126,7 +120,7 @@ def test_download_syn(query, distribution, marine_only):
 		assert "locality" in dist, "locality is not in dist"
 		assert dist["locality"] == "European waters (ERMS scope)", "locality is European waters (ERMS scope)"
 		assert "locationID" in dist, "locationID is not in dist"
-		assert (dist["locationID"] == "http://marineregions.org/mrgid/7130"), "locationID is http://marineregions.org/mrgid/7130"
+		assert dist["locationID"] == "http://marineregions.org/mrgid/7130", "locationID is http://marineregions.org/mrgid/7130"
 		assert "higherGeography" in dist, "higherGeography is not in dist"
 		assert dist["higherGeography"] == "North Atlantic Ocean", "higherGeography is not North Atlantic Ocean"
 		assert "higherGeographyID" in dist, "higherGeographyID is not in dist"

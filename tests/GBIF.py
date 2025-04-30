@@ -22,19 +22,7 @@ def gbif_query(query, accepted_only, occ, geometry):
 		dynamic_path = os.path.join(temp_dir)
 
 	# Start biodumpy function
-	bdp = Biodumpy(
-		[
-			GBIF(
-				dataset_key=gbif_backbone,
-				limit=20,
-				accepted_only=accepted_only,
-				occ=occ,
-				geometry=geometry,
-				output_format="json",
-				bulk = True
-			)
-		]
-	)
+	bdp = Biodumpy([GBIF(dataset_key=gbif_backbone, limit=20, accepted_only=accepted_only, occ=occ, geometry=geometry, output_format="json", bulk=True)])
 	bdp.start(elements=query, output_path=f"{dynamic_path}/downloads/{{date}}/{{module}}/{{name}}")
 
 	# Retrieve a file path
@@ -71,11 +59,7 @@ def test_gbif_initialization():
 
 @pytest.mark.parametrize(
 	"query, accepted_only, occ, geometry",
-	[
-		(["Alytes muletensis"], True, False, None),
-		(["Alytes muletensis"], True, True,
-		 "POLYGON((0.248 37.604, 6.300 37.604, 6.300 41.472, 0.248 41.472, 0.248 37.604))"),
-	],
+	[(["Alytes muletensis"], True, False, None), (["Alytes muletensis"], True, True, "POLYGON((0.248 37.604, 6.300 37.604, 6.300 41.472, 0.248 41.472, 0.248 37.604))")],
 )
 def test_download(query, accepted_only, occ, geometry):
 	with redirect_stdout(trap):
@@ -92,9 +76,9 @@ def test_download(query, accepted_only, occ, geometry):
 		assert "nameKey" in data, "nameKey is not in data"
 		assert data["nameKey"] == 497717, "nameKey is not 497717"
 		assert "datasetKey" in data, "datasetKey is not in data"
-		assert data["datasetKey"] == 'd7dddbf4-2cf0-4f39-9b2a-bb099caae36c', "datasetKey is not d7dddbf4-2cf0-4f39-9b2a-bb099caae36c"
+		assert data["datasetKey"] == "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c", "datasetKey is not d7dddbf4-2cf0-4f39-9b2a-bb099caae36c"
 		assert "constituentKey" in data, "constituentKey is not in data"
-		assert data["constituentKey"] == '7ddf754f-d193-4cc9-b351-99906754a03b', "datasetKey is not 7ddf754f-d193-4cc9-b351-99906754a03b"
+		assert data["constituentKey"] == "7ddf754f-d193-4cc9-b351-99906754a03b", "datasetKey is not 7ddf754f-d193-4cc9-b351-99906754a03b"
 		assert "nubKey" in data, "nubKey is not in data"
 		assert data["nubKey"] == 2426609, "nubKey is not 2426609"
 		assert "parentKey" in data, "parentKey is not in data"
@@ -104,23 +88,23 @@ def test_download(query, accepted_only, occ, geometry):
 		assert "basionymKey" in data, "basionymKey is not in data"
 		assert data["basionymKey"] == 4409471, "basionymKey is not 4409471"
 		assert "basionym" in data, "basionym is not in data"
-		assert data["basionym"] == 'Baleaphryne muletensis Sanchíz & Adrover, 1979', "basionym is not Baleaphryne muletensis Sanchíz & Adrover, 1979"
+		assert data["basionym"] == "Baleaphryne muletensis Sanchíz & Adrover, 1979", "basionym is not Baleaphryne muletensis Sanchíz & Adrover, 1979"
 		assert "kingdom" in data, "kingdom is not in data"
-		assert data["kingdom"] == 'Animalia', "kingdom is not Animalia"
+		assert data["kingdom"] == "Animalia", "kingdom is not Animalia"
 		assert "phylum" in data, "phylum is not in data"
-		assert data["phylum"] == 'Chordata', "phylum is not Chordata"
+		assert data["phylum"] == "Chordata", "phylum is not Chordata"
 		assert "phylum" in data, "phylum is not in data"
-		assert data["phylum"] == 'Chordata', "phylum is not Chordata"
+		assert data["phylum"] == "Chordata", "phylum is not Chordata"
 		assert "class" in data, "class is not in data"
-		assert data["class"] == 'Amphibia', "class is not Chordata"
+		assert data["class"] == "Amphibia", "class is not Chordata"
 		assert "order" in data, "order is not in data"
-		assert data["order"] == 'Anura', "order is not Anura"
+		assert data["order"] == "Anura", "order is not Anura"
 		assert "family" in data, "family is not in data"
-		assert data["family"] == 'Alytidae', "family is not Alytidae"
+		assert data["family"] == "Alytidae", "family is not Alytidae"
 		assert "genus" in data, "genus is not in data"
-		assert data["genus"] == 'Alytes', "genus is not Alytes"
+		assert data["genus"] == "Alytes", "genus is not Alytes"
 		assert "species" in data, "species is not in data"
-		assert data["species"] == 'Alytes muletensis', "species is not Alytes muletensis"
+		assert data["species"] == "Alytes muletensis", "species is not Alytes muletensis"
 		assert "kingdomKey" in data, "kingdomKey is not in data"
 		assert data["kingdomKey"] == 1, "kingdomKey is not 1"
 		assert "phylumKey" in data, "phylumKey is not in data"
@@ -136,26 +120,26 @@ def test_download(query, accepted_only, occ, geometry):
 		assert "speciesKey" in data, "speciesKey is not in data"
 		assert data["speciesKey"] == 2426609, "speciesKey is not 2426609"
 		assert "scientificName" in data, "scientificName is not in data"
-		assert data["scientificName"] == 'Alytes muletensis (Sanchíz & Adrover, 1979)', "scientificName is not Alytes muletensis (Sanchíz & Adrover, 1979)"
+		assert data["scientificName"] == "Alytes muletensis (Sanchíz & Adrover, 1979)", "scientificName is not Alytes muletensis (Sanchíz & Adrover, 1979)"
 		assert "canonicalName" in data, "canonicalName is not in data"
 		assert data["canonicalName"] == "Alytes muletensis", "canonicalName is not Alytes muletensis"
 		assert "authorship" in data, "authorship is not in data"
-		assert data["authorship"] == '(Sanchíz & Adrover, 1979) ', "authorship is not (Sanchíz & Adrover, 1979)"
+		assert data["authorship"] == "(Sanchíz & Adrover, 1979) ", "authorship is not (Sanchíz & Adrover, 1979)"
 		assert "nameType" in data, "nameType is not in data"
-		assert data["nameType"] == 'SCIENTIFIC', "nameType is not SCIENTIFIC"
+		assert data["nameType"] == "SCIENTIFIC", "nameType is not SCIENTIFIC"
 		assert "taxonomicStatus" in data, "taxonomicStatus is not in data"
-		assert data["taxonomicStatus"] == 'ACCEPTED', "taxonomicStatus is not ACCEPTED"
+		assert data["taxonomicStatus"] == "ACCEPTED", "taxonomicStatus is not ACCEPTED"
 		assert "rank" in data, "rank is not in data"
-		assert data["rank"] == 'SPECIES', "rank is not SPECIES"
+		assert data["rank"] == "SPECIES", "rank is not SPECIES"
 		assert "origin" in data, "origin is not in data"
-		assert data["origin"] == 'SOURCE', "origin is not SOURCE"
+		assert data["origin"] == "SOURCE", "origin is not SOURCE"
 		assert "numDescendants" in data, "numDescendants is not in data"
 		assert data["numDescendants"] == 1, "numDescendants is not 1"
 		# assert "numOccurrences" in data, "numOccurrences is not in data"
 		# assert data["numOccurrences"] == 0, "numOccurrences is not 0"
 		# assert "extinct" in data, "extinct is not in data"
 		# assert "habitats" in data, "habitats is not in data"
-		assert 'nomenclaturalStatus' in data, "nomenclaturalStatus is not in data"
+		assert "nomenclaturalStatus" in data, "nomenclaturalStatus is not in data"
 		# assert 'threatStatuses' in data, "threatStatuses is not in data"
 		# assert 'descriptions' in data, "descriptions is not in data"
 		# assert 'vernacularNames' in data, "vernacularNames is not in data"

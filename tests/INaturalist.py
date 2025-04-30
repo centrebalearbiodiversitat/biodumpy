@@ -49,12 +49,7 @@ def test_inat_initialization():
 		INaturalist(output_format="xml")
 
 
-@pytest.mark.parametrize(
-	"query",
-	[
-		(["Alytes muletensis"])
-	],
-)
+@pytest.mark.parametrize("query", [(["Alytes muletensis"])])
 def test_download(query):
 	with redirect_stdout(trap):
 		data = inat_query(query=query)
@@ -65,10 +60,12 @@ def test_download(query):
 	data = data[0]
 
 	assert "taxon" in data, "taxon is not in data"
-	assert data["taxon"] == 'Alytes muletensis', "taxon is not Alytes muletensis"
+	assert data["taxon"] == "Alytes muletensis", "taxon is not Alytes muletensis"
 	assert "image_id" in data, "image_id is not in data"
-	assert data["image_id"] == '61080851/medium.jpeg', "image_id is not 61080851/medium.jpeg"
+	assert data["image_id"] == "61080851/medium.jpeg", "image_id is not 61080851/medium.jpeg"
 	assert "license_code" in data, "license_code is not in data"
-	assert data['license_code'] == 'cc-by-nc', "image_id is not cc-by-nc"
+	assert data["license_code"] == "cc-by-nc", "image_id is not cc-by-nc"
 	assert "attribution" in data, "attribution is not in data"
-	assert data['attribution'] == '(c) Gert Jan Verspui, some rights reserved (CC BY-NC), uploaded by Gert Jan Verspui', "attribution is not (c) Gert Jan Verspui, some rights reserved (CC BY-NC), uploaded by Gert Jan Verspui"
+	assert data["attribution"] == "(c) Gert Jan Verspui, some rights reserved (CC BY-NC), uploaded by Gert Jan Verspui", (
+		"attribution is not (c) Gert Jan Verspui, some rights reserved (CC BY-NC), uploaded by Gert Jan Verspui"
+	)

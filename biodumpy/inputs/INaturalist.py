@@ -1,6 +1,5 @@
 import requests
 import sys
-import time
 
 from biodumpy import Input, BiodumpyException
 
@@ -57,7 +56,6 @@ class INaturalist(Input):
             raise ValueError('Invalid output_format. Expected "json".')
 
     def _download(self, query, **kwargs) -> list:
-
         # API request
         response = requests.get(f"https://api.inaturalist.org/v1/taxa?q={query}&order=desc&order_by=observations_count")
 
@@ -77,15 +75,11 @@ class INaturalist(Input):
             if self.info:
                 payload = []
 
-                if len(results) == 1:
-                    payload.append(results[0])
-                else:
-                    payload.append(results[0])
-                    print(
-                        f"More than one result for the taxon: {query}. \nOnly the first result was used in the output.",
-                        file=sys.stderr)
-
-                time.sleep(self.sleep)
+				if len(results) == 1:
+					payload.append(results[0])
+				else:
+					payload.append(results[0])
+					print(f"More than one result for the taxon: {query}. \nOnly the first result was used in the output.", file=sys.stderr)
 
                 return payload
 
@@ -108,30 +102,27 @@ class INaturalist(Input):
                             results_id = response_id.json()["results"]
                             photo_id = results_id[0]["taxon_photos"]
 
-                            photo_details = next(
-                                filter(lambda x: x["photo"]["license_code"] in photo_license, photo_id), None)
+							photo_details = next(filter(lambda x: x["photo"]["license_code"] in photo_license, photo_id), None)
 
-                            if photo_details:
-                                url_photo = photo_details["photo"]["url"]
-                                url_photo = url_photo.split("/")[-2] + "/" + url_photo.split("/")[-1]
-                                photo_details = {
-                                    "taxon": query,
-                                    "image_id": url_photo.replace("square", "medium"),
-                                    "license_code": photo_details["photo"]["license_code"],
-                                    "attribution": photo_details["photo"]["attribution"],
-                                }
-                            else:
-                                photo_details = photo_details_empty
-                    else:
-                        url_photo = photo_info["url"]
-                        url_photo = url_photo.split("/")[-2] + "/" + url_photo.split("/")[-1]
-                        photo_details = {
-                            "taxon": query,
-                            "image_id": url_photo.replace("square", "medium"),
-                            "license_code": photo_info["license_code"],
-                            "attribution": photo_info["attribution"]
-                        }
+							if photo_details:
+								url_photo = photo_details["photo"]["url"]
+								url_photo = url_photo.split("/")[-2] + "/" + url_photo.split("/")[-1]
+								photo_details = {
+									"taxon": query,
+									"image_id": url_photo.replace("square", "medium"),
+									"license_code": photo_details["photo"]["license_code"],
+									"attribution": photo_details["photo"]["attribution"],
+								}
+							else:
+								photo_details = photo_details_empty
+					else:
+						url_photo = photo_info["url"]
+						url_photo = url_photo.split("/")[-2] + "/" + url_photo.split("/")[-1]
+						photo_details = {
+							"taxon": query,
+							"image_id": url_photo.replace("square", "medium"),
+							"license_code": photo_info["license_code"],
+							"attribution": photo_info["attribution"],
+						}
 
-                time.sleep(self.sleep)
-
-                return [photo_details]
+				return [photo_details]

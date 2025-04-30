@@ -1,5 +1,4 @@
 import requests
-import time
 
 from biodumpy import Input, BiodumpyException
 
@@ -54,7 +53,6 @@ class COL(Input):
 			raise ValueError("Invalid output_format. Expected 'json'.")
 
 	def _download(self, query, **kwargs) -> list:
-
 		response = requests.get(
 			f"https://api.checklistbank.org/dataset/{self.dataset_key}/nameusage/search?",
 			params={
@@ -63,7 +61,8 @@ class COL(Input):
 				"type": "EXACT",
 				"offset": 0,
 				"limit": 10
-			})
+			},
+		)
 
 		if response.status_code != 200:
 			raise BiodumpyException(f"Taxonomy request. Error {response.status_code}")
@@ -79,7 +78,7 @@ class COL(Input):
 			if len(result) > 1:
 				ids = [item.get("id") for item in result if "id" in item]
 				ids = ", ".join(ids)
-				id_input = input(f"Please enter the correct taxon ID of {query} \n ID: {ids}; Skip \n" f"Insert the ID:")
+				id_input = input(f"Please enter the correct taxon ID of {query} \n ID: {ids}; Skip \nInsert the ID:")
 
 				if id_input == "Skip":
 					result = [{"id": None, "usage": None, "status": None, "classification": None}]
@@ -96,7 +95,5 @@ class COL(Input):
 				classification = [item for item in classification if item["id"] != synonym_id] if classification else None
 
 			payload = [{"origin_taxon": query, "taxon_id": id, "status": status, "usage": usage, "classification": classification}]
-
-		time.sleep(self.sleep)
 
 		return payload
