@@ -44,11 +44,7 @@ class INaturalist(Input):
 	>>> bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}')
 	"""
 
-	def __init__(self,
-				 info: bool = False,
-				 **kwargs
-				 ):
-
+	def __init__(self, info: bool = False, **kwargs):
 		super().__init__(**kwargs)
 		self.info = info
 
@@ -88,8 +84,7 @@ class INaturalist(Input):
 					taxon_id = results_filtered["id"]
 
 					if results_filtered["default_photo"] is not None:
-						photo_info = results_filtered["default_photo"] if results_filtered["default_photo"][
-							"license_code"] else None
+						photo_info = results_filtered["default_photo"] if results_filtered["default_photo"]["license_code"] else None
 					else:
 						photo_info = None
 

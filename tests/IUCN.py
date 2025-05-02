@@ -29,8 +29,9 @@ IUCN_SCOPE = [
 	"Gulf of Mexico",
 	"Caribbean",
 	"Persian Gulf",
-	"Arabian Sea"
+	"Arabian Sea",
 ]
+
 
 def iucn_query(query, authorization, assess_details, latest, scope, output_format):
 	# Create temporary directory
@@ -39,18 +40,7 @@ def iucn_query(query, authorization, assess_details, latest, scope, output_forma
 		dynamic_path = os.path.join(temp_dir)
 
 	# Start biodumpy function
-	bdp = Biodumpy(
-		[
-			IUCN(
-				authorization = authorization,
-				assess_details = assess_details,
-				latest = latest,
-				scope = scope,
-				output_format = output_format,
-				bulk = True
-			)
-		]
-	)
+	bdp = Biodumpy([IUCN(authorization=authorization, assess_details=assess_details, latest=latest, scope=scope, output_format=output_format, bulk=True)])
 
 	bdp.start(elements=query, output_path=f"{dynamic_path}/downloads/{{date}}/{{module}}/{{name}}")
 
@@ -111,20 +101,12 @@ def test_validate_regions_invalid():
 		(["Alytes muletensis"], False, False, ["Global"], "json"),
 		(["Alytes muletensis"], True, False, ["Global"], "json"),
 		(["Alytes muletensis"], False, True, ["Global"], "json"),
-		(["Bufotes viridis"], False, False, ["Global"], "json")
-
+		(["Bufotes viridis"], False, False, ["Global"], "json"),
 	],
 )
 def test_download(query, assess_details, latest, scope, output_format):
 	with redirect_stdout(trap):
-		data = iucn_query(
-			query=query,
-			authorization=API_KEY,
-			assess_details=assess_details,
-			latest=latest,
-			scope=scope,
-			output_format=output_format
-		)
+		data = iucn_query(query=query, authorization=API_KEY, assess_details=assess_details, latest=latest, scope=scope, output_format=output_format)
 
 	# Check if data is not empty
 	assert len(data) > 0, "data length is 0"
@@ -140,14 +122,14 @@ def test_download(query, assess_details, latest, scope, output_format):
 	assert "species" in taxon_info, "species is not in taxon_info"
 
 	taxon_assessment = data["assessment"][0]
-	assert 'year_published' in taxon_assessment, "year_published is not in taxon_assessment"
-	assert 'latest' in taxon_assessment, "latest is not in taxon_assessment"
-	assert 'possibly_extinct' in taxon_assessment, "possibly_extinct is not in taxon_assessment"
-	assert 'possibly_extinct_in_the_wild' in taxon_assessment, "possibly_extinct_in_the_wild is not in taxon_assessment"
-	assert 'sis_taxon_id' in taxon_assessment, "sis_taxon_id is not in taxon_assessment"
-	assert 'url' in taxon_assessment, "url is not in taxon_assessment"
-	assert 'assessment_id' in taxon_assessment, "uassessment_id is not in taxon_assessment"
-	assert 'scopes' in taxon_assessment, "scopes is not in taxon_assessment"
+	assert "year_published" in taxon_assessment, "year_published is not in taxon_assessment"
+	assert "latest" in taxon_assessment, "latest is not in taxon_assessment"
+	assert "possibly_extinct" in taxon_assessment, "possibly_extinct is not in taxon_assessment"
+	assert "possibly_extinct_in_the_wild" in taxon_assessment, "possibly_extinct_in_the_wild is not in taxon_assessment"
+	assert "sis_taxon_id" in taxon_assessment, "sis_taxon_id is not in taxon_assessment"
+	assert "url" in taxon_assessment, "url is not in taxon_assessment"
+	assert "assessment_id" in taxon_assessment, "uassessment_id is not in taxon_assessment"
+	assert "scopes" in taxon_assessment, "scopes is not in taxon_assessment"
 
 	# assess_details ----
 	if assess_details and query == "Alytes muletensis":
@@ -174,10 +156,10 @@ def test_download(query, assess_details, latest, scope, output_format):
 		assert "stresses" in taxon_assessment, "stresses is not in taxon_assessment"
 		assert "systems" in taxon_assessment, "systems is not in taxon_assessment"
 		assert len(taxon_assessment) == 1, "The length of the taxon_assessment is not 1"
-		assert taxon_assessment.get('year_published') == 2024, "The year_published is not 2024"
+		assert taxon_assessment.get("year_published") == 2024, "The year_published is not 2024"
 
 	if scope == ["Global"] and query == "Alytes muletensis":
-		assert taxon_assessment.get('scope') == "Global;Europe;Mediterranean", "The scope is not Global;Europe;Mediterranean"
+		assert taxon_assessment.get("scope") == "Global;Europe;Mediterranean", "The scope is not Global;Europe;Mediterranean"
 
 	if scope == ["Global"] and query == "Bufotes viridis":
-		assert taxon_assessment.get('scope') == "Global", "The scope is not Global"
+		assert taxon_assessment.get("scope") == "Global", "The scope is not Global"

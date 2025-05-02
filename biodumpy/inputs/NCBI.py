@@ -78,19 +78,19 @@ class NCBI(Input):
 	"""
 
 	def __init__(
-			self,
-			mail: str = None,
-			db: str = "nucleotide",
-			rettype: str = "gb",
-			query_type: str = "[Organism]",
-			step_id: int = 100,
-			step_seq: int = 100,
-			max_bp: int = None,
-			summary: bool = False,
-			by_id: bool = False,
-			taxonomy: bool = False,
-			taxonomy_only: bool = False,
-			**kwargs
+		self,
+		mail: str = None,
+		db: str = "nucleotide",
+		rettype: str = "gb",
+		query_type: str = "[Organism]",
+		step_id: int = 100,
+		step_seq: int = 100,
+		max_bp: int = None,
+		summary: bool = False,
+		by_id: bool = False,
+		taxonomy: bool = False,
+		taxonomy_only: bool = False,
+		**kwargs,
 	):
 		super().__init__(**kwargs)
 		self.mail = mail
@@ -110,7 +110,7 @@ class NCBI(Input):
 		if self.output_format == "fasta" and self.rettype != "fasta":
 			raise ValueError("Invalid output_format or rettype. Expected fasta.")
 
-		if self.output_format not in {'json', 'fasta'}:
+		if self.output_format not in {"json", "fasta"}:
 			raise ValueError('Invalid output_format. Expected "json" or "fasta".')
 
 		if self.by_id and self.query_type is not None:
@@ -245,12 +245,7 @@ class NCBI(Input):
 		attempt = 0
 		while attempt < retries:
 			try:
-				handle = Entrez.efetch(
-					db=db, id=seq_id,
-					rettype=rettype, retmode=retmode,
-					usehistory=history, WebEnv=webenv,
-					query_key=query_key
-				)
+				handle = Entrez.efetch(db=db, id=seq_id, rettype=rettype, retmode=retmode, usehistory=history, WebEnv=webenv, query_key=query_key)
 
 				if self.rettype == "fasta":
 					return handle.read().split("\n\n")[:-1]

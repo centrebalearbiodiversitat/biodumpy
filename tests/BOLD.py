@@ -56,12 +56,7 @@ def test_bold_initialization():
 
 @pytest.mark.parametrize(
 	"query, summary, output_format",
-	[
-		(["Alytes muletensis"], True, "json"),
-		(["Alytes muletensis"], True, "json"),
-		(["Alytes muletensis"], False, "json"),
-		(["Alytes muletensis"], False, "fasta")
-	]
+	[(["Alytes muletensis"], True, "json"), (["Alytes muletensis"], True, "json"), (["Alytes muletensis"], False, "json"), (["Alytes muletensis"], False, "fasta")],
 )
 def test_download(query, summary, output_format):
 	with redirect_stdout(trap):

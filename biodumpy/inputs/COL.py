@@ -39,12 +39,7 @@ class COL(Input):
 
 	ACCEPTED_TERMS = ["accepted", "provisionally accepted"]
 
-	def __init__(
-			self,
-			check_syn: bool = False,
-			dataset_key: int = 9923,
-			**kwargs
-	):
+	def __init__(self, check_syn: bool = False, dataset_key: int = 9923, **kwargs):
 		super().__init__(**kwargs)
 		self.check_syn = check_syn
 		self.dataset_key = dataset_key
@@ -55,13 +50,7 @@ class COL(Input):
 	def _download(self, query, **kwargs) -> list:
 		response = requests.get(
 			f"https://api.checklistbank.org/dataset/{self.dataset_key}/nameusage/search?",
-			params={
-				"q": query,
-				"content": "SCIENTIFIC_NAME",
-				"type": "EXACT",
-				"offset": 0,
-				"limit": 10
-			},
+			params={"q": query, "content": "SCIENTIFIC_NAME", "type": "EXACT", "offset": 0, "limit": 10},
 		)
 
 		if response.status_code != 200:

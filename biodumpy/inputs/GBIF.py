@@ -45,15 +45,7 @@ class GBIF(Input):
 	>>> bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}')
 	"""
 
-	def __init__(
-		self,
-		dataset_key: str = "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
-		limit: int = 20,
-		accepted_only: bool = True,
-		occ: bool = False,
-		geometry: str = None,
-		**kwargs
-	):
+	def __init__(self, dataset_key: str = "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c", limit: int = 20, accepted_only: bool = True, occ: bool = False, geometry: str = None, **kwargs):
 		super().__init__(**kwargs)
 		self.dataset_key = dataset_key
 		self.limit = limit  # Limit to find name in taxonomy backbone

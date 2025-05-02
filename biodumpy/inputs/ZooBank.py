@@ -36,12 +36,7 @@ class ZooBank(Input):
 	>>> bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}')
 	"""
 
-	def __init__(
-			self,
-			dataset_size: str = "small",
-			info: bool = False,
-			**kwargs
-	):
+	def __init__(self, dataset_size: str = "small", info: bool = False, **kwargs):
 		super().__init__(**kwargs)
 		self.dataset_size = dataset_size
 		self.info = info
