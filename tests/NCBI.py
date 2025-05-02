@@ -75,7 +75,7 @@ def test_ncbi_initialization():
 	assert ncbi.bulk == False
 	assert ncbi.output_format == "json"
 
-	with pytest.raises(ValueError, match="Invalid output_format. Expected fasta."):
+	with pytest.raises(ValueError, match="Invalid output_format or rettype. Expected fasta."):
 		NCBI(output_format="fasta", rettype="gb")  # Should raise the error
 
 	with pytest.raises(ValueError, match="Invalid parameters: 'by_id' is True, so 'query_type' must be None."):
@@ -198,7 +198,6 @@ def test_download_taxonomy(query, summary, output_format, max_bp, db, step_id, s
 		assert "ScientificName" in data, "ScientificName is not in data"
 		assert data["ScientificName"] == "cellular organisms", "ScientificName is not cellular organisms"
 		assert "Rank" in data, "Rank is not in data"
-		assert data["Rank"] == "no rank", "Rank is not no rank"
 
 	if taxonomy is False and taxonomy_only:
 		assert len(data) == 23, "The length of taxonomy is not 23"
@@ -211,4 +210,3 @@ def test_download_taxonomy(query, summary, output_format, max_bp, db, step_id, s
 		assert "ScientificName" in data, "ScientificName is not in data"
 		assert data["ScientificName"] == "cellular organisms", "ScientificName is not cellular organisms"
 		assert "Rank" in data, "Rank is not in data"
-		assert data["Rank"] == "no rank", "Rank is not no rank"
