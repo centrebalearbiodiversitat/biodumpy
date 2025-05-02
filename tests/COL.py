@@ -12,6 +12,7 @@ from biodumpy.inputs import COL
 # set a trap and redirect stdout. Remove the print of the function. In this wat the test output is cleanest.
 trap = io.StringIO()
 
+
 # Remember to check the latest dataset_key
 def col_query(query, check_syn, dataset_key):
 	# Create temporary directory
@@ -48,9 +49,7 @@ def test_col_initialization():
 		COL(output_format="xml")
 
 
-@pytest.mark.parametrize(
-	"query, check_syn, dataset_key", [(["Bufo roseus"], True, 309120), (["Bufo roseus"], False, 309120)]
-)
+@pytest.mark.parametrize("query, check_syn, dataset_key", [(["Bufo roseus"], True, 309120), (["Bufo roseus"], False, 309120)])
 def test_download(query, check_syn, dataset_key):
 	with redirect_stdout(trap):
 		data = col_query(query=query, check_syn=check_syn, dataset_key=dataset_key)
