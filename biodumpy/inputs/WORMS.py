@@ -1,5 +1,4 @@
 import requests
-import time
 
 from biodumpy import Input, BiodumpyException
 
@@ -61,8 +60,6 @@ class WORMS(Input):
                 f"https://www.marinespecies.org/rest/AphiaDistributionsByAphiaID/{aphia}")
 
         payload.append(response)
-
-        time.sleep(self.sleep)
 
         return payload
 

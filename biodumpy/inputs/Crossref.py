@@ -1,5 +1,4 @@
 import requests
-import time
 
 from biodumpy.utils import remove_tags
 from biodumpy import Input, BiodumpyException
@@ -81,7 +80,5 @@ class Crossref(Input):
                 )
             else:
                 payload = [message]
-
-        time.sleep(self.sleep)
 
         return payload

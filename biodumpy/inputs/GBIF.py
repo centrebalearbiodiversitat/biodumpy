@@ -1,5 +1,4 @@
 import requests
-import time
 
 from biodumpy import Input, BiodumpyException
 
@@ -118,8 +117,6 @@ class GBIF(Input):
 				if self.occ and len(payload) > 0:
 					# A taxon key from the GBIF backbone. All included (child) and synonym taxa are included in the search, so a search for Aves with taxonKey=212 (i.e. /occurrence/search?taxonKey=212) will match all birds, no matter which species.Parameter may be repeated.
 					payload = self._download_gbif_occ(taxon_key=payload["key"], geometry=self.geometry)
-
-		time.sleep(self.sleep)
 
 		return payload
 

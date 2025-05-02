@@ -1,5 +1,4 @@
 import requests
-import time
 
 from biodumpy import Input, BiodumpyException
 
@@ -42,11 +41,7 @@ class BOLD(Input):
 	>>> bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}')
 	"""
 
-    def __init__(self,
-                 summary: bool = False,
-                 **kwargs
-                 ):
-
+    def __init__(self, summary: bool = False, **kwargs):
         super().__init__(**kwargs)
         self.summary = summary
         # self.fasta = fasta
@@ -73,10 +68,7 @@ class BOLD(Input):
                 # Split the data by '>'
                 fasta_entries = [f">{entry}" for entry in data_str.split(">") if entry]
 
-                time.sleep(self.sleep)
-
                 return fasta_entries
-
         else:
             response = requests.get(
                 f"http://v4.boldsystems.org/index.php/API_Public/combined?taxon={query}&format=json")
@@ -127,7 +119,5 @@ class BOLD(Input):
                     res = results["bold_records"]["records"] if "bold_records" in results and "records" in results[
                         "bold_records"] else []
                     payload = list(res.values())
-
-            time.sleep(self.sleep)
 
             return payload
