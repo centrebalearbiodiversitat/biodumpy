@@ -18,13 +18,6 @@ class WORMS(Input):
 	distribution : bool, optional
 	    If True, the function also returns the WORMS distribution for the taxon.
 	    Default is False.
-	bulk : bool, optional
-	    If True, the function creates a bulk file.
-	    For further information, see the documentation of the Biodumpy package.
-	    Default is False.
-	output_format : string, optional
-	    The format of the output file. The options available are: 'json', 'fasta', 'pdf'.
-	    Default is 'json'.
 
 	Example
 	-------
@@ -37,12 +30,12 @@ class WORMS(Input):
 	>>> bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}')
 	"""
 
-	def __init__(self, marine_only: bool = False, distribution: bool = False, output_format: str = "json", bulk: bool = False):
-		super().__init__(output_format, bulk)
+	def __init__(self, marine_only: bool = False, distribution: bool = False, **kwargs):
+		super().__init__(**kwargs)
 		self.marine_only = marine_only
 		self.distribution = distribution
 
-		if output_format != "json":
+		if self.output_format != "json":
 			raise ValueError("Invalid output_format. Expected 'json'.")
 
 	def _download(self, query, **kwargs) -> list:

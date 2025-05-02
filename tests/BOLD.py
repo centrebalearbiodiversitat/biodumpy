@@ -54,7 +54,10 @@ def test_bold_initialization():
 		BOLD(output_format="xml")
 
 
-@pytest.mark.parametrize("query, summary, output_format", [(["Alytes muletensis"], True, "json"), (["Alytes muletensis"], False, "json"), (["Alytes muletensis"], False, "fasta")])
+@pytest.mark.parametrize(
+	"query, summary, output_format",
+	[(["Alytes muletensis"], True, "json"), (["Alytes muletensis"], True, "json"), (["Alytes muletensis"], False, "json"), (["Alytes muletensis"], False, "fasta")],
+)
 def test_download(query, summary, output_format):
 	with redirect_stdout(trap):
 		data = bold_query(query=query, summary=summary, output_format=output_format)

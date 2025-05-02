@@ -12,20 +12,12 @@ class COL(Input):
 	query : list
 	    The list of taxa to query.
 	dataset_key : int
-		The dataset key to query.
+		The dataset key to query. Please visit https://www.catalogueoflife.org/data/metadata to check the latest ChecklistBank release.
 		Default is 9923.
 	check_syn : bool, optional
 	    If True, the function returns only the accepted nomenclature of a taxon.
 	    See Detail section for further information.
 	    Default is False.
-	bulk : bool, optional
-		If True, the function creates a bulk file.
-		For further information, see the documentation of the Biodumpy package.
-		Default is False.
-	output_format : string, optional
-		The format of the output file.
-		The options available are: 'json', 'fasta', 'pdf'.
-		Default is 'json'.
 
 	Details
 	-------
@@ -47,12 +39,12 @@ class COL(Input):
 
 	ACCEPTED_TERMS = ["accepted", "provisionally accepted"]
 
-	def __init__(self, check_syn: bool = False, dataset_key: int = 9923, bulk: bool = False, output_format: str = "json"):
-		super().__init__(output_format, bulk)
+	def __init__(self, check_syn: bool = False, dataset_key: int = 9923, **kwargs):
+		super().__init__(**kwargs)
 		self.check_syn = check_syn
 		self.dataset_key = dataset_key
 
-		if output_format != "json":
+		if self.output_format != "json":
 			raise ValueError("Invalid output_format. Expected 'json'.")
 
 	def _download(self, query, **kwargs) -> list:

@@ -1,5 +1,5 @@
-The adaptation of biodumpy to R
-===============================
+From Python to R
+======================
 
 Overview
 --------
@@ -95,7 +95,3 @@ Below, we provide two examples of using biodumpy in R:
 
 	# Start the process with the specified taxa and output path
 	bdp$start(taxa, output_path = "./downloads_ex2/{date}/{module}/{name}")
-
-
-Example of data filtering
--------------------------

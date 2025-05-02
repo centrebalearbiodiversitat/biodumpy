@@ -13,7 +13,7 @@ from biodumpy.version import __version__ as version
 # -- Project information
 
 project = "biodumpy"
-copyright = "2024, Centre Balear de Biodiversitat (CBB) - Data Team"
+copyright = "2025, Centre Balear de Biodiversitat (CBB) - Data Team"
 author = "Cancellario, T.; Golomb, T.; Roldán, A.; Far, A."
 
 

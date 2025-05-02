@@ -15,11 +15,6 @@ class Crossref(Input):
 	summary : bool, optional
 	    If True, the function returns a summary of the downloaded metadata instead of the full records.
 	    Default is False.
-	bulk : bool, optional
-	    If True, the function creates a bulk file. For further information, see the documentation of the Biodumpy
-	    package. Default is False.
-	output_format : str, optional
-	    The format of the output file. The available option is 'json'. Default is 'json'.
 
 	Details
 	-------
@@ -46,17 +41,18 @@ class Crossref(Input):
 	>>> bdp.start(dois, output_path='./downloads/{date}/{module}/{name}')
 	"""
 
-	def __init__(self, summary: bool = False, output_format: str = "json", bulk: bool = False):
-		super().__init__(output_format, bulk)
+	def __init__(self, summary: bool = False, **kwargs):
+		super().__init__(**kwargs)
 		self.summary = summary
 
-		if output_format != "json":
+		if self.output_format != "json":
 			raise ValueError("Invalid output_format. Expected 'json'.")
 
 	def _download(self, query, **kwargs) -> list:
 		payload = []
 
 		response = requests.get(f"https://api.crossref.org/works/{query}")
+
 		if response.status_code != 200:
 			raise BiodumpyException(f"Reference request. Error {response.status_code}")
 

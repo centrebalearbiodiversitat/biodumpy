@@ -67,7 +67,7 @@ In detail, we described:
             'Hyla meridionalis Boettger, 1874', 'Anax imperator Leach, 1815']
 
     # Set the Biodumpy function with the specific parameters
-    bdp = Biodumpy([GBIF(bulk=False, accepted_only=True)])
+    bdp = Biodumpy([GBIF(sleep=3, bulk=False, accepted_only=True)])
 
     # Start the download
     bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}')
@@ -90,7 +90,7 @@ In detail, we described:
 
     # Set the Biodumpy functions with the specific parameters
     bdp = Biodumpy([GBIF(bulk=False, accepted_only=True),
-                    IUCN(api_key=api_key, bulk=True, region=['global'])])
+                    IUCN(api_key=api_key, bulk=True, region=['Global'])])
 
     # Start the download
     bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}')
@@ -102,11 +102,12 @@ For detailed documentation and tutorials, please visit the ``biodumpy`` Read the
 
 ## Contribution
 ``biodumpy`` is an open-source project, and contributions are welcome! 
-If you have ideas for new features, bug fixes, or improvements, please submit an issue or pull request in our GitHub repository or contact with the support team at [t.cancellario@uib.eu](mailto:t.cancellario@uib.eu) or [tomas.golomb@uib.eu](mailto:tomas.golomb@uib.eu).
+If you have ideas for new features, bug fixes, or improvements, please submit an issue or pull request in our GitHub repository or contact with the support team
+[✉️ here](mailto:t.cancellario@uib.eu?subject=biodumpy_support).
 
 
 ## License
-``biodumpy`` is licensed under the GNU General Public License for its software components. Additionally, any creative works associated with this project are licensed under the Creative Commons Attribution (CC BY) license. See the LICENSE file for more details.
+``biodumpy`` is licensed under the MIT License for its software components. Additionally, any creative works associated with this project—such as documentation, visual assets, or other non-code materials—are licensed under the Creative Commons Attribution (CC BY 4.0) license. See the [LICENSE](LICENSE.md) file for full details.
 
 
 ## Acknowledgments

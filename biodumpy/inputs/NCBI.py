@@ -56,13 +56,6 @@ class NCBI(Input):
 	taxonomy_only : bool, optional
 		If True, the function downloads the taxonomy data from NCBI.
 		Default is False.
-	bulk : bool, optional
-	    If True, the function creates a bulk file for large downloads. For more information, refer to the Biodumpy
-	    package documentation.
-	    Default is False.
-	output_format : str, optional
-	    The format of the output file. Available options are: 'json', 'fasta', 'pdf'.
-	    Default is 'json'.
 
 	Details
 	-------
@@ -97,26 +90,28 @@ class NCBI(Input):
 		by_id: bool = False,
 		taxonomy: bool = False,
 		taxonomy_only: bool = False,
-		output_format: str = "json",
-		bulk: bool = False,
+		**kwargs,
 	):
-		super().__init__(output_format, bulk)
+		super().__init__(**kwargs)
 		self.mail = mail
 		self.max_bp = max_bp
 		self.db = db
 		self.step_id = step_id
 		self.step_seq = step_seq
 		self.rettype = rettype
-		self.output_format = output_format
 		self.query_type = query_type
 		self.summary = summary
 		self.by_id = by_id
 		self.taxonomy = taxonomy
 		self.taxonomy_only = taxonomy_only
+
 		Entrez.email = mail
 
 		if self.output_format == "fasta" and self.rettype != "fasta":
 			raise ValueError("Invalid output_format or rettype. Expected fasta.")
+
+		if self.output_format not in {"json", "fasta"}:
+			raise ValueError('Invalid output_format. Expected "json" or "fasta".')
 
 		if self.by_id and self.query_type is not None:
 			raise ValueError("Invalid parameters: 'by_id' is True, so 'query_type' must be None.")
@@ -129,9 +124,6 @@ class NCBI(Input):
 
 		if self.taxonomy_only and (self.output_format == "fasta" or self.rettype == "fasta"):
 			raise ValueError("Invalid parameters: 'taxonomy_only' is True, so 'output_format' cannot be 'fasta'.")
-
-		if output_format not in {"json", "fasta"}:
-			raise ValueError('Invalid output_format. Expected "json" or "fasta".')
 
 	def _download(self, query, **kwargs) -> list:
 		payload = []

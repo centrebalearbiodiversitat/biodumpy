@@ -11,16 +11,10 @@ class INaturalist(Input):
 	Parameters
 	----------
 	query : list
-	    The list of taxa to query.
+		The list of taxa to query.
 	info : bool
 		If set to True, the function returns metadata about a taxon. The order parameter defaults to desc, and order_by defaults to observations_count, as proposed by the iNaturalist API endpoint (https://api.inaturalist.org/v1/docs/#!/Taxa/get_taxa). If the API returns multiple results, only the first one will be returned.
 		Default is False.
-	bulk : bool, optional
-	    If True, the function creates a bulk file. For further information, see the documentation of the biodumpy package.
-	    Default is False.
-	output_format : str, optional
-	    The format of the output file. The options available is: 'json'.
-	    Default is 'json'.
 
 	Details
 	-------
@@ -50,11 +44,11 @@ class INaturalist(Input):
 	>>> bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}')
 	"""
 
-	def __init__(self, info: bool = False, output_format: str = "json", bulk: bool = False):
-		super().__init__(output_format, bulk)
+	def __init__(self, info: bool = False, **kwargs):
+		super().__init__(**kwargs)
 		self.info = info
 
-		if output_format != "json":
+		if self.output_format != "json":
 			raise ValueError('Invalid output_format. Expected "json".')
 
 	def _download(self, query, **kwargs) -> list:
@@ -84,7 +78,6 @@ class INaturalist(Input):
 					print(f"More than one result for the taxon: {query}. \nOnly the first result was used in the output.", file=sys.stderr)
 
 				return payload
-
 			else:
 				results_filtered = next(filter(lambda x: x["name"] == query, results), None)
 				if results_filtered:

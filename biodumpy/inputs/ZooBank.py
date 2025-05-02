@@ -18,15 +18,12 @@ class ZooBank(Input):
 	    This parameter is useful for managing the download of bibliographic information based on the number of
 	    scientific articles stored in ZooBank for each taxon. You can set this parameter to either 'small' or 'large'.
 	    We recommend choosing 'small' if the number of articles for a given taxon is lower than 200, or 'large' if
-	    it exceeds 200. Default is 'small'.
+	    it exceeds 200.
+	    Default is 'small'.
 	info : bool, optional
 	    If set to True, the function will download additional article information not included in the main research,
-	    such as the DOI. Default is False.
-	bulk : bool, optional
-	    If True, the function creates a bulk file. For further information, see the documentation of the Biodumpy
-	    package. Default is False.
-	output_format : str, optional
-	    The format of the output file. The available option is 'json'. Default is 'json'.
+	    such as the DOI.
+	    Default is False.
 
 	Example
 	-------
@@ -39,15 +36,15 @@ class ZooBank(Input):
 	>>> bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}')
 	"""
 
-	def __init__(self, dataset_size: str = "small", output_format: str = "json", info: bool = False, bulk: bool = False):
-		super().__init__(output_format, bulk)
+	def __init__(self, dataset_size: str = "small", info: bool = False, **kwargs):
+		super().__init__(**kwargs)
 		self.dataset_size = dataset_size
 		self.info = info
 
 		if self.dataset_size not in ["small", "large"]:
 			raise ValueError("Invalid dataset_size. Expected 'small' or 'large'.")
 
-		if output_format != "json":
+		if self.output_format != "json":
 			raise ValueError("Invalid output_format. Expected 'json'.")
 
 	def _download(self, query, **kwargs) -> list:

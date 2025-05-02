@@ -12,14 +12,8 @@ class BOLD(Input):
 	query : list
 	    The list of taxa to query.
 	summary : bool, optional
-	    If True, the function returns a summary of the downloaded metadata instead of the full records. Default is False.
-	bulk : bool, optional
-		If True, the function creates a bulk file.
-		For further information, see the documentation of the Biodumpy package. Default is False.
-	output_format : string, optional
-		The format of the output file.
-		The options available are: 'json', 'fasta'.
-		Default is 'json'.
+	    If True, the function returns a summary of the downloaded metadata instead of the full records.
+	    Default is False.
 
 	Details
 	-------
@@ -47,15 +41,15 @@ class BOLD(Input):
 	>>> bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}')
 	"""
 
-	def __init__(self, summary: bool = False, output_format: str = "json", bulk: bool = False):
-		super().__init__(output_format, bulk)
+	def __init__(self, summary: bool = False, **kwargs):
+		super().__init__(**kwargs)
 		self.summary = summary
 		# self.fasta = fasta
 
 		# if self.fasta and output_format != "fasta":
 		# 	raise ValueError("Invalid output_format. Expected fasta.")
 
-		if output_format not in {"json", "fasta"}:
+		if self.output_format not in {"json", "fasta"}:
 			raise ValueError('Invalid output_format. Expected "json" or "fasta".')
 
 	def _download(self, query, **kwargs) -> list:
@@ -74,7 +68,6 @@ class BOLD(Input):
 				fasta_entries = [f">{entry}" for entry in data_str.split(">") if entry]
 
 				return fasta_entries
-
 		else:
 			response = requests.get(f"http://v4.boldsystems.org/index.php/API_Public/combined?taxon={query}&format=json")
 

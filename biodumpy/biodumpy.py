@@ -1,3 +1,4 @@
+import time
 from datetime import datetime
 from logging.handlers import MemoryHandler
 
@@ -45,6 +46,7 @@ class Biodumpy:
 		logging.basicConfig(level=logging.ERROR, format="%(asctime)s - %(levelname)s - %(message)s", datefmt="%Y-%m-%d %H:%M:%S", handlers=[log_handler])
 
 		bulk_input = {}
+		last_tick = {}
 		try:
 			for el in tqdm(elements, desc="Biodumpy list", unit=" elements", disable=not self.loading_bar, smoothing=0):
 				if not el:
@@ -67,7 +69,14 @@ class Biodumpy:
 					logging.info(f"biodumpy initialized with {module_name} inputs. Taxon: {name}")
 
 					try:
+						if module_name in last_tick:
+							delta_last_call = time.time() - last_tick[module_name]
+							if delta_last_call < inp.sleep:
+								if self.debug:
+									print(f"Blocking for {inp.sleep - delta_last_call} seconds...")
+								time.sleep(inp.sleep - delta_last_call)
 						payload = inp._download(**el)
+						last_tick[module_name] = time.time()
 					except Exception as e:
 						logging.error(f'[{module_name}] Failed to download data for "{name}": {str(e)} \n')
 						continue
@@ -76,7 +85,6 @@ class Biodumpy:
 						if inp not in bulk_input:
 							bulk_input[inp] = []
 						bulk_input[inp].extend(payload)
-
 					else:
 						dump(file_name=f"{output_path.format(date=current_date, module=module_name, name=clean_name)}", obj_list=payload, output_format=inp.output_format)
 		finally:

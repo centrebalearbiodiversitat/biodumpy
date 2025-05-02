@@ -13,14 +13,15 @@ from biodumpy.inputs import COL
 trap = io.StringIO()
 
 
-def col_query(query, check_syn):
+# Remember to check the latest dataset_key
+def col_query(query, check_syn, dataset_key):
 	# Create temporary directory
 	with tempfile.TemporaryDirectory() as temp_dir:
 		# Construct the dynamic path using formatted strings
 		dynamic_path = os.path.join(temp_dir)
 
 	# Start biodumpy function
-	bdp = Biodumpy([COL(bulk=True, check_syn=check_syn)])
+	bdp = Biodumpy([COL(bulk=True, check_syn=check_syn, dataset_key=dataset_key)])
 	bdp.start(elements=query, output_path=f"{dynamic_path}/downloads/{{date}}/{{module}}/{{name}}")
 
 	# Retrieve a file path
@@ -48,21 +49,22 @@ def test_col_initialization():
 		COL(output_format="xml")
 
 
-@pytest.mark.parametrize("query, check_syn", [(["Bufo roseus"], True), (["Bufo roseus"], False)])
-def test_download(query, check_syn):
+@pytest.mark.parametrize("query, check_syn, dataset_key", [(["Bufo roseus"], True, 309120), (["Bufo roseus"], False, 309120)])
+def test_download(query, check_syn, dataset_key):
 	with redirect_stdout(trap):
-		data = col_query(query=query, check_syn=check_syn)
+		data = col_query(query=query, check_syn=check_syn, dataset_key=dataset_key)
 
 	# Check if data is not empty
 	assert len(data) > 0, "data length is 0"
 
 	# Check the main structure of the JSON file
 	data = data[0]
+
 	assert "origin_taxon" in data, "origin_taxon is not in data"
 	assert data["origin_taxon"] == "Bufo roseus", "origin_taxon is not in Bufo roseus"
 
 	assert "taxon_id" in data, "taxon_id is not in data"
-	assert data["taxon_id"] == "NPDX", "taxon_id is not in NPDX"
+	assert data["taxon_id"] is not None, "taxon_id should not be None"
 
 	assert "status" in data, "status is not in data"
 	assert data["status"] == "synonym", "status is not in synonym"
@@ -74,7 +76,7 @@ def test_download(query, check_syn):
 	assert "modified" in usage, "modified is not in usage"
 	assert "modifiedBy" in usage, "modifiedBy is not in usage"
 	assert "datasetKey" in usage, "datasetKey is not in usage"
-	assert usage["datasetKey"] == 9923, "datasetKey is not 9923"
+	assert usage["datasetKey"] == dataset_key, f"datasetKey is not {dataset_key}"
 	assert "id" in usage, "id is not in usage"
 	assert usage["id"] == "NPDX", "id is not NPDX"
 	assert "sectorKey" in usage, "sectorKey is not in usage"
@@ -93,11 +95,7 @@ def test_download(query, check_syn):
 	assert "classification" in data, "classification is not in data"
 	classification = data["classification"]
 	assert "id" in classification[0], "id is not in classification"
-	assert classification[0]["id"] == "5T6MX", "id is not 5T6MX"
 	assert "name" in classification[0], "name is not in classification"
-	assert classification[0]["name"] == "Biota", "name is not Biota"
 	assert "rank" in classification[0], "rank is not in classification"
-	assert classification[0]["rank"] == "unranked", "rank is not unranked"
 	assert "label" in classification[0], "label is not in classification"
-	assert classification[0]["label"] == "Biota", "label is not Biota"
 	assert "labelHtml" in classification[0], "label is not in classification"

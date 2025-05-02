@@ -43,13 +43,13 @@ Key Features
 Contribution
 ------------
 
-``biodumpy`` is an open-source project, and contributions are welcome! If you have ideas for new features, bug fixes, or improvements, please submit an issue or pull request on our GitHub repository or contact our support team at t.cancellario@uib.eu or tomas.golomb@uib.eu.
+``biodumpy`` is an open-source project, and contributions are welcome! If you have ideas for new features, bug fixes, or improvements, please submit an issue or pull request on our GitHub repository or contact our support `✉️ here <mailto:t.cancellario@uib.eu?subject=biodumpy_support>`_.
 
 
 License
 -------
 
-``biodumpy`` is licensed under the GNU General Public License for its software components. Additionally, any creative works associated with this project are licensed under the Creative Commons Attribution (CC BY) license. See the `LICENSE`_ section for more details.
+``biodumpy`` is licensed under the MIT License for its software components. Additionally, any creative works associated with this project—such as documentation, visual assets, or other non-code materials—are licensed under the Creative Commons Attribution (CC BY 4.0) license. See the `LICENSE`_ file for full details.
 
 .. _`LICENSE`: https://github.com/centrebalearbiodiversitat/biodumpy/blob/master/LICENSE
 

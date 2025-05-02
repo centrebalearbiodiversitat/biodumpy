@@ -6,6 +6,8 @@ Below, we have compiled a collection of useful code snippets that can assist wit
 Save object in JSON format
 --------------------------
 
+This example uses placeholder data.
+
 .. code-block:: python
 
     import json
@@ -25,6 +27,8 @@ Save object in JSON format
 Save object in CSV format
 -------------------------
 
+This example uses placeholder data.
+
 .. code-block:: python
 
     import pandas as pd
@@ -41,8 +45,10 @@ Save object in CSV format
 
 
 
-Main code structure to filter JSON files
-----------------------------------------
+Main code to filter JSON files
+------------------------------
+
+Download the data using the BOLD module before performing the example.
 
 .. code-block:: python
 

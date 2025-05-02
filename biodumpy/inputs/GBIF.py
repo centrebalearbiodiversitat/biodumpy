@@ -12,7 +12,7 @@ class GBIF(Input):
 	query : list
 	    The list of taxa to query.
 	dataset_key : str
-	    GBIF dataset key. The default is set to the GBIF Backbone Taxonomy dataset key.
+	    GBIF dataset key. The default is set to the GBIF Backbone Taxonomy dataset key (d7dddbf4-2cf0-4f39-9b2a-bb099caae36c).
 	limit : int
 	    The maximum number of names to retrieve from the taxonomy backbone for a taxon.
 	    Default is 20.
@@ -25,12 +25,6 @@ class GBIF(Input):
 	geometry : str, optional
 	    A spatial polygon to filter occurrences within a specified area.
 	    Default is an empty string.
-	bulk : bool, optional
-	    If True, the function creates a bulk file. For further information, see the documentation of the Biodumpy package.
-	    Default is False.
-	output_format : str, optional
-	    The format of the output file. The options available are: 'json', 'fasta', 'pdf'.
-	    Default is 'json'.
 
 	Details
 	-------
@@ -51,24 +45,15 @@ class GBIF(Input):
 	>>> bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}')
 	"""
 
-	def __init__(
-		self,
-		dataset_key: str = "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
-		limit: int = 20,
-		accepted_only: bool = True,
-		occ: bool = False,
-		geometry: str = None,
-		output_format: str = "json",
-		bulk: bool = False,
-	):
-		super().__init__(output_format, bulk)
+	def __init__(self, dataset_key: str = "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c", limit: int = 20, accepted_only: bool = True, occ: bool = False, geometry: str = None, **kwargs):
+		super().__init__(**kwargs)
 		self.dataset_key = dataset_key
 		self.limit = limit  # Limit to find name in taxonomy backbone
 		self.accepted = accepted_only
 		self.occ = occ
 		self.geometry = geometry
 
-		if output_format != "json":
+		if self.output_format != "json":
 			raise ValueError('Invalid output_format. Expected "json".')
 
 	def _download(self, query, **kwargs) -> list:
