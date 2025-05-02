@@ -1,3 +1,4 @@
+import sys
 import time
 from datetime import datetime
 from logging.handlers import MemoryHandler
@@ -28,11 +29,12 @@ class Biodumpy:
 		Default is True
 	"""
 
-	def __init__(self, inputs: list[Input], loading_bar: bool = False, debug: bool = True) -> None:
+	def __init__(self, inputs: list[Input], loading_bar: bool = True, debug: bool = False) -> None:
 		super().__init__()
 		self.inputs = inputs
 		self.debug = debug
 		self.loading_bar = loading_bar
+		# self.loading_bar = not debug and loading_bar
 
 	# elements must be a flat list of strings
 	def start(self, elements, output_path="downloads/{date}/{module}/{name}"):
@@ -48,10 +50,7 @@ class Biodumpy:
 		bulk_input = {}
 		last_tick = {}
 		try:
-			for el in tqdm(elements, desc="Biodumpy list", unit=" elements", disable=not self.loading_bar, smoothing=0):
-				if not el:
-					continue
-
+			for el in tqdm(elements, desc="Biodumpy list", unit=" elements", disable=not self.loading_bar, smoothing=0, file=sys.stdout, colour="#FECC45"):
 				if isinstance(el, str):
 					el = {"query": el}
 
@@ -61,8 +60,7 @@ class Biodumpy:
 
 				name = el["query"]
 				clean_name = name.replace("/", "_")
-				if self.debug:
-					print(f"Downloading {name}...")
+				tqdm.write(f"Downloading {name}...")
 
 				for inp in self.inputs:
 					module_name = type(inp).__name__
@@ -73,8 +71,9 @@ class Biodumpy:
 							delta_last_call = time.time() - last_tick[module_name]
 							if delta_last_call < inp.sleep:
 								if self.debug:
-									print(f"Blocking for {inp.sleep - delta_last_call} seconds...")
+									tqdm.write(f"[{module_name}] Blocking for {inp.sleep - delta_last_call} seconds...")
 								time.sleep(inp.sleep - delta_last_call)
+						tqdm.write(f"[{module_name}] Downloading...")
 						payload = inp._download(**el)
 						last_tick[module_name] = time.time()
 					except Exception as e:
