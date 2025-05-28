@@ -1,15 +1,18 @@
 ZooBank Module
 ==============
 
-.. _ZooBank:
+.. _ZooBank_module:
 
 
 Overview
 --------
 
-The ``ZooBank`` module allows users to easily retrieve scientific bibliographic information about taxa from the Official
-Registry of Zoological Nomenclature (ZooBank) database. By providing a taxa name, users can access to bibliographic data.
-The information is downloaded in JSON format.
+The ``ZooBank`` module allows users to easily retrieve scientific bibliographic information about taxa from the `Official Registry of Zoological Nomenclature`_ (ZooBank) database :cite:`zoobank2024`. By providing a taxa name, users can access to bibliographic data.
+
+.. toggle:: Click to expand
+
+    JSON
+
 
 Key Features
 ------------
@@ -20,11 +23,7 @@ Key Features
 Retrieve comprehensive metadata from ZooBank
 --------------------------------------------
 
-This example demonstrates how users can download bibliographic information from ZooBank for a list of taxa.
-When the ``dataset_size`` parameter is set to *small*, the function relies on the ZooBank API's `References`_ endpoint.
-However, if ``dataset_size`` is set to *large*, the function connects to the ZooBank website and retrieves the information
-through a web scraping process. As a result, the output file may vary slightly depending on whether a *small* or *large*
-dataset size is selected.
+This example demonstrates how users can download bibliographic information from ZooBank for a list of taxa. When the ``dataset_size`` parameter is set to *small*, the function relies on the ZooBank API's `References`_ endpoint. However, if ``dataset_size`` is set to *large*, the function connects to the ZooBank website and retrieves the information through a web scraping process. As a result, the output file may vary slightly depending on whether a *small* or *large* dataset size is selected.
 
 .. _References: http://zoobank.org/References.json?term=pyle
 
@@ -39,15 +38,18 @@ dataset size is selected.
     from biodumpy.inputs import ZooBank
 
     # Taxa list
-    taxa = [
-    	'Alytes muletensis', 'Bufotes viridis',
-    	'Hyla meridionalis', 'Anax imperator'
-    ]
+    taxa = ['Alytes muletensis', 'Bufotes viridis', 'Hyla meridionalis', 'Anax imperator']
 
     # Set the module and start the download
     # Start the download
     bdp = Biodumpy([ZooBank(bulk=False, dataset_size='small', info=False)])
     bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}')
+
+
+Retrieve comprehensive metadata from ZooBank and additional information
+-----------------------------------------------------------------------
+
+Users can also download additional information from ZooBank by setting the parameter ``info`` to *True*. When this parameter is activated, the results include the main information of a bibliographic resource along with additional details such as the Digital Object Identifier (DOI).
 
 
 Reference link/s

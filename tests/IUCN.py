@@ -12,42 +12,36 @@ from biodumpy.inputs import IUCN
 # set a trap and redirect stdout. Remove the print of the function. In this wat the test output is cleanest.
 trap = io.StringIO()
 
-API_KEY = "YOUR_API_KEY"
+# TO DO: Remove IUCN KEY
+API_KEY = ""
 
-IUCN_REGIONS = [
-	"northern_africa",
-	"global",
-	"pan-africa",
-	"central_africa",
-	"eastern_africa",
-	"northeastern_africa",
-	"western_africa",
-	"southern_africa",
-	"mediterranean",
-	"europe",
+IUCN_SCOPE = [
+	"Global",
+	"Europe",
+	"Mediterranean",
+	"Western Africa",
+	"S. Africa FW",
+	"Pan-Africa",
+	"Central Africa",
+	"Northeastern Africa",
+	"Eastern Africa",
+	"Northern Africa",
+	"Gulf of Mexico",
+	"Caribbean",
+	"Persian Gulf",
+	"Arabian Sea",
 ]
 
 
-def iucn_query(query, api_key, habitat, regions, historical, threats, output_format):
+def iucn_query(query, authorization, assess_details, latest, scope, output_format):
 	# Create temporary directory
 	with tempfile.TemporaryDirectory() as temp_dir:
 		# Construct the dynamic path using formatted strings
 		dynamic_path = os.path.join(temp_dir)
 
 	# Start biodumpy function
-	bdp = Biodumpy(
-		[
-			IUCN(
-				bulk=True,
-				api_key=api_key,
-				habitat=habitat,
-				regions=regions,
-				historical=historical,
-				threats=threats,
-				output_format=output_format,
-			)
-		]
-	)
+	bdp = Biodumpy([IUCN(authorization=authorization, assess_details=assess_details, latest=latest, scope=scope, output_format=output_format, bulk=True)])
+
 	bdp.start(elements=query, output_path=f"{dynamic_path}/downloads/{{date}}/{{module}}/{{name}}")
 
 	# Retrieve a file path
@@ -65,27 +59,26 @@ def iucn_query(query, api_key, habitat, regions, historical, threats, output_for
 
 def test_iucn_initialization():
 	# Test default initialization
-	iucn = IUCN(api_key=API_KEY)
+	iucn = IUCN(authorization=API_KEY)
 
 	# Verify default parameters
-	assert iucn.habitat == False
-	assert iucn.historical == False
-	assert iucn.threats == False
+	assert iucn.latest == False
+	assert iucn.assess_details == False
 	assert iucn.output_format == "json"
 
 	# Objective: Verify that the class raises a ValueError when an invalid value is provided for the
 	# output_format parameter.
 	with pytest.raises(ValueError, match="Invalid output_format. Expected 'json'."):
-		IUCN(output_format="csv", api_key=API_KEY)
+		IUCN(output_format="csv", authorization=API_KEY)
 
 
 def test_validate_regions_valid():
 	# Ensures that valid regions don't raise an error.
-	regions = ["europe", "global"]
+	regions = ["Europe", "Global"]
 	try:
 		for region in regions:
-			if region not in IUCN_REGIONS:
-				raise ValueError(f"Choose an IUCN region from the following options: {IUCN_REGIONS}.")
+			if region not in IUCN_SCOPE:
+				raise ValueError(f"Choose an IUCN scope from the following options: {IUCN_SCOPE}.")
 	except ValueError:
 		pytest.fail("ValueError raised with valid regions")
 
@@ -96,64 +89,77 @@ def test_validate_regions_invalid():
 
 	with pytest.raises(ValueError) as exc_info:
 		for region in regions:
-			if region not in IUCN_REGIONS:
-				raise ValueError(f"Choose an IUCN region from the following options: {IUCN_REGIONS}.")
+			if region not in IUCN_SCOPE:
+				raise ValueError(f"Choose an IUCN scope from the following options: {IUCN_SCOPE}.")
 
-	assert "Choose an IUCN region from the following options" in str(exc_info.value)
+	assert "Choose an IUCN scope from the following options" in str(exc_info.value)
 
 
 @pytest.mark.parametrize(
-	"query, regions, habitat, historical, threats, output_format",
+	"query, assess_details, latest, scope, output_format",
 	[
-		(["Alytes muletensis"], ["global"], False, False, False, "json"),
-		(["Alytes muletensis"], ["global"], True, False, False, "json"),
-		(["Alytes muletensis"], ["global"], False, True, False, "json"),
-		(["Alytes muletensis"], ["global"], False, False, True, "json"),
+		(["Alytes muletensis"], False, False, ["Global"], "json"),
+		(["Alytes muletensis"], True, False, ["Global"], "json"),
+		(["Alytes muletensis"], False, True, ["Global"], "json"),
+		(["Bufotes viridis"], False, False, ["Global"], "json"),
 	],
 )
-def test_download(query, regions, habitat, historical, threats, output_format):
+def test_download(query, assess_details, latest, scope, output_format):
 	with redirect_stdout(trap):
-		data = iucn_query(
-			query=query,
-			regions=regions,
-			habitat=habitat,
-			historical=historical,
-			threats=threats,
-			output_format=output_format,
-			api_key=API_KEY,
-		)
+		data = iucn_query(query=query, authorization=API_KEY, assess_details=assess_details, latest=latest, scope=scope, output_format=output_format)
 
 	# Check if data is not empty
 	assert len(data) > 0, "data length is 0"
 
+	# General checks ----
 	# Check some fields
 	data = data[0]
-	assert "taxonid" in data, "taxonid is not in data"
-	assert "scientific_name" in data, "scientific_name is not in data"
-	assert "category" in data, "category is not in data"
-	assert "assessment_date" in data, "assessment_date is not in data"
-	assert "region" in data, "region is not in data"
-	assert data["region"] == "global", "assessment_date is not in data"
+	assert "taxon" in data, "taxon is not in data"
+	assert "assessment" in data, "assessment is not in data"
 
-	if habitat:
-		assert "habitat" in data, "habitat is not in data"
-		assert "code" in data["habitat"], "code is not in data['habitat']"
-		assert "habitat" in data["habitat"], "habitat is not in data['habitat']"
-		assert "suitability" in data["habitat"], "suitability is not in data['habitat']"
-		assert "season" in data["habitat"], "season is not in data['habitat']"
+	taxon_info = data["taxon"]
+	assert "sis_id" in taxon_info, "sis_id is not in taxon_info"
+	assert "species" in taxon_info, "species is not in taxon_info"
 
-	if historical:
-		assert "historical" in data, "historical is not in data"
-		assert "year" in data["historical"], "code is not in data['historical']"
-		assert "assess_year" in data["historical"], "assess_year is not in data['historical']"
-		assert "code" in data["historical"], "code is not in data['historical']"
-		assert "category" in data["historical"], "category is not in data['historical']"
-		assert "region" in data["historical"], "region is not in data['historical']"
+	taxon_assessment = data["assessment"][0]
+	assert "year_published" in taxon_assessment, "year_published is not in taxon_assessment"
+	assert "latest" in taxon_assessment, "latest is not in taxon_assessment"
+	assert "possibly_extinct" in taxon_assessment, "possibly_extinct is not in taxon_assessment"
+	assert "possibly_extinct_in_the_wild" in taxon_assessment, "possibly_extinct_in_the_wild is not in taxon_assessment"
+	assert "sis_taxon_id" in taxon_assessment, "sis_taxon_id is not in taxon_assessment"
+	assert "url" in taxon_assessment, "url is not in taxon_assessment"
+	assert "assessment_id" in taxon_assessment, "uassessment_id is not in taxon_assessment"
+	assert "scopes" in taxon_assessment, "scopes is not in taxon_assessment"
 
-	if threats:
-		assert "threats" in data, "threats is not in data"
-		assert "title" in data["threats"], "title is not in data['threats']"
-		assert "timing" in data["threats"], "timing is not in data['threats']"
-		assert "code" in data["threats"], "code is not in data['threats']"
-		assert "scope" in data["threats"], "scope is not in data['threats']"
-		assert "score" in data["threats"], "score is not in data['threats']"
+	# assess_details ----
+	if assess_details and query == "Alytes muletensis":
+		assert "criteria" in taxon_assessment, "criteria is not in taxon_assessment"
+		assert "citation" in taxon_assessment, "citation is not in taxon_assessment"
+		assert "population_trend" in taxon_assessment, "population_trend is not in taxon_assessment"
+		assert "red_list_category" in taxon_assessment, "red_list_category is not in taxon_assessment"
+		assert "supplementary_info" in taxon_assessment, "supplementary_info is not in taxon_assessment"
+		assert "documentation" in taxon_assessment, "documentation is not in taxon_assessment"
+		assert "biogeographical_realms" in taxon_assessment, "biogeographical_realms is not in taxon_assessment"
+		assert "conservation_actions" in taxon_assessment, "conservation_actions is not in taxon_assessment"
+		assert "faos" in taxon_assessment, "faos is not in taxon_assessment"
+		assert "habitats" in taxon_assessment, "habitats is not in taxon_assessment"
+		assert "locations" in taxon_assessment, "locations is not in taxon_assessment"
+		assert "researches" in taxon_assessment, "researches is not in taxon_assessment"
+		assert "use_and_trade" in taxon_assessment, "use_and_trade is not in taxon_assessment"
+		assert "threats" in taxon_assessment, "threats is not in taxon_assessment"
+		assert "credits" in taxon_assessment, "credits is not in taxon_assessment"
+		assert "errata" in taxon_assessment, "errata is not in taxon_assessment"
+		assert "references" in taxon_assessment, "references is not in taxon_assessment"
+		assert "growth_forms" in taxon_assessment, "growth_forms is not in taxon_assessment"
+		assert "lmes" in taxon_assessment, "lmes is not in taxon_assessment"
+		assert "scopes" in taxon_assessment, "scopes is not in taxon_assessment"
+		assert "stresses" in taxon_assessment, "stresses is not in taxon_assessment"
+		assert "systems" in taxon_assessment, "systems is not in taxon_assessment"
+		assert len(taxon_assessment) == 1, "The length of the taxon_assessment is not 1"
+		assert taxon_assessment.get("year_published") == 2024, "The year_published is not 2024"
+
+	if scope == ["Global"] and query == "Alytes muletensis":
+		assert taxon_assessment.get("scope") == "Global;Europe;Mediterranean", "The scope is not Global;Europe;Mediterranean"
+
+	if scope == ["Global"] and query == "Bufotes viridis":
+		assert taxon_assessment.get("scope") == "Global", "The scope is not Global"

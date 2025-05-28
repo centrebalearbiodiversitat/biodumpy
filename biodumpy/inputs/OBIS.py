@@ -11,18 +11,13 @@ class OBIS(Input):
 	Parameters
 	----------
 	query : list
-	    The list of taxa to query.
+		The list of taxa to query.
 	occ : bool, optional
-	    If True, the function also returns the occurrences of a taxon. Default is False.
+		If True, the function also returns the occurrences of a taxon. Default is False.
 	geometry : str, optional
-	    A spatial polygon to filter occurrences within a specified area. Default is an empty string.
+		A spatial polygon to filter occurrences within a specified area. Default is an empty string.
 	area : int, optional
-	    A marine area to filter occurrences. Default is an empty string.
-	bulk : bool, optional
-		If True, the function creates a bulk file. For further information, see the documentation of the Biodumpy package.
-		Default is False.
-	output_format : string, optional
-		The format of the output file. The options available is: 'json'. Default is 'json'.
+		A marine area to filter occurrences. Default is an empty string.
 
 	Example
 	-------
@@ -35,13 +30,13 @@ class OBIS(Input):
 	>>> bdp.start(taxa, output_path='./downloads/{date}/{module}_occ/{name}')
 	"""
 
-	def __init__(self, occ: bool = False, geometry: str = None, areaid: int = None, output_format: str = "json", bulk: bool = False):
-		super().__init__(output_format, bulk)
+	def __init__(self, occ: bool = False, geometry: str = None, areaid: int = None, **kwargs):
+		super().__init__(**kwargs)
 		self.occ = occ
 		self.geometry = geometry
 		self.areaid = areaid
 
-		if output_format != "json":
+		if self.output_format != "json":
 			raise ValueError('Invalid output_format. Expected "json".')
 
 		# if occ is False, areaid and pylogon cannot both be True
@@ -106,7 +101,6 @@ class OBIS(Input):
 
 				# Update the 'after' parameter with the last id
 				params["after"] = data[-1]["id"]
-
 		finally:
 			# Ensure the progress bar is closed properly even if an error occurs
 			if total_records is not None:

@@ -1,18 +1,18 @@
 /venv/
 .idea
 /[Dd]ownload*/
-/Poloni
-/Enrique_Arboleda
-/IUCN
 /html
 
 main*
 list*
 *.json
 *.log
-/proof.py
+/main.py
+/cmd.txt
+/haplotype_collapse.py
 
 /.idea
 /biodumpy.egg-info/
 /build/
 /dist/
+/htmlcov

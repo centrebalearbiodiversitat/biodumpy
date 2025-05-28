@@ -1,4 +1,5 @@
 import requests
+import sys
 
 from biodumpy import Input, BiodumpyException
 
@@ -10,12 +11,10 @@ class INaturalist(Input):
 	Parameters
 	----------
 	query : list
-	    The list of taxa to query.
-	bulk : bool, optional
-	    If True, the function creates a bulk file.
-	    For further information, see the documentation of the Biodumpy package. Default is False.
-	output_format : str, optional
-	    The format of the output file. The options available is: 'json'. Default is 'json'.
+		The list of taxa to query.
+	info : bool
+		If set to True, the function returns metadata about a taxon. The order parameter defaults to desc, and order_by defaults to observations_count, as proposed by the iNaturalist API endpoint (https://api.inaturalist.org/v1/docs/#!/Taxa/get_taxa). If the API returns multiple results, only the first one will be returned.
+		Default is False.
 
 	Details
 	-------
@@ -39,20 +38,17 @@ class INaturalist(Input):
 	>>> from biodumpy import Biodumpy
 	>>> from biodumpy.inputs import INaturalist
 	# List of taxa
-	>>> taxa = ['Alytes muletensis', 'Bufotes viridis', 'Hyla meridionalis', 'Anax imperator', 'Bufo roseus', 'Stollia betae']
+	>>> taxa = ['Alytes muletensis', 'Bufotes viridis', 'Hyla meridionalis', 'Anax imperator']
 	# Start the download
 	>>> bdp = Biodumpy([INaturalist(bulk=True)])
-	>>> bdp.start(taxa, output_path='./biodumpy/downloads/{date}/{module}/{name}')
+	>>> bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}')
 	"""
 
-	def __init__(
-		self,
-		output_format: str = "json",
-		bulk: bool = False,
-	):
-		super().__init__(output_format, bulk)
+	def __init__(self, info: bool = False, **kwargs):
+		super().__init__(**kwargs)
+		self.info = info
 
-		if output_format != "json":
+		if self.output_format != "json":
 			raise ValueError('Invalid output_format. Expected "json".')
 
 	def _download(self, query, **kwargs) -> list:
@@ -71,45 +67,56 @@ class INaturalist(Input):
 
 		if response.status_code == 200:
 			results = response.json()["results"]
-			results_filtered = next(filter(lambda x: x["name"] == query, results), None)
 
-			if results_filtered:
-				taxon_id = results_filtered["id"]
+			if self.info:
+				payload = []
 
-				if results_filtered["default_photo"] is not None:
-					photo_info = results_filtered["default_photo"] if results_filtered["default_photo"]["license_code"] else None
+				if len(results) == 1:
+					payload.append(results[0])
 				else:
-					photo_info = None
+					payload.append(results[0])
+					print(f"More than one result for the taxon: {query}. \nOnly the first result was used in the output.", file=sys.stderr)
 
-				# Search the photo into the occurrences
-				if photo_info is None:
-					response_id = requests.get(f"https://api.inaturalist.org/v1/taxa/{taxon_id}")
+				return payload
+			else:
+				results_filtered = next(filter(lambda x: x["name"] == query, results), None)
+				if results_filtered:
+					taxon_id = results_filtered["id"]
 
-					if response_id.status_code == 200:
-						results_id = response_id.json()["results"]
-						photo_id = results_id[0]["taxon_photos"]
+					if results_filtered["default_photo"] is not None:
+						photo_info = results_filtered["default_photo"] if results_filtered["default_photo"]["license_code"] else None
+					else:
+						photo_info = None
 
-						photo_details = next(filter(lambda x: x["photo"]["license_code"] in photo_license, photo_id), None)
+					# Search the photo into the occurrences
+					if photo_info is None:
+						response_id = requests.get(f"https://api.inaturalist.org/v1/taxa/{taxon_id}")
 
-						if photo_details:
-							url_photo = photo_details["photo"]["url"]
-							url_photo = url_photo.split("/")[-2] + "/" + url_photo.split("/")[-1]
-							photo_details = {
-								"taxon": query,
-								"image_id": url_photo.replace("square", "medium"),
-								"license_code": photo_details["photo"]["license_code"],
-								"attribution": photo_details["photo"]["attribution"],
-							}
-						else:
-							photo_details = photo_details_empty
-				else:
-					url_photo = photo_info["url"]
-					url_photo = url_photo.split("/")[-2] + "/" + url_photo.split("/")[-1]
-					photo_details = {
-						"taxon": query,
-						"image_id": url_photo.replace("square", "medium"),
-						"license_code": photo_info["license_code"],
-						"attribution": photo_info["attribution"],
-					}
+						if response_id.status_code == 200:
+							results_id = response_id.json()["results"]
+							photo_id = results_id[0]["taxon_photos"]
 
-		return [photo_details]
+							photo_details = next(filter(lambda x: x["photo"]["license_code"] in photo_license, photo_id), None)
+
+							if photo_details:
+								url_photo = photo_details["photo"]["url"]
+								url_photo = url_photo.split("/")[-2] + "/" + url_photo.split("/")[-1]
+								photo_details = {
+									"taxon": query,
+									"image_id": url_photo.replace("square", "medium"),
+									"license_code": photo_details["photo"]["license_code"],
+									"attribution": photo_details["photo"]["attribution"],
+								}
+							else:
+								photo_details = photo_details_empty
+					else:
+						url_photo = photo_info["url"]
+						url_photo = url_photo.split("/")[-2] + "/" + url_photo.split("/")[-1]
+						photo_details = {
+							"taxon": query,
+							"image_id": url_photo.replace("square", "medium"),
+							"license_code": photo_info["license_code"],
+							"attribution": photo_info["attribution"],
+						}
+
+				return [photo_details]
