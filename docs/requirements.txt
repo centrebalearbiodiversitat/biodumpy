@@ -2,3 +2,4 @@ sphinx==7.4.7
 sphinx-rtd-theme==3.0.2
 sphinxcontrib-bibtex==2.6.3
 sphinx-togglebutton==0.3.2
+tqdm==4.66.4
