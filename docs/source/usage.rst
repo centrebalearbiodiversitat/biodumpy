@@ -26,9 +26,9 @@ Alternatively, if you are using an IDE like `PyCharm`_ or `Visual Studio`_, you 
 
 .. warning::
 
-    Windows users may need to install the `Microsoft C++ Build Tools`_.
+    Windows users may need to install the `Microsoft C++ Build Tools`_ and select the C++ component.
 
-.. _`Microsoft C++ Build Tools`: https://visualstudio.microsoft.com/it/visual-cpp-build-tools/
+.. _`Microsoft C++ Build Tools`: https://visualstudio.microsoft.com/visual-cpp-build-tools/
 
 Usage
 -----
