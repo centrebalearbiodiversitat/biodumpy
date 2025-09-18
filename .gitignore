@@ -18,3 +18,4 @@ list*
 /dist/
 /htmlcov
 /biodumpy/data/AVONET/
+/test_results/
