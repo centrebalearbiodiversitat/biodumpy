@@ -1,7 +1,7 @@
 # Citation for Biodumpy
 If you use `biodumpy` in your research, please cite it as follows:
 
-**Cancellario T., Golomb T., Roldán A., Far, A.** `biodumpy`, Version 0.1.4, 2024.
+**Cancellario, T., Golomb Durán, T., Far, A. J., Roldán, A., & Capa, M. (2025). biodumpy: A Comprehensive Biological Data Downloader. bioRxiv, 2025-07.**
 Available at: [biodumpy](https://pypi.org/project/biodumpy/).
 
 ## Description
@@ -28,15 +28,6 @@ Available at: [beautifulsoup4](https://pypi.org/project/beautifulsoup4/).
 Available at: [biopython](https://pypi.org/project/biopython/).
 
 **Citation**: Chapman, B., Chang, J.: Biopython: Python tools for computational biology. ACM SIGBIO Newslett. 2000, 20: 15-19. 10.1145/360262.360268.
-
----
-`lxml`
-
-**lxml dev team** - *lxml* - Version 5.2.2, 2024. 
-
-Available at: [lxml](https://pypi.org/project/lxml/).
-
-**Citation**: -
 
 ---
 `numpy`
@@ -80,15 +71,6 @@ Available at: [Python](https://www.python.org/).
 **Reitz, K. et al.** - *requests* - Version 2.32.3, 2024. 
 
 Available at: [requests](https://pypi.org/project/requests/).
-
-**Citation**: -
-
----
-`selenium`
-
-**Muthukadan, B.** - *selenium* - Version 4.23.0, 2024. 
-
-Available at: [selenium](https://pypi.org/project/selenium/).
 
 **Citation**: -
 

@@ -16,7 +16,12 @@ class Input:
 	    Default is False.
 	"""
 
-	def __init__(self, sleep: float = 3, output_format: str = "json", bulk: bool = False):
+	def __init__(
+			self,
+			sleep: float = 3,
+			output_format: str = "json",
+			bulk: bool = False
+	):
 		super().__init__()
 		self.sleep = sleep
 		self.output_format = output_format

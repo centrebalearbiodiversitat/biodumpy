@@ -15,7 +15,7 @@ trap = io.StringIO()
 gbif_backbone = "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c"
 
 
-def gbif_query(query, accepted_only, occ, geometry):
+def gbif_query(query, accepted_only, occ, geometry, dir_module = "GBIF"):
 	# Create temporary directory
 	with tempfile.TemporaryDirectory() as temp_dir:
 		# Construct the dynamic path using formatted strings
@@ -27,7 +27,6 @@ def gbif_query(query, accepted_only, occ, geometry):
 
 	# Retrieve a file path
 	dir_date = os.listdir(f"{dynamic_path}/downloads/")[0]
-	dir_module = os.listdir(f"{dynamic_path}/downloads/{dir_date}")[0]
 	file_list = os.listdir(f"{dynamic_path}/downloads/{dir_date}/{dir_module}")[0]
 
 	# Open file
@@ -50,6 +49,7 @@ def test_gbif_initialization():
 	assert gbif.geometry is None
 	assert gbif.bulk == False
 	assert gbif.output_format == "json"
+	assert gbif.sleep == 3
 
 	# Objective: Verify that the class raises a ValueError when an invalid value is provided for the
 	# output_format parameter.

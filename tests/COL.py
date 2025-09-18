@@ -14,7 +14,7 @@ trap = io.StringIO()
 
 
 # Remember to check the latest dataset_key
-def col_query(query, check_syn, dataset_key):
+def col_query(query, check_syn, dataset_key, dir_module = "COL"):
 	# Create temporary directory
 	with tempfile.TemporaryDirectory() as temp_dir:
 		# Construct the dynamic path using formatted strings
@@ -26,7 +26,6 @@ def col_query(query, check_syn, dataset_key):
 
 	# Retrieve a file path
 	dir_date = os.listdir(f"{dynamic_path}/downloads/")[0]
-	dir_module = os.listdir(f"{dynamic_path}/downloads/{dir_date}")[0]
 	file_list = os.listdir(f"{dynamic_path}/downloads/{dir_date}/{dir_module}")[0]
 
 	# Open file
@@ -39,15 +38,18 @@ def col_query(query, check_syn, dataset_key):
 
 def test_col_initialization():
 	# Test default initialization
-	col = COL()
+	col = COL(dataset_key=309120)
 
 	assert col.output_format == "json"
+	assert col.sleep == 3
 
 	# Objective: Verify that the class raises a ValueError when an invalid value is provided for the
 	# output_format parameter.
 	with pytest.raises(ValueError, match="Invalid output_format. Expected 'json'."):
 		COL(output_format="xml")
 
+	with pytest.raises(ValueError, match="Please provide a valid dataset_key, or visit https://www.catalogueoflife.org/data/changelog to use the latest ChecklistBank."):
+		COL(dataset_key=None)
 
 @pytest.mark.parametrize("query, check_syn, dataset_key", [(["Bufo roseus"], True, 309120), (["Bufo roseus"], False, 309120)])
 def test_download(query, check_syn, dataset_key):

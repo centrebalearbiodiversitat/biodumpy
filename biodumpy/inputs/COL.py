@@ -39,13 +39,16 @@ class COL(Input):
 
 	ACCEPTED_TERMS = ["accepted", "provisionally accepted"]
 
-	def __init__(self, check_syn: bool = False, dataset_key: int = 9923, **kwargs):
+	def __init__(self, check_syn: bool = False, dataset_key: int = None, **kwargs):
 		super().__init__(**kwargs)
 		self.check_syn = check_syn
 		self.dataset_key = dataset_key
 
 		if self.output_format != "json":
 			raise ValueError("Invalid output_format. Expected 'json'.")
+
+		if self.dataset_key is None:
+			raise ValueError("Please provide a valid dataset_key, or visit https://www.catalogueoflife.org/data/changelog to use the latest ChecklistBank.")
 
 	def _download(self, query, **kwargs) -> list:
 		response = requests.get(
@@ -66,13 +69,25 @@ class COL(Input):
 			# Multiple IDs
 			if len(result) > 1:
 				ids = [item.get("id") for item in result if "id" in item]
-				ids = ", ".join(ids)
-				id_input = input(f"Please enter the correct taxon ID of {query} \n ID: {ids}; Skip \nInsert the ID:")
+
+				# Generate web links for each ID
+				web_links = "\n".join(
+					[f"https://www.checklistbank.org/dataset/{self.dataset_key}/taxon/{id_}" for id_ in ids])
+				id_input = input(f"\n Please enter the correct taxon ID of {query} \n ID: {ids}; Skip \n\n"
+								 f"Web links:\n{web_links}\n"
+								 f"Insert the ID: \n")
+
+				# Check if id_input is contained in ids (if the user write a wrong id)
+				if id_input not in ids and id_input != "Skip":
+					id_input = input(f"\n Please enter the CORRECT taxon ID of {query} \n ID: {ids}; Skip \n\n"
+									 f"Web links:\n{web_links}\n"
+									 f"Insert the ID: \n")
+				else:
+					result = [item for item in result if item["id"] == id_input]
 
 				if id_input == "Skip":
 					result = [{"id": None, "usage": None, "status": None, "classification": None}]
-				else:
-					result = [item for item in result if item["id"] == id_input]
+
 
 			id = result[0].get("id")
 			usage = result[0].get("usage")
