@@ -84,7 +84,7 @@ class Biodumpy:
 
 				for inp in self.inputs:
 					module_name = type(inp).__name__
-					tqdm.write(f"biodumpy initialized with {module_name} inputs. Taxon: {name}")
+					logging.info(f"biodumpy initialized with {module_name} inputs. Taxon: {name}")
 
 					try:
 						if module_name in last_tick:
@@ -93,7 +93,7 @@ class Biodumpy:
 								if self.debug:
 									tqdm.write(f"[{module_name}] Blocking for {inp.sleep - delta_last_call} seconds...")
 								time.sleep(inp.sleep - delta_last_call)
-								tqdm.write(f"[{module_name}] Downloading...")
+						tqdm.write(f"[{module_name}] Downloading...")
 						payload = inp._download(**el)
 						last_tick[module_name] = time.time()
 					except Exception as e:
