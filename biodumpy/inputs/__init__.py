@@ -9,4 +9,3 @@ from .GBIF import GBIF
 from .OBIS import OBIS
 from .Crossref import Crossref
 from .WORMS import WORMS
-from .AVONET import AVONET

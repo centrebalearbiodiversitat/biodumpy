@@ -1,3 +1,4 @@
+import sys
 import time
 from datetime import datetime
 from logging.handlers import MemoryHandler
@@ -35,7 +36,7 @@ class Biodumpy:
     	Default is "apa".
 	"""
 
-	def __init__(self, inputs: list[Input], loading_bar: bool = False, debug: bool = False, cit_style: str = "apa") -> None:
+	def __init__(self, inputs: list[Input], loading_bar: bool = True, debug: bool = False, cit_style: str = "apa") -> None:
 		super().__init__()
 
 		print("\n 🐔 Please remember to cite biodumpy in your work."
@@ -68,10 +69,7 @@ class Biodumpy:
 		bulk_input = {}
 		last_tick = {}
 		try:
-			for el in tqdm(elements, desc="Biodumpy list", unit=" elements", disable=not self.loading_bar, smoothing=0):
-				if not el:
-					continue
-
+			for el in tqdm(elements, desc="Biodumpy list", unit=" elements", disable=not self.loading_bar, smoothing=0, file=sys.stdout, colour="#FECC45"):
 				# Check whether the variable el is a string.
 				if isinstance(el, str):
 					el = {"query": el}
@@ -81,21 +79,21 @@ class Biodumpy:
 					raise ValueError(f"Missing 'name' key for {el}")
 
 				name = el["query"]
-
-				# if self.debug:
-				print(f"Downloading {name}...")
+				clean_name = name.replace("/", "_")
+				tqdm.write(f"Downloading {name}...")
 
 				for inp in self.inputs:
 					module_name = type(inp).__name__
-					# logging.info(f"biodumpy initialized with {module_name} inputs. Taxon: {name}")
+					tqdm.write(f"biodumpy initialized with {module_name} inputs. Taxon: {name}")
 
 					try:
 						if module_name in last_tick:
 							delta_last_call = time.time() - last_tick[module_name]
 							if delta_last_call < inp.sleep:
 								if self.debug:
-									print(f"Blocking for {inp.sleep - delta_last_call} seconds...")
+									tqdm.write(f"[{module_name}] Blocking for {inp.sleep - delta_last_call} seconds...")
 								time.sleep(inp.sleep - delta_last_call)
+								tqdm.write(f"[{module_name}] Downloading...")
 						payload = inp._download(**el)
 						last_tick[module_name] = time.time()
 					except Exception as e:
@@ -107,8 +105,7 @@ class Biodumpy:
 							bulk_input[inp] = []
 						bulk_input[inp].extend(payload)
 					else:
-						# name.replace('/', '_') especially to write the name of the DOI files
-						dump(file_name=f"{output_path.format(date=current_date, module=module_name, name=name.replace('/', '_'))}", obj_list=payload, output_format=inp.output_format)
+						dump(file_name=f"{output_path.format(date=current_date, module=module_name, name=clean_name)}", obj_list=payload, output_format=inp.output_format)
 		finally:
 			for inp, payload in bulk_input.items():
 				dump(file_name=output_path.format(date=current_date, module=type(inp).__name__, name="bulk"), obj_list=payload, output_format=inp.output_format)
@@ -117,10 +114,14 @@ class Biodumpy:
 
 			if log_handler.buffer:
 				print("---- Please review the dump file; errors have been detected ----")
+				down_path = str()
+				for folder in output_path.split("/"):
+					if "{" in folder:
+						break
+					down_path = f"{down_path}{folder}/"
 
-				down_path = output_path.format(date=current_date, module="", name=f"dump_{current_date}.log")
 				create_directory(down_path)
-				with open(down_path, "w+") as f:
+				with open(f"{down_path}/dump_{current_date}.log", "w") as f:
 					for record in log_handler.buffer:
 						log_entry = f"{record.levelname}: {record.getMessage()}\n"
 						f.write(log_entry)
