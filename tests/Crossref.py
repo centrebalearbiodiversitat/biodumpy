@@ -13,7 +13,7 @@ from biodumpy.inputs import Crossref
 trap = io.StringIO()
 
 
-def crossref_query(query, summary, dir_module = "Crossref"):
+def crossref_query(query, summary, dir_module="Crossref"):
 	# Create temporary directory
 	with tempfile.TemporaryDirectory() as temp_dir:
 		# Construct dynamic path using formatted strings

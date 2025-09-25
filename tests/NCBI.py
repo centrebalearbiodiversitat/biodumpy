@@ -13,7 +13,7 @@ from biodumpy.inputs import NCBI
 trap = io.StringIO()
 
 
-def ncbi_query(query, summary, output_format, max_bp, db, step_id, step_seq, rettype, query_type, by_id, taxonomy, taxonomy_only, mail, dir_module = "NCBI"):
+def ncbi_query(query, summary, output_format, max_bp, db, step_id, step_seq, rettype, query_type, by_id, taxonomy, taxonomy_only, mail, dir_module="NCBI"):
 	# Create temporary directory
 	with tempfile.TemporaryDirectory() as temp_dir:
 		# Construct the dynamic path using formatted strings

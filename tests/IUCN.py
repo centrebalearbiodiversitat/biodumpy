@@ -33,7 +33,7 @@ IUCN_SCOPE = [
 ]
 
 
-def iucn_query(query, authorization, assess_details, latest, scope, output_format, dir_module = "IUCN"):
+def iucn_query(query, authorization, assess_details, latest, scope, output_format, dir_module="IUCN"):
 	# Create temporary directory
 	with tempfile.TemporaryDirectory() as temp_dir:
 		# Construct the dynamic path using formatted strings

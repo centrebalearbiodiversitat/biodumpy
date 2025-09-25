@@ -13,7 +13,7 @@ from biodumpy.inputs import BOLD
 trap = io.StringIO()
 
 
-def bold_query(query, summary, output_format, dir_module = "BOLD"):
+def bold_query(query, summary, output_format, dir_module="BOLD"):
 	# Create temporary directory
 	with tempfile.TemporaryDirectory() as temp_dir:
 		# Construct the dynamic path using formatted strings

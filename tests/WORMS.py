@@ -13,7 +13,7 @@ from biodumpy.inputs import WORMS
 trap = io.StringIO()
 
 
-def worms_query(query, distribution, marine_only, dir_module = "WORMS"):
+def worms_query(query, distribution, marine_only, dir_module="WORMS"):
 	# Create temporary directory
 	with tempfile.TemporaryDirectory() as temp_dir:
 		# Construct the dynamic path using formatted strings

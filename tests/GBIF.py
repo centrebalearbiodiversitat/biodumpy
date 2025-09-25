@@ -15,7 +15,7 @@ trap = io.StringIO()
 gbif_backbone = "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c"
 
 
-def gbif_query(query, accepted_only, occ, geometry, dir_module = "GBIF"):
+def gbif_query(query, accepted_only, occ, geometry, dir_module="GBIF"):
 	# Create temporary directory
 	with tempfile.TemporaryDirectory() as temp_dir:
 		# Construct the dynamic path using formatted strings

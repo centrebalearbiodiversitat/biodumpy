@@ -13,7 +13,7 @@ from biodumpy.inputs import OBIS
 trap = io.StringIO()
 
 
-def obis_query(query, occ, geometry, areaid, dir_module = "OBIS"):
+def obis_query(query, occ, geometry, areaid, dir_module="OBIS"):
 	# Create temporary directory
 	with tempfile.TemporaryDirectory() as temp_dir:
 		# Construct the dynamic path using formatted strings

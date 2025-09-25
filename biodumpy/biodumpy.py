@@ -31,17 +31,19 @@ class Biodumpy:
 		If True, enables printing of detailed information during execution.
 		Default is True
 	cit_style: str
-    	Citation style used when generating references for the downloaded data.
-    	Admitted values include "apa" and "bib".
-    	Default is "apa".
+	Citation style used when generating references for the downloaded data.
+	Admitted values include "apa" and "bib".
+	Default is "apa".
 	"""
 
 	def __init__(self, inputs: list[Input], loading_bar: bool = True, debug: bool = False, cit_style: str = "apa") -> None:
 		super().__init__()
 
-		print("\n 🐔 Please remember to cite biodumpy in your work."
-			  "\n Consult the citation file to ensure proper attribution of all modules used. "
-			  "\n Citation: Cancellario, T., Golomb Durán, T., Far, A. J., Roldán, A., & Capa, M. (2025). biodumpy: A Comprehensive Biological Data Downloader. bioRxiv, 2025-07. \n\n")
+		print(
+			"\n 🐔 Please remember to cite biodumpy in your work."
+			"\n Consult the citation file to ensure proper attribution of all modules used. "
+			"\n Citation: Cancellario, T., Golomb Durán, T., Far, A. J., Roldán, A., & Capa, M. (2025). biodumpy: A Comprehensive Biological Data Downloader. bioRxiv, 2025-07. \n\n"
+		)
 
 		for input in inputs:
 			if not isinstance(input, Input):
@@ -127,28 +129,19 @@ class Biodumpy:
 						f.write(log_entry)
 
 	def _generate_citation(self, output_path):
-
 		# Open file with bibliography information
 		base_dir = os.path.dirname(__file__)  # directory of current script
-		with open(f"{base_dir}/data/citations.json", 'r') as file:
+		with open(f"{base_dir}/data/citations.json", "r") as file:
 			cit_data = json.load(file)
 
-			citations = [
-				{
-					"module": "biodumpy",
-					"citation": cit_data.get("biodumpy").get(self.cit_style)
-				 }
-			]
+			citations = [{"module": "biodumpy", "citation": cit_data.get("biodumpy").get(self.cit_style)}]
 
 			for inp in self.inputs:
 				module_name = type(inp).__name__
-				citations.append({
-					"module": module_name,
-					"citation": cit_data.get(module_name).get(self.cit_style)
-				})
+				citations.append({"module": module_name, "citation": cit_data.get(module_name).get(self.cit_style)})
 
 			with open(output_path, "w+") as f:
 				for item in citations:
-					f.write(f'---- {item.get("module")} ---- \n')
+					f.write(f"---- {item.get('module')} ---- \n")
 					f.write(item.get("citation"))
 					f.write("\n\n")

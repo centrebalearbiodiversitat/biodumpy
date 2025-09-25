@@ -13,7 +13,7 @@ from biodumpy.inputs import ZooBank
 trap = io.StringIO()
 
 
-def zoobank_query(query, info, dataset_size, dir_module = "ZooBank"):
+def zoobank_query(query, info, dataset_size, dir_module="ZooBank"):
 	# Create temporary directory
 	with tempfile.TemporaryDirectory() as temp_dir:
 		# Construct the dynamic path using formatted strings

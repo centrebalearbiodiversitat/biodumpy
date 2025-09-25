@@ -77,21 +77,21 @@ def remove_tags(text: str) -> str:
 
 def clean_nones(value):
 	"""
-	Recursively remove all None values from dictionaries and lists, and returns
-	the result as a new dictionary or list.
+	    Recursively remove all None values from dictionaries and lists, and returns
+	    the result as a new dictionary or list.
 
-	Example:
-    data = {
-    	"name": "Alice",
-    	"age": None,
-    	"hobbies": ["reading", None, "swimming"],
-    	"address": {
-    	"city": "Wonderland",
-    	"zip": None
-    	}
-    	}
-    clean_nones(data)
-    {'name': 'Alice', 'hobbies': ['reading', 'swimming'], 'address': {'city': 'Wonderland'}}
+	    Example:
+	data = {
+		"name": "Alice",
+		"age": None,
+		"hobbies": ["reading", None, "swimming"],
+		"address": {
+		"city": "Wonderland",
+		"zip": None
+		}
+		}
+	clean_nones(data)
+	{'name': 'Alice', 'hobbies': ['reading', 'swimming'], 'address': {'city': 'Wonderland'}}
 	"""
 	if isinstance(value, list):
 		return [clean_nones(x) for x in value if x is not None]

@@ -13,7 +13,7 @@ from biodumpy.inputs import INaturalist
 trap = io.StringIO()
 
 
-def inat_query(query, dir_module = "INaturalist"):
+def inat_query(query, dir_module="INaturalist"):
 	# Create temporary directory
 	with tempfile.TemporaryDirectory() as temp_dir:
 		# Construct the dynamic path using formatted strings

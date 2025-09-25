@@ -14,7 +14,7 @@ trap = io.StringIO()
 
 
 # Remember to check the latest dataset_key
-def col_query(query, check_syn, dataset_key, dir_module = "COL"):
+def col_query(query, check_syn, dataset_key, dir_module="COL"):
 	# Create temporary directory
 	with tempfile.TemporaryDirectory() as temp_dir:
 		# Construct the dynamic path using formatted strings
@@ -50,6 +50,7 @@ def test_col_initialization():
 
 	with pytest.raises(ValueError, match="Please provide a valid dataset_key, or visit https://www.catalogueoflife.org/data/changelog to use the latest ChecklistBank."):
 		COL(dataset_key=None)
+
 
 @pytest.mark.parametrize("query, check_syn, dataset_key", [(["Bufo roseus"], True, 309120), (["Bufo roseus"], False, 309120)])
 def test_download(query, check_syn, dataset_key):
