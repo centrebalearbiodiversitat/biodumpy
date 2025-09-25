@@ -1,3 +1,3 @@
 # version.py
 
-__version__ = "0.1.7"  # To upload
+__version__ = "0.1.7"
