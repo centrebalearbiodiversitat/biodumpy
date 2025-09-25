@@ -13,7 +13,7 @@ from biodumpy.inputs import WORMS
 trap = io.StringIO()
 
 
-def worms_query(query, distribution, marine_only):
+def worms_query(query, distribution, marine_only, dir_module="WORMS"):
 	# Create temporary directory
 	with tempfile.TemporaryDirectory() as temp_dir:
 		# Construct the dynamic path using formatted strings
@@ -25,7 +25,6 @@ def worms_query(query, distribution, marine_only):
 
 	# Retrieve a file path
 	dir_date = os.listdir(f"{dynamic_path}/downloads/")[0]
-	dir_module = os.listdir(f"{dynamic_path}/downloads/{dir_date}")[0]
 	file_list = os.listdir(f"{dynamic_path}/downloads/{dir_date}/{dir_module}")[0]
 
 	# Open file
@@ -41,6 +40,7 @@ def test_worms_initialization():
 	worms = WORMS()
 
 	assert worms.output_format == "json"
+	assert worms.sleep == 3
 
 	# Objective: Verify that the class raises a ValueError when an invalid value is provided for the
 	# output_format parameter.

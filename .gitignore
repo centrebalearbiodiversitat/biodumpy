@@ -10,9 +10,12 @@ list*
 /main.py
 /cmd.txt
 /haplotype_collapse.py
+/biodumpy/data/AVONET/convert_avonet.py
 
 /.idea
 /biodumpy.egg-info/
 /build/
 /dist/
 /htmlcov
+/biodumpy/data/AVONET/
+/test_results/

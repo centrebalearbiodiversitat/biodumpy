@@ -13,7 +13,7 @@ from biodumpy.inputs import BOLD
 trap = io.StringIO()
 
 
-def bold_query(query, summary, output_format):
+def bold_query(query, summary, output_format, dir_module="BOLD"):
 	# Create temporary directory
 	with tempfile.TemporaryDirectory() as temp_dir:
 		# Construct the dynamic path using formatted strings
@@ -25,7 +25,7 @@ def bold_query(query, summary, output_format):
 
 	# Retrieve a file path
 	dir_date = os.listdir(f"{dynamic_path}/downloads/")[0]
-	dir_module = os.listdir(f"{dynamic_path}/downloads/{dir_date}")[0]
+	# dir_module = os.listdir(f"{dynamic_path}/downloads/{dir_date}")[0]
 	file_list = os.listdir(f"{dynamic_path}/downloads/{dir_date}/{dir_module}")[0]
 
 	file = os.path.join(f"{dynamic_path}/downloads/{dir_date}/{dir_module}/{file_list}")
@@ -47,6 +47,7 @@ def test_bold_initialization():
 	assert bold.summary == False
 	assert bold.bulk == False
 	assert bold.output_format == "json"
+	assert bold.sleep == 3
 
 	# Objective: Verify that the class raises a ValueError when an invalid value is provided for the
 	# output_format parameter.

@@ -77,8 +77,21 @@ def remove_tags(text: str) -> str:
 
 def clean_nones(value):
 	"""
-	Recursively remove all None values from dictionaries and lists, and returns
-	the result as a new dictionary or list.
+	    Recursively remove all None values from dictionaries and lists, and returns
+	    the result as a new dictionary or list.
+
+	    Example:
+	data = {
+		"name": "Alice",
+		"age": None,
+		"hobbies": ["reading", None, "swimming"],
+		"address": {
+		"city": "Wonderland",
+		"zip": None
+		}
+		}
+	clean_nones(data)
+	{'name': 'Alice', 'hobbies': ['reading', 'swimming'], 'address': {'city': 'Wonderland'}}
 	"""
 	if isinstance(value, list):
 		return [clean_nones(x) for x in value if x is not None]
@@ -140,7 +153,7 @@ def split_to_batches(input_list, batch_size: int):
 	Returns:
 	list of lists: A list containing the smaller batches.
 
-	Example usage:
+	Example:
 	input_list = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 	batch_size = 3
 	batches = divide_list_into_batches_by_size(input_list, batch_size)
@@ -256,7 +269,7 @@ def haplo_collapse(fasta_file):
 
 	Example
 	-------
-	>>> a = haplo_collapse(fasta_file)
+	a = haplo_collapse(fasta_file)
 	"""
 
 	if not all("id" in item and "sequence" in item for item in fasta_file):
@@ -288,9 +301,9 @@ def rm_dup(data: list) -> list:
 	    list: A list containing only unique dictionaries, in their original order.
 
 	Example:
-	    >>> data = [{'a': 1}, {'a': 2}, {'a': 1}]
-	    >>> rm_dup(data)
-	    [{'a': 1}, {'a': 2}]
+	data = [{'a': 1}, {'a': 2}, {'a': 1}]
+	rm_dup(data)
+	[{'a': 1}, {'a': 2}]
 	"""
 
 	unique = []  # Final list of unique dictionaries to return

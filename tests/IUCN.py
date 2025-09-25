@@ -33,7 +33,7 @@ IUCN_SCOPE = [
 ]
 
 
-def iucn_query(query, authorization, assess_details, latest, scope, output_format):
+def iucn_query(query, authorization, assess_details, latest, scope, output_format, dir_module="IUCN"):
 	# Create temporary directory
 	with tempfile.TemporaryDirectory() as temp_dir:
 		# Construct the dynamic path using formatted strings
@@ -46,7 +46,6 @@ def iucn_query(query, authorization, assess_details, latest, scope, output_forma
 
 	# Retrieve a file path
 	dir_date = os.listdir(f"{dynamic_path}/downloads/")[0]
-	dir_module = os.listdir(f"{dynamic_path}/downloads/{dir_date}")[0]
 	file_list = os.listdir(f"{dynamic_path}/downloads/{dir_date}/{dir_module}")[0]
 
 	file = os.path.join(f"{dynamic_path}/downloads/{dir_date}/{dir_module}/{file_list}")
@@ -65,6 +64,7 @@ def test_iucn_initialization():
 	assert iucn.latest == False
 	assert iucn.assess_details == False
 	assert iucn.output_format == "json"
+	assert iucn.sleep == 3
 
 	# Objective: Verify that the class raises a ValueError when an invalid value is provided for the
 	# output_format parameter.

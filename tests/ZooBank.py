@@ -13,7 +13,7 @@ from biodumpy.inputs import ZooBank
 trap = io.StringIO()
 
 
-def zoobank_query(query, info, dataset_size):
+def zoobank_query(query, info, dataset_size, dir_module="ZooBank"):
 	# Create temporary directory
 	with tempfile.TemporaryDirectory() as temp_dir:
 		# Construct the dynamic path using formatted strings
@@ -25,7 +25,6 @@ def zoobank_query(query, info, dataset_size):
 
 	# Retrieve a file path
 	dir_date = os.listdir(f"{dynamic_path}/downloads/")[0]
-	dir_module = os.listdir(f"{dynamic_path}/downloads/{dir_date}")[0]
 	file_list = os.listdir(f"{dynamic_path}/downloads/{dir_date}/{dir_module}")[0]
 
 	# Open file
@@ -45,6 +44,7 @@ def test_zoobank_initialization():
 	assert zoobank.dataset_size == "small"
 	assert zoobank.info == False
 	assert zoobank.output_format == "json"
+	assert zoobank.sleep == 3
 
 	# Objective: Verify that the class correctly raises a ValueError when an invalid value is provided for the
 	# dataset_size parameter.

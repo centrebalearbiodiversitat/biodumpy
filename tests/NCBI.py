@@ -13,7 +13,7 @@ from biodumpy.inputs import NCBI
 trap = io.StringIO()
 
 
-def ncbi_query(query, summary, output_format, max_bp, db, step_id, step_seq, rettype, query_type, by_id, taxonomy, taxonomy_only, mail):
+def ncbi_query(query, summary, output_format, max_bp, db, step_id, step_seq, rettype, query_type, by_id, taxonomy, taxonomy_only, mail, dir_module="NCBI"):
 	# Create temporary directory
 	with tempfile.TemporaryDirectory() as temp_dir:
 		# Construct the dynamic path using formatted strings
@@ -43,7 +43,6 @@ def ncbi_query(query, summary, output_format, max_bp, db, step_id, step_seq, ret
 
 	# Retrieve a file path
 	dir_date = os.listdir(f"{dynamic_path}/downloads/")[0]
-	dir_module = os.listdir(f"{dynamic_path}/downloads/{dir_date}")[0]
 	file_list = os.listdir(f"{dynamic_path}/downloads/{dir_date}/{dir_module}")[0]
 
 	file = os.path.join(f"{dynamic_path}/downloads/{dir_date}/{dir_module}/{file_list}")
@@ -74,6 +73,7 @@ def test_ncbi_initialization():
 	assert ncbi.taxonomy_only == False
 	assert ncbi.bulk == False
 	assert ncbi.output_format == "json"
+	assert ncbi.sleep == 3
 
 	with pytest.raises(ValueError, match="Invalid output_format or rettype. Expected fasta."):
 		NCBI(output_format="fasta", rettype="gb")  # Should raise the error

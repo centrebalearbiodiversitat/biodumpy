@@ -13,7 +13,7 @@ from biodumpy.inputs import Crossref
 trap = io.StringIO()
 
 
-def crossref_query(query, summary):
+def crossref_query(query, summary, dir_module="Crossref"):
 	# Create temporary directory
 	with tempfile.TemporaryDirectory() as temp_dir:
 		# Construct dynamic path using formatted strings
@@ -25,7 +25,6 @@ def crossref_query(query, summary):
 
 	# Retrieve a file path
 	dir_date = os.listdir(f"{dynamic_path}/downloads/")[0]
-	dir_module = os.listdir(f"{dynamic_path}/downloads/{dir_date}")[0]
 	file_list = os.listdir(f"{dynamic_path}/downloads/{dir_date}/{dir_module}")[0]
 
 	# Open file
@@ -44,6 +43,7 @@ def test_crossref_initialization():
 	# correct default values.
 	assert crossref.summary == False
 	assert crossref.output_format == "json"
+	assert crossref.sleep == 3
 
 	# Objective: Verify that class raises a ValueError when an invalid value is provided for the
 	# output_format parameter.
@@ -76,7 +76,6 @@ def test_download(query, summary):
 		assert "language" in data, "language is not in data"
 		assert data["language"] == "en", "language is not en"
 		assert "URL" in data, "URL is not in data"
-		# assert data["URL"] == "http://dx.doi.org/10.1038/s44185-022-00001-3", "URL is not http://dx.doi.org/10.1038/s44185-022-00001-3"
 		assert "published" in data, "published is not in data"
 		assert "title" in data, "title is not in data"
 		assert data["title"] == "Climate change will redefine taxonomic, functional, and phylogenetic diversity of Odonata in space and time", (
@@ -90,12 +89,10 @@ def test_download(query, summary):
 		assert "reference-count" in data, "reference-count is not in data"
 		assert data["reference-count"] == 132, "reference-count is not 132"
 		assert "publisher" in data, "publisher is not in data"
-		# assert data["publisher"] == "Springer Science and Business Media LLC", "publisher is not Springer Science and Business Media LLC"
 		assert "issue" in data, "issue is not in data"
 		assert "license" in data, "license is not in data"
 		assert "content-domain" in data, "content-domain is not in data"
 		assert "short-container-title" in data, "short-container-title is not in data"
-		# assert data["short-container-title"][0] == "npj biodivers", "short-container-title is not npj biodivers"
 		assert "abstract" in data, "abstract is not in data"
 		assert "DOI" in data, "DOI is not in data"
 		assert data["DOI"] == "10.1038/s44185-022-00001-3", "DOI is not 10.1038/s44185-022-00001-3"
@@ -110,7 +107,6 @@ def test_download(query, summary):
 			"title is not Climate change will redefine taxonomic, functional, and phylogenetic diversity of Odonata in space and time"
 		)
 		assert "prefix" in data, "prefix is not in data"
-		# assert data["prefix"] == "10.1038", "prefix is not 10.1038"
 		assert "volume" in data, "volume is not in data"
 		assert data["volume"] == "1", "volume is not 1"
 		assert "author" in data, "author is not in data"
@@ -132,7 +128,6 @@ def test_download(query, summary):
 		assert "journal-issue" in data, "journal-issue is not in data"
 		assert "alternative-id" in data, "alternative-id is not in data"
 		assert "URL" in data, "URL is not in data"
-		# assert data["URL"] == "http://dx.doi.org/10.1038/s44185-022-00001-3", "URL is not http://dx.doi.org/10.1038/s44185-022-00001-3"
 		assert "relation" in data, "relation is not in data"
 		assert "ISSN" in data, "ISSN is not in data"
 		assert "issn-type" in data, "issn-type is not in data"

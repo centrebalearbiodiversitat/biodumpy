@@ -6,7 +6,48 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
-## [0.1.4] - Unreleased
+## [0.1.7] - Unreleased
+
+### Added
+- Direct links to COL IDs when a taxon has multiple IDs
+- Generate module citation file in APA or BibTeX format in the download folder
+- Improved error message when dataset_key is missing in COL module
+
+### Changed
+- Module tests (minor improvements)
+
+### Fix
+
+---
+
+## [0.1.6] - 2025-05-29
+
+### Added
+
+
+### Changed
+
+
+### Fix
+- Docs and setup
+- Requirements
+
+---
+
+## [0.1.5] - 2025-05-29
+
+### Added
+
+
+### Changed
+
+
+### Fix
+- Docs and setup
+
+---
+
+## [0.1.4] - 2025-05-28
 
 ### Added
 - Crossref module.
