@@ -14,6 +14,11 @@ The ``ZooBank`` module allows users to easily retrieve scientific bibliographic 
     JSON
 
 
+.. warning::
+
+   Before using the ZooBank module, please confirm that you are not a robot at: `zoobank.org`_. Be considerate and avoid overloading the system; download responsibly.
+
+
 Key Features
 ------------
 
@@ -58,3 +63,7 @@ Reference link/s
 `Official Registry of Zoological Nomenclature`_
 
 .. _Official Registry of Zoological Nomenclature: https://zoobank.org/
+
+`zoobank.org`_
+
+.. _zoobank.org: https://zoobank.org/

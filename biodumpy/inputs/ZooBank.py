@@ -4,7 +4,6 @@ from bs4 import BeautifulSoup
 from tqdm import tqdm
 from biodumpy import Input, BiodumpyException
 
-
 class ZooBank(Input):
 	"""
 	Query the Official Registry of Zoological Nomenclature (ZooBank) database to retrieve scientific bibliographic
@@ -41,11 +40,20 @@ class ZooBank(Input):
 		self.dataset_size = dataset_size
 		self.info = info
 
+		robot_input = input(
+			"\nBefore using the ZooBank module, please confirm that you are not a robot at: https://zoobank.org/\n"
+			"Be considerate and avoid overloading the system; download responsibly.\n\n"
+			"If you have visited the page, type 'yes' to continue with the download.\n"
+		)
+
 		if self.dataset_size not in ["small", "large"]:
 			raise ValueError("Invalid dataset_size. Expected 'small' or 'large'.")
 
 		if self.output_format != "json":
 			raise ValueError("Invalid output_format. Expected 'json'.")
+
+		if robot_input != "yes":
+			raise ValueError("Please visit the ZooBank website and confirm that you are not a robot.")
 
 	def _download(self, query, **kwargs) -> list:
 		payload = []
