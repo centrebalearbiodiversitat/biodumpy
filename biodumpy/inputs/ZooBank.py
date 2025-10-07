@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 from tqdm import tqdm
 from biodumpy import Input, BiodumpyException
 
+
 class ZooBank(Input):
 	"""
 	Query the Official Registry of Zoological Nomenclature (ZooBank) database to retrieve scientific bibliographic
