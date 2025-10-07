@@ -1,0 +1,50 @@
+{
+  "biodumpy": {
+    "bib": "@article{cancellario2025biodumpy, \n title={biodumpy: A Comprehensive Biological Data Downloader}, \n  author={Cancellario, T and Golomb Duran, T and Far, AJ and Roldan, A and Capa, M}, \n journal={bioRxiv}, \n  pages={2025--07}, \n  year={2025}, \n  publisher={Cold Spring Harbor Laboratory}}",
+    "apa": "Cancellario, T., Golomb Durán, T., Far, A. J., Roldán, A., & Capa, M. (2025). biodumpy: A Comprehensive Biological Data Downloader. bioRxiv, 2025-07."
+  },
+  "AVONET": {
+    "bib": "@article{tobias2022avonet,\n  author = {Tobias, J. A. and Sheard, C. and Pigot, A. L. and Devenish, A. J. and Yang, J. and Sayol, F. and ... and Schleuning, M.},\n  title = {AVONET: morphological, ecological and geographical data for all birds},\n  journal = {Ecology Letters},\n  year = {2022},\n  volume = {25},\n  number = {3},\n  pages = {581-597}\n}",
+    "apa": "Tobias, J. A., Sheard, C., Pigot, A. L., Devenish, A. J., Yang, J., Sayol, F., ... & Schleuning, M. (2022). AVONET: morphological, ecological and geographical data for all birds. Ecology Letters, 25(3), 581-597."
+  },
+  "BOLD": {
+    "bib": "@misc{ratnasingham2024bold,\n  author = {Ratnasingham, Sujeevan and Wei, C. and Chan, D. and Agda, J. and Agda, J. and Ballesteros-Mejia, L. and Ait Boutou, H. and El Bastami, Z. M. and Ma, E. and Manjunath, R. and Rea, D. and Ho, C. and Telfer, A. and McKeowan, J. and Rahulan, M. and Steinke, C. and Dorsheimer, J. and Milton, M. and Hebert, P. D. N.},\n  title = {BOLD v4: A centralized bioinformatics platform for DNA-based biodiversity data},\n  booktitle = {DNA Barcoding: Methods and Protocols},\n  chapter = {26},\n  pages = {403--441},\n  year = {2024},\n  publisher = {Springer US},\n  address = {New York, NY}\n}",
+    "apa": "Ratnasingham, S., Wei, C., Chan, D., Agda, J., Agda, J., Ballesteros-Mejia, L., Ait Boutou, H., El Bastami, Z. M., Ma, E., Manjunath, R., Rea, D., Ho, C., Telfer, A., McKeowan, J., Rahulan, M., Steinke, C., Dorsheimer, J., Milton, M., & Hebert, P. D. N. (2024). BOLD v4: A centralized bioinformatics platform for DNA-based biodiversity data. In *DNA barcoding: Methods and protocols* (Chapter 26, pp. 403–441). Springer US."
+  },
+  "Crossref": {
+    "bib": "@misc{crossref,\n  author = {{Crossref}},\n  title = {Crossref},\n  year = {n.d.},\n  url = {https://www.crossref.org/},\n  note = {Accessed: 2025-06-09}\n}",
+    "apa": "Crossref. (n.d.). *Crossref*. https://www.crossref.org/"
+  },
+  "COL": {
+    "bib": "@misc{banki2025catalogue,\n  author = {Bánki, O. and Roskov, Y. and Döring, M. and Ower, G. and Hernández Robles, D. R. and Plata Corredor, C. A. and Stjernegaard Jeppesen, T. and Örn, A. and Pape, T. and Hobern, D. and Garnett, S. and Little, H. and DeWalt, R. E. and Ma, K. and Miller, J. and Orrell, T. and Aalbu, R. and Abbott, J. and Adlard, R. and others},\n  title = {Catalogue of Life (Version 2025-05-13)},\n  year = {2025},\n  publisher = {Catalogue of Life},\n  address = {Amsterdam, Netherlands},\n  doi = {10.48580/dgqdn},\n  url = {https://doi.org/10.48580/dgqdn}\n}",
+    "apa": "Bánki, O., Roskov, Y., Döring, M., Ower, G., Hernández Robles, D. R., Plata Corredor, C. A., Stjernegaard Jeppesen, T., Örn, A., Pape, T., Hobern, D., Garnett, S., Little, H., DeWalt, R. E., Ma, K., Miller, J., Orrell, T., Aalbu, R., Abbott, J., Adlard, R., et al. (2025). *Catalogue of Life (Version 2025-05-13)*. Catalogue of Life. https://doi.org/10.48580/dgqdn"
+  },
+  "GBIF":{
+    "bib": "@misc{gbif,\n  author = {{GBIF.org}},\n  title = {GBIF Home Page},\n  year = {year},\n  url = {https://www.gbif.org},\n  note = {Accessed: DD Month YYYY}\n}",
+    "apa": "GBIF.org. (year). *GBIF Home Page*. Available from https://www.gbif.org (Accessed: DD Month YYYY)."
+  },
+  "INaturalist": {
+    "bib": "@misc{inaturalist,\n  author = {{iNaturalist}},\n  title = {iNaturalist},\n  url = {https://www.inaturalist.org},\n  note = {Accessed: DD Month YYYY}\n}",
+    "apa": "iNaturalist. (n.d.). *iNaturalist*. Available from https://www.inaturalist.org (Accessed: DD Month YYYY)."
+  },
+  "IUCN": {
+    "bib": "@misc{iucn2025,\n  author = {{IUCN}},\n  title = {The IUCN Red List of Threatened Species. Version year-X},\n  year = {year},\n  url = {https://www.iucnredlist.org},\n  note = {Accessed on DD Month YYYY}\n}",
+    "apa": "IUCN. (year). *The IUCN Red List of Threatened Species. Version year-X*. https://www.iucnredlist.org (Accessed on DD Month YYYY)."
+  },
+  "NCBI": {
+    "bib": "@article{sayers2024database,\n  author = {Sayers, E. W. and Beck, J. and Bolton, E. E. and Brister, J. R. and Chan, J. and Comeau, D. C. and Connor, R. and DiCuccio, M. and Farrell, C. M. and Feldgarden, M. and Fine, A. M. and Funk, K. and Hatcher, E. and Hoeppner, M. and Kane, M. and Kannan, S. and Katz, K. S. and Kelly, C. and Klimke, W. and Kim, S. and ... Sherry, S. T.},\n  title = {Database resources of the National Center for Biotechnology Information},\n  journal = {Nucleic Acids Research},\n  volume = {52},\n  number = {D1},\n  pages = {D33--D43},\n  year = {2024},\n  doi = {10.1093/nar/gkad1044},\n  url = {https://doi.org/10.1093/nar/gkad1044}\n}",
+    "apa": "Sayers, E. W., Beck, J., Bolton, E. E., Brister, J. R., Chan, J., Comeau, D. C., Connor, R., DiCuccio, M., Farrell, C. M., Feldgarden, M., Fine, A. M., Funk, K., Hatcher, E., Hoeppner, M., Kane, M., Kannan, S., Katz, K. S., Kelly, C., Klimke, W., Kim, S., … Sherry, S. T. (2024). Database resources of the National Center for Biotechnology Information. *Nucleic Acids Research, 52*(D1), D33–D43. https://doi.org/10.1093/nar/gkad1044"
+  },
+  "OBIS": {
+    "bib": "@misc{obis,\n  author = {{OBIS}},\n  title = {Ocean Biodiversity Information System},\n  year = {YEAR},\n  howpublished = {Intergovernmental Oceanographic Commission of UNESCO},\n  url = {https://obis.org}\n}",
+    "apa": "OBIS. (YEAR). *Ocean Biodiversity Information System*. Intergovernmental Oceanographic Commission of UNESCO. https://obis.org"
+  },
+  "WORMS": {
+    "bib": "@misc{worms2025,\n  author = {Ahyong, S. and Boyko, C.B. and Bernot, J. and Brandão, S.N. and Daly, M. and De Grave, S. and de Voogd, N.J. and Gofas, S. and Hernandez, F. and Hughes, L. and Neubauer, T.A. and Paulay, G. and van der Meij, S. and Boydens, B. and Decock, W. and Dekeyzer, S. and Goharimanesh, M. and Vandepitte, L. and Vanhoorne, B. and others},\n  title = {World Register of Marine Species (WoRMS)},\n  year = {2025},\n  publisher = {WoRMS Editorial Board},\n  url = {https://www.marinespecies.org},\n  note = {Accessed: DD Month YYYY}\n}",
+    "apa": "Ahyong, S., Boyko, C. B., Bernot, J., Brandão, S. N., Daly, M., De Grave, S., de Voogd, N. J., Gofas, S., Hernandez, F., Hughes, L., Neubauer, T. A., Paulay, G., van der Meij, S., Boydens, B., Decock, W., Dekeyzer, S., Goharimanesh, M., Vandepitte, L., Vanhoorne, B., & others. (2025). World Register of Marine Species (WoRMS). WoRMS Editorial Board. https://www.marinespecies.org"
+  },
+  "ZooBank": {
+    "bib": "@misc{pyle2025,\n  author = {Pyle, R.},\n  title = {ZooBank},\n  year = {year},\n  version = {v.},\n  howpublished = {International Commission on Zoological Nomenclature. Checklist dataset},\n  url = {https://doi.org/10.15468/wkr0kn},\n}",
+    "apa": "Pyle, R. (year). ZooBank (Version v.) [Checklist dataset]. International Commission on Zoological Nomenclature. https://doi.org/10.15468/wkr0kn (accessed via GBIF.org on 2025-06-09)"
+  }
+}

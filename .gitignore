@@ -6,6 +6,7 @@
 main*
 list*
 *.json
+*.DS_Store
 *.log
 /main.py
 /cmd.txt
