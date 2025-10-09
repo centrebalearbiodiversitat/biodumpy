@@ -138,7 +138,7 @@ class Biodumpy:
 	def _generate_citation(self, output_path):
 		# Open file with bibliography information
 		base_dir = os.path.dirname(__file__)  # directory of current script
-		with (open(f"{base_dir}/data/citations.json", "r") as file):
+		with open(f"{base_dir}/data/citations.json", "r") as file:
 			cit_data = json.load(file)
 
 			citations = [{"module": "biodumpy", "citation": cit_data.get("biodumpy").get(self.cit_style)}]
@@ -151,4 +151,4 @@ class Biodumpy:
 			for item in citations:
 				citation_text.append(f"---- {item.get('module')} ----\n{item.get('citation')}")
 
-			dump(output_path, "\n\n".join(citation_text), output_format = "txt")
+			dump(output_path, "\n\n".join(citation_text), output_format="txt")
