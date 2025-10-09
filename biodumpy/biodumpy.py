@@ -112,7 +112,14 @@ class Biodumpy:
 			for inp, payload in bulk_input.items():
 				dump(file_name=output_path.format(date=current_date, module=type(inp).__name__, name="bulk"), obj_list=payload, output_format=inp.output_format)
 
-			self._generate_citation(output_path.format(date=current_date, module="", name="citation.txt"))
+			citation_path = []
+			for folder in output_path.split("/"):
+				citation_path.append(folder)
+				if "{name}" in folder:
+					break
+
+			citation_path = "/".join(citation_path)
+			self._generate_citation(citation_path.format(date=current_date, module="", name="citation"))
 
 			if log_handler.buffer:
 				print("---- Please review the dump file; errors have been detected ----")
@@ -131,7 +138,7 @@ class Biodumpy:
 	def _generate_citation(self, output_path):
 		# Open file with bibliography information
 		base_dir = os.path.dirname(__file__)  # directory of current script
-		with open(f"{base_dir}/data/citations.json", "r") as file:
+		with (open(f"{base_dir}/data/citations.json", "r") as file):
 			cit_data = json.load(file)
 
 			citations = [{"module": "biodumpy", "citation": cit_data.get("biodumpy").get(self.cit_style)}]
@@ -140,8 +147,8 @@ class Biodumpy:
 				module_name = type(inp).__name__
 				citations.append({"module": module_name, "citation": cit_data.get(module_name).get(self.cit_style)})
 
-			with open(output_path, "w+") as f:
-				for item in citations:
-					f.write(f"---- {item.get('module')} ---- \n")
-					f.write(item.get("citation"))
-					f.write("\n\n")
+			citation_text = []
+			for item in citations:
+				citation_text.append(f"---- {item.get('module')} ----\n{item.get('citation')}")
+
+			dump(output_path, "\n\n".join(citation_text), output_format = "txt")

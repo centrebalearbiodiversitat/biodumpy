@@ -1,4 +1,5 @@
 import json
+import sys
 import time
 
 from biodumpy import Input
@@ -141,14 +142,14 @@ class NCBI(Input):
 			ids_list = self._download_ids(term=f"{query}{self.query_type}", step_id=self.step_id)
 
 		if self.summary:
-			with tqdm(total=len(ids_list), desc="NCBI summary retrieve", unit=" Summary", colour="#3c91d5") as pbar:
+			with tqdm(total=len(ids_list), desc="\tNCBI summary retrieve", unit=" Summary", colour="#3c91d5", file=sys.stdout) as pbar:
 				for seq_id in split_to_batches(list(ids_list), self.step_seq):
 					for sumr in self._download_summary(seq_id):
 						sumr["query"] = f"{query}{self.query_type}"
 						payload.append(json.loads(json.dumps(sumr, cls=CustomEncoder)))
 					pbar.update(len(seq_id))
 		else:
-			with tqdm(total=len(ids_list), desc="NCBI sequences retrieve", unit=" Sequences", colour="#3c91d5") as pbar:
+			with tqdm(total=len(ids_list), desc="\tNCBI sequences retrieve", unit=" Sequences", colour="#3c91d5", file=sys.stdout) as pbar:
 				for seq_id in split_to_batches(list(ids_list), self.step_seq):
 					for seq in self._download_seq(seq_id, rettype=self.rettype, db=self.db):
 						payload.append(json.loads(json.dumps(seq, cls=CustomEncoder)))
@@ -185,7 +186,7 @@ class NCBI(Input):
 
 		id_bp_list = set()
 		total_ids = int(record["Count"])
-		with tqdm(total=total_ids, desc="NCBI IDs retrieve", unit=" IDs", colour="#3c91d5") as pbar:
+		with tqdm(total=total_ids, desc="\tNCBI IDs retrieve", unit=" IDs", colour="#3c91d5", file=sys.stdout) as pbar:
 			for start in range(0, total_ids, step_id):
 				try:
 					handle = Entrez.esearch(db=self.db, retstart=start, retmax=step_id, term=term)

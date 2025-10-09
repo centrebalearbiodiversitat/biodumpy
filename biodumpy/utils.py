@@ -37,7 +37,7 @@ def dump(file_name, obj_list, output_format="json"):
 		if output_format == "fasta":
 			for line in obj_list:
 				output_file.write(f"{line}\n")
-		elif output_format == "pdf":
+		elif output_format in {"pdf", "txt"}:
 			output_file.write(obj_list)
 		else:
 			json.dump(obj_list, output_file, indent=4)
