@@ -36,14 +36,18 @@ class Biodumpy:
 	Default is "apa".
 	"""
 
+	SHOW_REMINDER_CITE = True
+
 	def __init__(self, inputs: list[Input], loading_bar: bool = True, debug: bool = False, cit_style: str = "apa") -> None:
 		super().__init__()
 
-		print(
-			"\n 🐔 Please remember to cite biodumpy in your work."
-			"\n Consult the citation file to ensure proper attribution of all modules used. "
-			"\n Citation: Cancellario, T., Golomb Durán, T., Far, A. J., Roldán, A., & Capa, M. (2025). biodumpy: A Comprehensive Biological Data Downloader. bioRxiv, 2025-07. \n\n"
-		)
+		if Biodumpy.SHOW_REMINDER_CITE:
+			print(
+				"\n 🐔 Please remember to cite biodumpy in your work."
+				"\n Consult the citation file to ensure proper attribution of all modules used. "
+				"\n Citation: Cancellario, T., Golomb Durán, T., Far, A. J., Roldán, A., & Capa, M. (2025). biodumpy: A Comprehensive Biological Data Downloader. bioRxiv, 2025-07. \n\n"
+			)
+			Biodumpy.SHOW_REMINDER_CITE = False
 
 		for input in inputs:
 			if not isinstance(input, Input):
