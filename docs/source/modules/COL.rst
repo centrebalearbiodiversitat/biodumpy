@@ -34,6 +34,8 @@ In this first example, we download the nomenclature from CoL for a list of taxa 
 
     The taxonomy list should be compiled using only the taxon names, excluding any authorship information.
 
+    A key parameter for this module is the ``dataset_key``, which specifies the COL version to use for the search. This number can be found at the bottom of the Catalogue of Life webpage under the ChecklistBank label.
+
 
 .. code-block:: python
 
@@ -44,7 +46,7 @@ In this first example, we download the nomenclature from CoL for a list of taxa 
     taxa = ['Alytes muletensis', 'Bufotes viridis', 'Hyla meridionalis', 'Anax imperator']
 
     # Start the download
-    bdp = Biodumpy([COL(bulk=True, check_syn=False)])
+    bdp = Biodumpy([COL(bulk=True, check_syn=False, dataset_key=313100)])
     bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}')
 
 
@@ -62,11 +64,11 @@ In the following example, the species *Bufo roseus* is a synonym of *Bufotes vir
     taxa = ['Bufo roseus']
 
     # Start the download check_syn = False
-    bdp = Biodumpy([COL(bulk=False, check_syn=False)])
+    bdp = Biodumpy([COL(bulk=False, check_syn=False, dataset_key=313100)])
     bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}_false')
 
     # Start the download check_syn = True
-    bdp = Biodumpy([COL(bulk=False, check_syn=True)])
+    bdp = Biodumpy([COL(bulk=False, check_syn=True, dataset_key=313100)])
     bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}_true')
 
 
@@ -124,7 +126,7 @@ Sometimes, in the CoL database, the same taxon can have multiple IDs. In such ca
     taxa = ['Stollia betae']
 
     # Start the download
-    bdp = Biodumpy([COL(bulk=False, check_syn=True)])
+    bdp = Biodumpy([COL(bulk=False, check_syn=True, dataset_key=313100)])
     bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}')
 
 
