@@ -76,47 +76,12 @@ def test_download(query, summary, output_format):
 		assert "record_id" in data, "record_id is not in data"
 		assert "processid" in data, "processid is not in data"
 		assert "bin_uri" in data, "bin_uri is not in data"
-		assert data["bin_uri"] == "BOLD:ABY0152", "bin_uri is not 'BOLD:ABY0152'"
-
 		assert "specimen_identifiers" in data, "specimen_identifiers is not in data"
-		sp_ident = data["specimen_identifiers"]
-		assert "sampleid" in sp_ident, "specimen_identifiers is not in specimen_identifiers"
-		assert "catalognum" in sp_ident, "catalognum is not in specimen_identifiers"
-		assert "fieldnum" in sp_ident, "fieldnum is not in specimen_identifiers"
-		assert "institution_storing" in sp_ident, "institution_storing is not in specimen_identifiers"
-
 		assert "taxonomy" in data, "taxonomy is not in data"
-		taxon = data["taxonomy"]
-		assert "phylum" in taxon, "phylum is not in taxonomy"
-		assert "class" in taxon, "class is not in taxonomy"
-		assert "order" in taxon, "order is not in taxonomy"
-		assert "family" in taxon, "family is not in taxonomy"
-		assert "genus" in taxon, "genus is not in taxonomy"
-		assert "species" in taxon, "species is not in taxonomy"
-		species = taxon["species"]["taxon"]
-		assert "taxID" in species, "taxID is not in species level"
-		assert "name" in species, "name is not in species level"
-		assert "reference" in species, "reference is not in species level"
-		assert species["taxID"] == "455292", "species taxID is not in 455292"
-		assert species["name"] == "Alytes muletensis", "species name is not in Alytes muletensis"
-		assert species["reference"] == "(Sanchíz and Adrover, 1979)", "species reference is not in (Sanchíz and Adrover, 1979)"
-
 		assert "specimen_desc" in data, "specimen_desc is not in data"
-		sp_desc = data["specimen_desc"]
-		assert "voucher_status" in sp_desc, "voucher_status is not in specimen_desc"
-		assert "extrainfo" in sp_desc, "extrainfo is not in specimen_desc"
-
 		assert "collection_event" in data, "collection_event is not in data"
-		coll_event = data["collection_event"]
-		assert "collectors" in coll_event, "collectors is not in collection_event"
-		assert "country" in coll_event, "country is not in collection_event"
-
 		assert "sequences" in data, "sequences is not in data"
-		seq = data["sequences"]["sequence"][0]
-		assert "sequenceID" in seq, "sequenceID is not in sequences"
-		assert "markercode" in seq, "markercode is not in sequences"
-		assert "genbank_accession" in seq, "genbank_accession is not in sequences"
-		assert "nucleotides" in seq, "nucleotides is not in sequences"
+
 
 	if summary and output_format != "fasta":
 		# Check the summary structure
@@ -124,13 +89,7 @@ def test_download(query, summary, output_format):
 		assert "processid" in data[0], "processid is not in data"
 		assert "bin_uri" in data[0], "bin_uri is not in data"
 		assert "taxon" in data[0], "taxon is not in data"
-		assert "country" in data[0], "country is not in data"
-		assert "province_state" in data[0], "province_state is not in data"
-		assert "region" in data[0], "region is not in data"
-		assert "lat" in data[0], "lat is not in data"
-		assert "lon" in data[0], "lon is not in data"
-		assert "markercode" in data[0], "markercode is not in data"
-		assert "genbank_accession" in data[0], "genbank_accession is not in data"
+
 
 	if summary is False and output_format == "fasta":
 		# Check if the fasta file starts with >

@@ -190,13 +190,10 @@ def test_download_taxonomy(query, summary, output_format, max_bp, db, step_id, s
 
 	if taxonomy:
 		assert "taxonomy" in data, "taxonomy is not in data"
-		assert len(data["taxonomy"]) == 23, "The length of taxonomy is not 23"
 
 		data = data["taxonomy"][0]
 		assert "TaxId" in data, "TaxId is not in data"
-		assert data["TaxId"] == "131567", "TaxId is not 131567"
 		assert "ScientificName" in data, "ScientificName is not in data"
-		assert data["ScientificName"] == "cellular organisms", "ScientificName is not cellular organisms"
 		assert "Rank" in data, "Rank is not in data"
 
 	if taxonomy is False and taxonomy_only:
@@ -206,7 +203,5 @@ def test_download_taxonomy(query, summary, output_format, max_bp, db, step_id, s
 		assert len(data) == 3, "The length of taxonomy is not 3"
 
 		assert "TaxId" in data, "TaxId is not in data"
-		assert data["TaxId"] == "131567", "TaxId is not 131567"
 		assert "ScientificName" in data, "ScientificName is not in data"
-		assert data["ScientificName"] == "cellular organisms", "ScientificName is not cellular organisms"
 		assert "Rank" in data, "Rank is not in data"

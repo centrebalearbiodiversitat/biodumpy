@@ -20,3 +20,5 @@ list*
 /htmlcov
 /biodumpy/data/AVONET/
 /test_results/
+/tests/.env
+/docs/source/_build/

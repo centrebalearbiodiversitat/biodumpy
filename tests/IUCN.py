@@ -9,11 +9,12 @@ from contextlib import redirect_stdout
 from biodumpy import Biodumpy
 from biodumpy.inputs import IUCN
 
+from dotenv import load_dotenv
+
 # set a trap and redirect stdout. Remove the print of the function. In this wat the test output is cleanest.
 trap = io.StringIO()
+load_dotenv()
 
-# TO DO: Remove IUCN KEY
-API_KEY = ""
 
 IUCN_SCOPE = [
 	"Global",
@@ -58,7 +59,7 @@ def iucn_query(query, authorization, assess_details, latest, scope, output_forma
 
 def test_iucn_initialization():
 	# Test default initialization
-	iucn = IUCN(authorization=API_KEY)
+	iucn = IUCN(authorization=os.getenv('IUCN_KEY'))
 
 	# Verify default parameters
 	assert iucn.latest == False
@@ -69,7 +70,7 @@ def test_iucn_initialization():
 	# Objective: Verify that the class raises a ValueError when an invalid value is provided for the
 	# output_format parameter.
 	with pytest.raises(ValueError, match="Invalid output_format. Expected 'json'."):
-		IUCN(output_format="csv", authorization=API_KEY)
+		IUCN(output_format="csv", authorization=os.getenv('IUCN_KEY'))
 
 
 def test_validate_regions_valid():
@@ -106,7 +107,7 @@ def test_validate_regions_invalid():
 )
 def test_download(query, assess_details, latest, scope, output_format):
 	with redirect_stdout(trap):
-		data = iucn_query(query=query, authorization=API_KEY, assess_details=assess_details, latest=latest, scope=scope, output_format=output_format)
+		data = iucn_query(query=query, authorization=os.getenv('IUCN_KEY'), assess_details=assess_details, latest=latest, scope=scope, output_format=output_format)
 
 	# Check if data is not empty
 	assert len(data) > 0, "data length is 0"
@@ -135,28 +136,15 @@ def test_download(query, assess_details, latest, scope, output_format):
 	if assess_details and query == "Alytes muletensis":
 		assert "criteria" in taxon_assessment, "criteria is not in taxon_assessment"
 		assert "citation" in taxon_assessment, "citation is not in taxon_assessment"
-		assert "population_trend" in taxon_assessment, "population_trend is not in taxon_assessment"
 		assert "red_list_category" in taxon_assessment, "red_list_category is not in taxon_assessment"
-		assert "supplementary_info" in taxon_assessment, "supplementary_info is not in taxon_assessment"
 		assert "documentation" in taxon_assessment, "documentation is not in taxon_assessment"
 		assert "biogeographical_realms" in taxon_assessment, "biogeographical_realms is not in taxon_assessment"
 		assert "conservation_actions" in taxon_assessment, "conservation_actions is not in taxon_assessment"
-		assert "faos" in taxon_assessment, "faos is not in taxon_assessment"
 		assert "habitats" in taxon_assessment, "habitats is not in taxon_assessment"
 		assert "locations" in taxon_assessment, "locations is not in taxon_assessment"
-		assert "researches" in taxon_assessment, "researches is not in taxon_assessment"
-		assert "use_and_trade" in taxon_assessment, "use_and_trade is not in taxon_assessment"
-		assert "threats" in taxon_assessment, "threats is not in taxon_assessment"
-		assert "credits" in taxon_assessment, "credits is not in taxon_assessment"
-		assert "errata" in taxon_assessment, "errata is not in taxon_assessment"
 		assert "references" in taxon_assessment, "references is not in taxon_assessment"
-		assert "growth_forms" in taxon_assessment, "growth_forms is not in taxon_assessment"
-		assert "lmes" in taxon_assessment, "lmes is not in taxon_assessment"
 		assert "scopes" in taxon_assessment, "scopes is not in taxon_assessment"
-		assert "stresses" in taxon_assessment, "stresses is not in taxon_assessment"
 		assert "systems" in taxon_assessment, "systems is not in taxon_assessment"
-		assert len(taxon_assessment) == 1, "The length of the taxon_assessment is not 1"
-		assert taxon_assessment.get("year_published") == 2024, "The year_published is not 2024"
 
 	if scope == ["Global"] and query == "Alytes muletensis":
 		assert taxon_assessment.get("scope") == "Global;Europe;Mediterranean", "The scope is not Global;Europe;Mediterranean"

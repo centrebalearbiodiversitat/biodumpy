@@ -67,6 +67,9 @@ class IUCN(Input):
 		if self.output_format != "json":
 			raise ValueError("Invalid output_format. Expected 'json'.")
 
+		if self.authorization is None:
+			raise ValueError("To use the IUCN module, please insert your API key. More information can be found at: https://api.iucnredlist.org/")
+
 		for scope in self.scope:
 			if scope not in iucn_scope:
 				raise ValueError(f"Choose an IUCN scope from the following options: {iucn_scope}.")
