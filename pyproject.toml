@@ -1,8 +1,38 @@
-[build-system]
-requires = ["setuptools>=61.0.0", "wheel"]
-build-backend = "setuptools.build_meta"
+[project]
+name = "biodumpy"
+version = "0.1.9"
+description = "A Comprehensive Biological Data Downloader."
+authors = [
+    {name = "Tomas Golomb",email = "tomas.golomb@uib.cat"},
+    {name = "Tommaso Cancellario",email = "tommaso.cancellario@gmail.com"}
+]
+license = "GPL-3.0-or-later"
+license-files = [
+    "LICENSE"
+]
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "biopython >=1.84,<2.0",
+    "numpy >=1.26.4,<2.0",
+    "tqdm >=4.66.4,<5.0",
+    "requests >=2.32.3,<3.0",
+    "pandas >=2.2.2,<3.0",
+    "beautifulsoup4 >=4.12.3,<5.0"
+]
+
+[dependency-groups]
+dev = [
+    "pytest >=8.3.2,<9.0",
+    "coverage >=7.6.3,<8.0",
+    "pytest-cov >=5.0.0,<6.0"
+]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 python_files = ["*.py"]
 python_functions = ["test_*"]
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
