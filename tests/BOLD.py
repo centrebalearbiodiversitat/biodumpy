@@ -82,14 +82,12 @@ def test_download(query, summary, output_format):
 		assert "collection_event" in data, "collection_event is not in data"
 		assert "sequences" in data, "sequences is not in data"
 
-
 	if summary and output_format != "fasta":
 		# Check the summary structure
 		assert "record_id" in data[0], "record_id is not in data"
 		assert "processid" in data[0], "processid is not in data"
 		assert "bin_uri" in data[0], "bin_uri is not in data"
 		assert "taxon" in data[0], "taxon is not in data"
-
 
 	if summary is False and output_format == "fasta":
 		# Check if the fasta file starts with >

@@ -62,7 +62,6 @@ def test_download(query, summary):
 	# Check the main structure of the JSON file
 	data = data[0]
 
-
 	if summary:
 		assert "publisher" in data, "publisher is not in data"
 		assert "DOI" in data, "DOI is not in data"

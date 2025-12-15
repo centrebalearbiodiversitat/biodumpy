@@ -43,7 +43,7 @@ def test_gbif_initialization():
 	gbif = GBIF()
 
 	# Verify default parameters
-	assert gbif.dataset_key == os.getenv('GBIF_KEY')
+	assert gbif.dataset_key == os.getenv("GBIF_KEY")
 	assert gbif.limit == 20
 	assert gbif.accepted == True
 	assert gbif.occ == False
@@ -64,7 +64,7 @@ def test_gbif_initialization():
 )
 def test_download(query, accepted_only, occ, geometry):
 	with redirect_stdout(trap):
-		data = gbif_query(query=query, accepted_only=accepted_only, occ=occ, geometry=geometry, dataset_key=os.getenv('GBIF_KEY'))
+		data = gbif_query(query=query, accepted_only=accepted_only, occ=occ, geometry=geometry, dataset_key=os.getenv("GBIF_KEY"))
 
 	# Check if data is not empty
 	assert len(data) > 0, "data length is 0"
