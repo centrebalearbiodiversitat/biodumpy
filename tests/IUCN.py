@@ -9,11 +9,9 @@ from contextlib import redirect_stdout
 from biodumpy import Biodumpy
 from biodumpy.inputs import IUCN
 
-from dotenv import load_dotenv
 
 # set a trap and redirect stdout. Remove the print of the function. In this wat the test output is cleanest.
 trap = io.StringIO()
-load_dotenv()
 
 
 IUCN_SCOPE = [

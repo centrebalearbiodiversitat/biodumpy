@@ -9,11 +9,9 @@ from contextlib import redirect_stdout
 from biodumpy import Biodumpy
 from biodumpy.inputs import GBIF
 
-from dotenv import load_dotenv
 
 # set a trap and redirect stdout. Remove the print of the function. In this wat the test output is cleanest.
 trap = io.StringIO()
-load_dotenv()
 
 
 def gbif_query(query, accepted_only, occ, geometry, dataset_key, dir_module="GBIF"):
