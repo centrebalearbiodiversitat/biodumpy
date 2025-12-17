@@ -4,6 +4,37 @@ All notable changes to this project will be documented in this file 🐔.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.1.9] - 18-12-2025
+
+### Added
+- Automated testing using GitHub Actions on the dev branch (OS: Ubuntu; Python 3.10 and 3.14)
+- Automated testing using GitHub Actions on the main branch (OS: Ubuntu, macOS, Windows; Python versions 3.10–3.14)
+
+### Changed
+- Updated license (from MIT to GPL-3.0)
+- Switched to Poetry for dependency management
+- Updated COL docu
+
+### Fix
+- Simplified tests
+
+---
+
+## [0.1.8] - 24-10-2025
+
+### Added
+- Updated ZooBank module
+- Improved NCBI loading bar
+
+### Changed
+- Minor improvements to module tests
+- Updated ZooBank documentation
+
+### Fix
+- Tests
+- Citation file
+- Requirements
+
 ---
 
 ## [0.1.7] - Unreleased
