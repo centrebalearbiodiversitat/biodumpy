@@ -1,4 +1,4 @@
-name: Tests
+name: Dev Tests
 
 on:
   push:
@@ -9,13 +9,13 @@ on:
       - dev
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
+  dev_tests:
+    runs-on: ${{ matrix.os }}
     strategy:
+      max-parallel: 1
       matrix:
-        python-version: ["3.11", "3.12", "3.13", "3.14"]
-    env:
-      IUCN_API_KEY: ${{ secrets.IUCN_API_KEY }}
+        os: [ubuntu-latest]
+        python-version: ["3.10", "3.14"]
     steps:
     - uses: actions/checkout@v4
 
@@ -45,4 +45,8 @@ jobs:
       run: poetry install --no-interaction --with dev
 
     - name: Run tests
+      env:
+        IUCN_API_KEY: ${{ secrets.IUCN_API_KEY }}
+        COL_DATASET_KEY: ${{ env.COL_DATASET_KEY }}
+        GBIF_DATASET_KEY: ${{ env.GBIF_DATASET_KEY }}
       run: poetry run pytest
