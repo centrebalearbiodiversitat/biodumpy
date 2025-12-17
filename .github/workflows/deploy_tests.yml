@@ -16,6 +16,11 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
         python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
+
+    defaults:
+      run:
+        shell: bash
+
     steps:
     - uses: actions/checkout@v4
 
@@ -47,6 +52,4 @@ jobs:
     - name: Run tests
       env:
         IUCN_API_KEY: ${{ secrets.IUCN_API_KEY }}
-        COL_DATASET_KEY: ${{ vars.COL_DATASET_KEY }}
-        GBIF_DATASET_KEY: ${{ vars.GBIF_DATASET_KEY }}
       run: poetry run pytest
