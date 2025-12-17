@@ -47,6 +47,6 @@ jobs:
     - name: Run tests
       env:
         IUCN_API_KEY: ${{ secrets.IUCN_API_KEY }}
-        COL_DATASET_KEY: ${{ env.COL_DATASET_KEY }}
-        GBIF_DATASET_KEY: ${{ env.GBIF_DATASET_KEY }}
+        COL_DATASET_KEY: ${{ vars.COL_DATASET_KEY }}
+        GBIF_DATASET_KEY: ${{ vars.GBIF_DATASET_KEY }}
       run: poetry run pytest
