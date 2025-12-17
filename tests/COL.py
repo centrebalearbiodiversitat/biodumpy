@@ -9,11 +9,9 @@ from contextlib import redirect_stdout
 from biodumpy import Biodumpy
 from biodumpy.inputs import COL
 
-from dotenv import load_dotenv
 
 # set a trap and redirect stdout. Remove the print of the function. In this wat the test output is cleanest.
 trap = io.StringIO()
-load_dotenv()
 
 
 # Remember to check the latest dataset_key
@@ -41,7 +39,8 @@ def col_query(query, check_syn, dataset_key, dir_module="COL"):
 
 def test_col_initialization():
 	# Test default initialization
-	col = COL(dataset_key=os.getenv("COL_KEY"))
+	col = COL(dataset_key=os.environ.get("COL_DATASET_KEY"))
+	# col = COL(dataset_key=os.getenv("COL_DATASET_KEY"))
 
 	assert col.output_format == "json"
 	assert col.sleep == 3
@@ -56,7 +55,7 @@ def test_col_initialization():
 
 
 # ⚠️ Remember to check the ChecklistBank fo COL
-@pytest.mark.parametrize("query, check_syn, dataset_key", [(["Bufo roseus"], True, os.getenv("COL_KEY")), (["Bufo roseus"], False, os.getenv("COL_KEY"))])
+@pytest.mark.parametrize("query, check_syn, dataset_key", [(["Bufo roseus"], True, os.environ.get("COL_DATASET_KEY")), (["Bufo roseus"], False, os.environ.get("COL_DATASET_KEY"))])
 def test_download(query, check_syn, dataset_key):
 	with redirect_stdout(trap):
 		data = col_query(query=query, check_syn=check_syn, dataset_key=dataset_key)

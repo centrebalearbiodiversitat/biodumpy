@@ -59,7 +59,7 @@ def iucn_query(query, authorization, assess_details, latest, scope, output_forma
 
 def test_iucn_initialization():
 	# Test default initialization
-	iucn = IUCN(authorization=os.getenv("IUCN_KEY"))
+	iucn = IUCN(authorization=os.getenv("IUCN_API_KEY"))
 
 	# Verify default parameters
 	assert iucn.latest == False
@@ -70,7 +70,7 @@ def test_iucn_initialization():
 	# Objective: Verify that the class raises a ValueError when an invalid value is provided for the
 	# output_format parameter.
 	with pytest.raises(ValueError, match="Invalid output_format. Expected 'json'."):
-		IUCN(output_format="csv", authorization=os.getenv("IUCN_KEY"))
+		IUCN(output_format="csv", authorization=os.getenv("IUCN_API_KEY"))
 
 
 def test_validate_regions_valid():
@@ -107,7 +107,7 @@ def test_validate_regions_invalid():
 )
 def test_download(query, assess_details, latest, scope, output_format):
 	with redirect_stdout(trap):
-		data = iucn_query(query=query, authorization=os.getenv("IUCN_KEY"), assess_details=assess_details, latest=latest, scope=scope, output_format=output_format)
+		data = iucn_query(query=query, authorization=os.getenv("IUCN_API_KEY"), assess_details=assess_details, latest=latest, scope=scope, output_format=output_format)
 
 	# Check if data is not empty
 	assert len(data) > 0, "data length is 0"
