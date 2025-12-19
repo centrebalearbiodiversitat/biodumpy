@@ -49,7 +49,7 @@ Contribution
 License
 -------
 
-``biodumpy`` is licensed under the MIT License for its software components. Additionally, any creative works associated with this project—such as documentation, visual assets, or other non-code materials—are licensed under the Creative Commons Attribution (CC BY 4.0) license. See the `LICENSE`_ file for full details.
+``biodumpy`` is licensed under the **GNU AGPLv3** License for its software components. Additionally, any creative works associated with this project—such as documentation, visual assets, or other non-code materials—are licensed under the Creative Commons Attribution (CC BY 4.0) license. See the `LICENSE`_ file for full details.
 
 .. _`LICENSE`: https://github.com/centrebalearbiodiversitat/biodumpy/blob/master/LICENSE
 
