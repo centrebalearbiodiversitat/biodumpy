@@ -30,24 +30,6 @@ Available at: [biopython](https://pypi.org/project/biopython/).
 **Citation**: Chapman, B., Chang, J.: Biopython: Python tools for computational biology. ACM SIGBIO Newslett. 2000, 20: 15-19. 10.1145/360262.360268.
 
 ---
-`numpy`
-
-**Harris et al.** - *numpy* - Version 1.26.4, 2024. 
-
-Available at: [numpy](https://pypi.org/project/numpy/1.26.4/).
-
-**Citation**: Harris, C.R., Millman, K.J., van der Walt, S.J. et al. Array programming with NumPy. Nature 585, 357–362 (2020). https://doi.org/10.1038/s41586-020-2649-2
-
----
-`pandas`
-
-**The Pandas Development Team** - *pandas* - Version 2.2.2, 2024. 
-
-Available at: [pandas](https://pypi.org/project/pandas/).
-
-**Citation**: The pandas development team. (2024). pandas-dev/pandas: Pandas (v2.2.3). Zenodo. https://doi.org/10.5281/zenodo.13819579
-
----
 `pytest`
 
 **Richardson, L.** - *pytest* - Version 8.3.3, 2024. 
