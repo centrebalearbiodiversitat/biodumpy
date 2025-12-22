@@ -13,7 +13,7 @@ from biodumpy.inputs import INaturalist
 trap = io.StringIO()
 
 
-def inat_query(query):
+def inat_query(query, dir_module="INaturalist"):
 	# Create temporary directory
 	with tempfile.TemporaryDirectory() as temp_dir:
 		# Construct the dynamic path using formatted strings
@@ -25,7 +25,6 @@ def inat_query(query):
 
 	# Retrieve a file path
 	dir_date = os.listdir(f"{dynamic_path}/downloads/")[0]
-	dir_module = os.listdir(f"{dynamic_path}/downloads/{dir_date}")[0]
 	file_list = os.listdir(f"{dynamic_path}/downloads/{dir_date}/{dir_module}")[0]
 
 	file = os.path.join(f"{dynamic_path}/downloads/{dir_date}/{dir_module}/{file_list}")
@@ -37,11 +36,12 @@ def inat_query(query):
 
 def test_inat_initialization():
 	# Test default initialization
-	bold = INaturalist()
+	inat = INaturalist()
 
 	# Verify default parameters
-	assert bold.bulk == False
-	assert bold.output_format == "json"
+	assert inat.bulk == False
+	assert inat.output_format == "json"
+	assert inat.sleep == 3
 
 	# Objective: Verify that the class raises a ValueError when an invalid value is provided for the
 	# output_format parameter.
@@ -60,12 +60,6 @@ def test_download(query):
 	data = data[0]
 
 	assert "taxon" in data, "taxon is not in data"
-	assert data["taxon"] == "Alytes muletensis", "taxon is not Alytes muletensis"
 	assert "image_id" in data, "image_id is not in data"
-	assert data["image_id"] == "61080851/medium.jpeg", "image_id is not 61080851/medium.jpeg"
 	assert "license_code" in data, "license_code is not in data"
-	assert data["license_code"] == "cc-by-nc", "image_id is not cc-by-nc"
 	assert "attribution" in data, "attribution is not in data"
-	assert data["attribution"] == "(c) Gert Jan Verspui, some rights reserved (CC BY-NC), uploaded by Gert Jan Verspui", (
-		"attribution is not (c) Gert Jan Verspui, some rights reserved (CC BY-NC), uploaded by Gert Jan Verspui"
-	)

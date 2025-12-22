@@ -1,0 +1,62 @@
+name: Dev Tests
+
+on:
+  push:
+    branches:
+      - dev
+    paths:
+      - '**.py'
+      - 'poetry.lock'
+      - 'pyproject.toml'
+      - '.github/workflows/*.yml'
+  pull_request:
+    branches:
+      - dev
+    paths:
+      - '**.py'
+      - 'poetry.lock'
+      - 'pyproject.toml'
+      - '.github/workflows/*.yml'
+
+jobs:
+  dev_tests:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      max-parallel: 1
+      matrix:
+        os: [ubuntu-latest]
+        python-version: ["3.10", "3.14"]
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install Poetry
+      uses: snok/install-poetry@v1
+      with:
+        virtualenvs-create: true
+        virtualenvs-in-project: true
+
+    - name: Load cached venv
+      id: cached-poetry-dependencies
+      uses: actions/cache@v3
+      with:
+        path: .venv
+        key: venv-${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('**/poetry.lock') }}
+
+    - name: Install dependencies
+      if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+      run: poetry install --no-interaction --no-root
+
+    - name: Install project
+      run: poetry install --no-interaction --with dev
+
+    - name: Run tests
+      env:
+        IUCN_API_KEY: ${{ secrets.IUCN_API_KEY }}
+        COL_DATASET_KEY: ${{ vars.COL_DATASET_KEY }}
+        GBIF_DATASET_KEY: ${{ vars.GBIF_DATASET_KEY }}
+      run: poetry run pytest

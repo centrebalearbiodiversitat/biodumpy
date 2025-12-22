@@ -1,7 +1,7 @@
 # Citation for Biodumpy
 If you use `biodumpy` in your research, please cite it as follows:
 
-**Cancellario T., Golomb T., Roldán A., Far, A.** `biodumpy`, Version 0.1.4, 2024.
+**Cancellario, T., Golomb Durán, T., Far, A. J., Roldán, A., & Capa, M. (2025). biodumpy: A Comprehensive Biological Data Downloader. bioRxiv, 2025-07.**
 Available at: [biodumpy](https://pypi.org/project/biodumpy/).
 
 ## Description
@@ -30,33 +30,6 @@ Available at: [biopython](https://pypi.org/project/biopython/).
 **Citation**: Chapman, B., Chang, J.: Biopython: Python tools for computational biology. ACM SIGBIO Newslett. 2000, 20: 15-19. 10.1145/360262.360268.
 
 ---
-`lxml`
-
-**lxml dev team** - *lxml* - Version 5.2.2, 2024. 
-
-Available at: [lxml](https://pypi.org/project/lxml/).
-
-**Citation**: -
-
----
-`numpy`
-
-**Harris et al.** - *numpy* - Version 1.26.4, 2024. 
-
-Available at: [numpy](https://pypi.org/project/numpy/1.26.4/).
-
-**Citation**: Harris, C.R., Millman, K.J., van der Walt, S.J. et al. Array programming with NumPy. Nature 585, 357–362 (2020). https://doi.org/10.1038/s41586-020-2649-2
-
----
-`pandas`
-
-**The Pandas Development Team** - *pandas* - Version 2.2.2, 2024. 
-
-Available at: [pandas](https://pypi.org/project/pandas/).
-
-**Citation**: The pandas development team. (2024). pandas-dev/pandas: Pandas (v2.2.3). Zenodo. https://doi.org/10.5281/zenodo.13819579
-
----
 `pytest`
 
 **Richardson, L.** - *pytest* - Version 8.3.3, 2024. 
@@ -80,15 +53,6 @@ Available at: [Python](https://www.python.org/).
 **Reitz, K. et al.** - *requests* - Version 2.32.3, 2024. 
 
 Available at: [requests](https://pypi.org/project/requests/).
-
-**Citation**: -
-
----
-`selenium`
-
-**Muthukadan, B.** - *selenium* - Version 4.23.0, 2024. 
-
-Available at: [selenium](https://pypi.org/project/selenium/).
 
 **Citation**: -
 
