@@ -1,4 +1,5 @@
 import requests
+from urllib.parse import quote
 
 from biodumpy import Input, BiodumpyException
 
@@ -44,76 +45,113 @@ class BOLD(Input):
 	def __init__(self, summary: bool = False, **kwargs):
 		super().__init__(**kwargs)
 		self.summary = summary
-		# self.fasta = fasta
-
-		# if self.fasta and output_format != "fasta":
-		# 	raise ValueError("Invalid output_format. Expected fasta.")
 
 		if self.output_format not in {"json", "fasta"}:
 			raise ValueError('Invalid output_format. Expected "json" or "fasta".')
-
+		
+		if self.summary and self.output_format == "fasta":
+					raise BiodumpyException("Invalid parameter combination: output_format='fasta' cannot be used when summary=True.")
+		
 	def _download(self, query, **kwargs) -> list:
-		# if self.fasta:
-		if self.output_format == "fasta":
-			response = requests.get(f"http://v4.boldsystems.org/index.php/API_Public/sequence?taxon={query}")
 
-			if response.status_code != 200:
-				raise BiodumpyException(f"Fasta sequence request. Error {response.status_code}")
+		# First query to match the string with BOLD	
+		response_json = self._querytax(query)["successful_terms"][0]["matched"]
 
-			if response.content:
-				response = response.content
-				data_str = response.decode()
+		# Count
+		count_json = self._querycount(response_json)["records"]
 
-				# Split the data by '>'
-				fasta_entries = [f">{entry}" for entry in data_str.split(">") if entry]
+		# Generate the query to download the records
+		query_download = self._querygenerator(response_json)["query_id"]
 
-				return fasta_entries
-		else:
-			response = requests.get(f"http://v4.boldsystems.org/index.php/API_Public/combined?taxon={query}&format=json")
+		# Download the data
+		response = requests.get(f"https://portal.boldsystems.org/api/documents/{query_download}?length={count_json}&start=0")
 
-			payload = []
+		if response.status_code != 200:
+			raise BiodumpyException(f"Download BOLD. Error {response.status_code}")
 
-			if response.status_code != 200:
-				raise BiodumpyException(f"Combined data request. Error {response.status_code}")
+		if response.content:
+			res = response.json()["data"]
+			payload = res
 
-			if response.content:
-				results = response.json()
-				if self.summary:
-					results_summary = results.get("bold_records", {}).get("records", [])
-					for entry in results_summary:
-						entry_summary = results_summary[entry]
+			# Fasta file
+			if self.output_format == "fasta":
+				fasta_entries = []
 
-						# Extract the necessary fields with default None values if keys are missing.
-						# Sequence could contain more than one marker code.
-						sequences = entry_summary.get("sequences", {}).get("sequence", [])
-						markercodes = [seq.get("markercode") for seq in sequences if "markercode" in seq]
-						genbank_accession = [seq.get("genbank_accession") for seq in sequences if "genbank_accession" in seq]
-
-						# Retrieve taxonomy
-						taxonomy = entry_summary.get("taxonomy", {})
-						taxon_name = taxonomy.get(list(taxonomy.keys())[-1], {}).get("taxon", {}).get("name")
-
-						# Retrieve collection event metadata
-						collection_event = entry_summary.get("collection_event", {})
-						coordinates = collection_event.get("coordinates", {})
-
-						payload.append(
-							{
-								"record_id": entry_summary.get("record_id"),
-								"processid": entry_summary.get("processid"),
-								"bin_uri": entry_summary.get("bin_uri"),
-								"taxon": taxon_name,
-								"country": collection_event.get("country"),
-								"province_state": collection_event.get("province_state"),
-								"region": collection_event.get("region"),
-								"lat": coordinates.get("lat") if coordinates else None,
-								"lon": coordinates.get("lon") if coordinates else None,
-								"markercode": "/".join(markercodes) if markercodes else None,
-								"genbank_accession": genbank_accession[0] if genbank_accession else None,
-							}
+				for entry in res:
+					if entry.get("nuc"):
+						header = (
+							f">{entry.get('processid')}|"
+							f"{entry.get('identification')}|"
+							f"{entry.get('marker_code')}"
 						)
-				else:
-					res = results["bold_records"]["records"] if "bold_records" in results and "records" in results["bold_records"] else []
-					payload = list(res.values())
 
-			return payload
+						fasta_entries.append(header)
+						fasta_entries.append(entry["nuc"])
+
+				payload = fasta_entries
+
+			# Summary
+			if self.summary:
+				summary_entries = []
+
+				for entry in res:
+					summary_entries.append({
+						"processid": entry.get("processid", None),
+						"sampleid": entry.get("sampleid", None),
+						"insdc_acs": entry.get("insdc_acs", None),
+						"bin_uri": entry.get("bin_uri", None),
+						"collection_date_start": entry.get("collection_date_start", None),
+						"coord": entry.get("coord", None),
+						"country_ocean": entry.get("country/ocean", None),
+						"identified_by": entry.get("identified_by", None),
+						"inst": entry.get("inst", None),
+						"marker_code": entry.get("marker_code", None),
+						"sequence_run_site": entry.get("sequence_run_site", None),
+						"sequence_upload_date": entry.get("sequence_upload_date", None),
+						"species": entry.get("species", None),
+						"identification": entry.get("identification", None),
+						"specimens": entry.get("specimens", None)
+					})
+				
+				payload = summary_entries
+
+		return payload
+
+		
+
+	def _querytax(self, query):
+
+		encoded = quote(query, safe="")
+
+		response = requests.get(f"https://portal.boldsystems.org/api/query/preprocessor?query=tax:{encoded}")
+		
+		if response.status_code != 200:
+						raise BiodumpyException(f"Query tax. Error {response.status_code}")
+
+		response_json = response.json()
+
+		return response_json
+	
+	def _querycount(self, query):
+
+		encoded = quote(query, safe="")
+		response = requests.get(f"https://portal.boldsystems.org/api/counts?query={encoded}")
+
+		if response.status_code != 200:
+						raise BiodumpyException(f"Query count. Error {response.status_code}")
+
+		response_json = response.json()
+
+		return response_json
+	
+	def _querygenerator(self, query):
+
+		encoded = quote(query, safe="")
+		response = requests.get(f"https://portal.boldsystems.org/api/query?query={encoded}&extent=full")
+
+		if response.status_code != 200:
+						raise BiodumpyException(f"Query generator. Error {response.status_code}")
+
+		response_json = response.json()
+
+		return response_json

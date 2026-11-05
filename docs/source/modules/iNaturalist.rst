@@ -64,7 +64,7 @@ In this example, we download the information from iNaturalist setting the parame
     bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}')
 
 
-To view the photo, users can append the 'image_id' value at the end of the following link: https://inaturalist-open-data.s3.amazonaws.com/photos/ . For example: https://inaturalist-open-data.s3.amazonaws.com/photos/34826202/medium.jpg
+To view the photo, users can append the 'image_id' value at the end of the following link: https://inaturalist-open-data.s3.amazonaws.com/photos/ . For example: https://inaturalist-open-data.s3.amazonaws.com/photos/34826202/medium.jpg .
 
 Photos can only be downloaded if they have one of the valid licenses listed below. If an iNaturalist photo has a license other than those specified, it cannot be downloaded.
 Please carefully check the photo's license before using it.
