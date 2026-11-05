@@ -55,10 +55,6 @@ The previous method downloads the entire set of data for each record from Crossr
 - **author**: The names of the authors who contributed to the research along with their main academic information.
 - **abstract**: The publication abstract (if available).
 
-Example of data filtering
--------------------------
-
-
 Reference link/s
 ----------------
 

@@ -1,7 +1,7 @@
 # Citation for Biodumpy
 If you use `biodumpy` in your research, please cite it as follows:
 
-**Cancellario, T., Golomb Durán, T., Far, A. J., Roldán, A., & Capa, M. (2025). biodumpy: A Comprehensive Biological Data Downloader. bioRxiv, 2025-07.**
+**Cancellario, T., Golomb Durán , T., Far, A. J., Roldán, A., & Capa, M. (2026). Biodumpy: A comprehensive biological data downloader. Biodiversity Informatics, 20(1). https://doi.org/10.17161/bi.v20i1.24725**
 Available at: [biodumpy](https://pypi.org/project/biodumpy/).
 
 ## Description

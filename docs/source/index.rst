@@ -43,7 +43,7 @@ Key Features
 Contribution
 ------------
 
-``biodumpy`` is an open-source project, and contributions are welcome! If you have ideas for new features, bug fixes, or improvements, please submit an issue or pull request on our GitHub repository or contact our support `✉️ here <mailto:t.cancellario@uib.eu?subject=biodumpy_support>`_.
+``biodumpy`` is an open-source project, and contributions are welcome! If you have ideas for new features, bug fixes, or improvements, please submit an issue or pull request on our GitHub repository or contact our support `here <mailto:tommaso.cancellario@gmail.com?subject=biodumpy_support>`_.
 
 
 License
@@ -59,6 +59,16 @@ The data retrieved and downloaded using this package is sourced from external da
 
 If you encounter any bugs or issues using the package, please contact the developers for support.
 
+
+Citation
+--------
+Please cite the following paper if you use ``biodumpy``: 
+   
+   APA: 
+      Cancellario, T., Golomb Durán , T., Far, A. J., Roldán, A., & Capa, M. (2026). Biodumpy: A comprehensive biological data downloader. Biodiversity Informatics, 20(1). https://doi.org/10.17161/bi.v20i1.24725
+
+   BibTeX: 
+      @article{Cancellario_Golomb Durán_Far_Roldán_Capa_2026, title={Biodumpy: A comprehensive biological data downloader}, volume={20}, url={https://journals.ku.edu/jbi/article/view/24725}, DOI={10.17161/bi.v20i1.24725}, abstractNote={In recent years, the expansion of public biodiversity platforms and associated datasets has greatly improved access to ecological and biological information. These resources now cover vast geographic areas, extended temporal scales, and diverse taxonomic groups, becoming essential for ecological studies by enabling more comprehensive analyses and novel hypotheses testing. Concurrently, the development of programming packages has facilitated data access and interaction, optimizing their retrieval processes. However, most existing tools are limited to specific databases, posing challenges for studies requiring smooth data integration from multiple sources. The growing availability of biodiversity records highlight the urgent need for robust tools to efficiently download, process, and analyse, ecological and biological information. To address this limitation, we introduce biodumpy, a new Python package developed for the retrieval, management, and integration of biological data from several public databases. Biodumpy provides access to up-to-date and comprehensive datasets spanning genetic, geographic, taxonomic, and bibliographic sources. It includes specialized modules for efficient data retrieval across taxonomic lists, with the possibility to process multiple modules simultaneously. By integrating diverse data sources, biodumpy enhances data acquisition, providing researchers with a powerful framework for comprehensive analyses and supporting ecological research to tackle complex environmental challenges.}, number={1}, journal={Biodiversity Informatics}, author={Cancellario, Tommaso and Golomb Durán , Tomas and Far, Antoni Josep and Roldán, Alejandro and Capa, Maria}, year={2026}, month={Mar.} }
 
 Acknowledgments
 ---------------

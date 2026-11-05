@@ -17,6 +17,7 @@
 ## Key Features
 ``biodumpy`` offers dedicated modules for each supported database, with each module featuring functions specifically designed for retrieving information from its respective source. The modules implemented so far are:
 
+- AVONET (AVONET)
 - Barcode of life data system v4 (BOLD)
 - Catalogue of life (COL)
 - Crossref
@@ -103,7 +104,7 @@ For detailed documentation and tutorials, please visit the ``biodumpy`` Read the
 ## Contribution
 ``biodumpy`` is an open-source project, and contributions are welcome! 
 If you have ideas for new features, bug fixes, or improvements, please submit an issue or pull request in our GitHub repository or contact with the support team
-[✉️ here](mailto:t.cancellario@uib.eu?subject=biodumpy_support).
+[✉️ here](mailto:tommaso.cancellario@gmail.com?subject=biodumpy_support).
 
 
 ## License

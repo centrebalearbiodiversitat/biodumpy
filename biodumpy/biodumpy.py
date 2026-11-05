@@ -4,7 +4,7 @@ from datetime import datetime
 from logging.handlers import MemoryHandler
 
 from .input import Input
-from .utils import dump, create_directory
+from .utils import dump, create_directory, is_na
 from tqdm import tqdm
 import logging
 
@@ -45,7 +45,7 @@ class Biodumpy:
 			print(
 				"\n 🐔 Please remember to cite biodumpy in your work."
 				"\n Consult the citation file to ensure proper attribution of all modules used. "
-				"\n Citation: Cancellario, T., Golomb Durán, T., Far, A. J., Roldán, A., & Capa, M. (2025). biodumpy: A Comprehensive Biological Data Downloader. bioRxiv, 2025-07. \n\n"
+				"\n Cancellario, T., Golomb Durán , T., Far, A. J., Roldán, A., & Capa, M. (2026). Biodumpy: A comprehensive biological data downloader. Biodiversity Informatics, 20(1). https://doi.org/10.17161/bi.v20i1.24725 \n\n"
 			)
 			Biodumpy.SHOW_REMINDER_CITE = False
 
@@ -65,6 +65,12 @@ class Biodumpy:
 	def start(self, elements, output_path="downloads/{date}/{module}/{name}"):
 		if not isinstance(elements, list):
 			raise ValueError("Invalid query. Expected a list of taxa to query.")
+
+		# Check if there are NAs in the element list. If NAs are present, remove them and show a message
+		if any(is_na(e) for e in elements):
+			print("Found NA values, removing them... \n"
+				  "------------------------------------")
+			elements = [e for e in elements if not is_na(e)]
 
 		current_date = datetime.now().strftime("%Y-%m-%d")
 

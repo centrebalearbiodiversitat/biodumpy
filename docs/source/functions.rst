@@ -8,6 +8,11 @@ Function
    :undoc-members:
    :show-inheritance:
 
+.. automodule:: biodumpy.inputs.AVONET
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 .. automodule:: biodumpy.inputs.BOLD
    :members:
    :undoc-members:

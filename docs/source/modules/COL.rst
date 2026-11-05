@@ -34,15 +34,16 @@ In this first example, we download the nomenclature from CoL for a list of taxa 
 
     The taxonomy list should be compiled using only the taxon names, excluding any authorship information.
 
-    A key parameter for this module is the ``dataset_key``, which specifies the COL version to use for the search. This number can be found at the bottom of the Catalogue of Life webpage under the ChecklistBank label.
+    A key parameter for this module is the ``dataset_key``, which specifies the CoL version to use for the search. This number can be found at the bottom of the `Catalogue of Life webpage`_ under the ChecklistBank label.
 
+.. _Catalogue of Life webpage: https://www.catalogueoflife.org/
 
 .. code-block:: python
 
     from biodumpy import Biodumpy
     from biodumpy.inputs import COL
 
-    # List od taxa
+    # List of taxa
     taxa = ['Alytes muletensis', 'Bufotes viridis', 'Hyla meridionalis', 'Anax imperator']
 
     # Start the download
@@ -110,7 +111,7 @@ When the parameter ``check_syn`` is set to *False*, the ``COL`` module provides 
 Retrieve nomenclature from COL - Taxon with multiple IDs
 --------------------------------------------------------
 
-Sometimes, in the CoL database, the same taxon can have multiple IDs. In such cases, the ``COL`` module allows users to select a specific ID. We recommend choosing the ID after verifying it on the CoL website. We can try this option with the species *Stollia betae*.
+Sometimes, in the CoL database, the same taxon name can have multiple IDs. In such cases, the ``COL`` module allows users to select a specific ID. We recommend choosing the ID after verifying it on the CoL website. We can try this option with the species *Stollia betae*.
 
 .. warning::
 
@@ -128,10 +129,6 @@ Sometimes, in the CoL database, the same taxon can have multiple IDs. In such ca
     # Start the download
     bdp = Biodumpy([COL(bulk=False, check_syn=True, dataset_key=313100)])
     bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}')
-
-
-Example of data filtering
--------------------------
 
 
 Reference link/s
