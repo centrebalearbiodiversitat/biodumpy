@@ -14,7 +14,7 @@ sys.path.insert(0, os.path.abspath("../../"))
 project = "biodumpy"
 copyright = "2026, Centre Balear de Biodiversitat (CBB) - Data Team"
 author = "Cancellario, T.; Golomb, T.; Roldán, A.; Far, A."
-version = "0.1.9"
+version = "0.1.10"
 
 # -- General configuration
 
