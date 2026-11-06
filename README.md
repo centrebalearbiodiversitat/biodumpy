@@ -1,4 +1,6 @@
-<img src="https://raw.githubusercontent.com/centrebalearbiodiversitat/biodumpy/refs/heads/master/docs/source/static/Biodumpy_logo.png" alt="Project Logo" width="200">
+<p align="center">
+    <img src="docs/source/static/Biodumpy_logo.png" alt="Project Logo" width="200">
+</p>
 
 # biodumpy: A Comprehensive Biological Data Downloader
 
