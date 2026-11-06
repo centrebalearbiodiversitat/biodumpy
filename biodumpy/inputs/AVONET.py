@@ -1,4 +1,5 @@
 import json
+import os
 from pathlib import Path
 import requests
 
@@ -12,6 +13,8 @@ class AVONET(Input):
 
 	Parameters
 	----------
+	data_path : str or Path, optional
+		Custom path to an AVONET JSON file. If omitted, the default plugin dataset is used.
 	output_format : str
 		Output format for the plugin data. Must be "json".
 
@@ -26,44 +29,68 @@ class AVONET(Input):
 	>>> bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}')
 	"""
 
-	def __init__(self, **kwargs):
+	DATA_URL = "https://github.com/centrebalearbiodiversitat/biodumpy/releases/download/v0.1.10/AVONET1_BirdLife_plugin.json"
+
+	_DATA_CACHE = None
+
+	def __init__(self, data_path=None, **kwargs):
 		super().__init__(**kwargs)
 
 		if self.output_format not in {"json"}:
 			raise ValueError('Invalid output_format. Expected "json".')
 
-		# Verify if into the folder plugin exist the AVONET json file
-		self.base_dir = Path.cwd()
-		json_file = self.base_dir / "biodumpy" / "data" / "plugin" / "AVONET1_BirdLife_plugin.json"
-
-		# Ensure the plugin directory exists
-		# self.json_file.parent.mkdir(parents=True, exist_ok=True)
-
-		if json_file.exists():
-			print("AVONET1_BirdLife_plugin... OK")
+		if data_path:
+			self.json_file = Path(data_path)
 		else:
-			print('Downloading AVONET1_BirdLife...')
-			response = requests.get('https://github.com/TommasoCanc/prueba_biodumpy/releases/download/AVONET/AVONET1_BirdLife_plugin.json')
+			package_dir = Path(__file__).resolve().parent.parent / "data" / "plugin"
+			try:
+				package_dir.mkdir(parents=True, exist_ok=True)
+				self.json_file = package_dir / "AVONET1_BirdLife_plugin.json"
+			except (PermissionError, OSError):
+				cache_dir = Path.home() / ".cache" / "biodumpy" / "data" / "plugin"
+				cache_dir.mkdir(parents=True, exist_ok=True)
+				self.json_file = cache_dir / "AVONET1_BirdLife_plugin.json"
+
+		# Download dataset if not cached locally
+		if not self.json_file.exists():
+			self._download_dataset()
+		else:
+			print("AVONET1_BirdLife_plugin... OK")
+
+		# Load dataset into memory once
+		if not data_path and AVONET._DATA_CACHE is not None:
+			self.data = AVONET._DATA_CACHE
+		else:
+			with open(self.json_file, "r", encoding="utf-8") as f:
+				self.data = json.load(f)
+			if not data_path:
+				AVONET._DATA_CACHE = self.data
+
+	def _download_dataset(self):
+		print("Downloading AVONET1_BirdLife...")
+		try:
+			response = requests.get(self.DATA_URL, timeout=30)
 			if response.status_code == 200:
 				data = response.json()
-				with open(f"{self.base_dir}/biodumpy/data/plugin/AVONET1_BirdLife_plugin.json", "w", encoding="utf-8") as f:
+				with open(self.json_file, "w", encoding="utf-8") as f:
 					json.dump(data, f, indent=4)
+				return
 			else:
-				print(f"Failed to download file: {response.status_code}")
-
+				raise BiodumpyException(
+					f"Failed to download AVONET dataset from {self.DATA_URL}: HTTP {response.status_code}"
+				)
+		except requests.RequestException as e:
+			raise BiodumpyException(
+				f"Failed to download AVONET dataset from {self.DATA_URL}: {str(e)}"
+			)
 
 	def _download(self, query, **kwargs) -> list:
-
 		payload = []
 
-		# Open file with trait information
-		with open(f"{self.base_dir}/biodumpy/data/plugin/AVONET1_BirdLife_plugin.json", 'r') as file:
-			avonet = json.load(file)
+		result = self.data.get(query, None)
+		if result is None:
+			raise ValueError(f"Taxon '{query}' not found in AVONET dataset.")
 
-			result = avonet.get(query, None)
-			if result is None:
-				raise ValueError()
-
-			payload.append(result)
+		payload.append(result)
 
 		return payload
