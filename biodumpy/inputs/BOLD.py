@@ -1,5 +1,7 @@
 import requests
 from urllib.parse import quote
+from requests.adapters import HTTPAdapter
+from urllib3.util import Retry
 
 from biodumpy import Input, BiodumpyException
 
@@ -54,9 +56,15 @@ class BOLD(Input):
 	>>> bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}')
 	"""
 
-	def __init__(self, summary: bool = False, **kwargs):
+	HEADERS = {
+		"User-Agent": ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"),
+		"Accept": "application/json, text/plain, */*",
+	}
+
+	def __init__(self, summary: bool = False, headers: dict = None, **kwargs):
 		super().__init__(**kwargs)
 		self.summary = summary
+		self.headers = headers if headers is not None else self.HEADERS.copy()
 
 		if self.output_format not in {"json", "fasta"}:
 			raise ValueError('Invalid output_format. Expected "json" or "fasta".')
@@ -64,11 +72,21 @@ class BOLD(Input):
 		if self.summary and self.output_format == "fasta":
 			raise BiodumpyException("Invalid parameter combination: output_format='fasta' cannot be used when summary=True.")
 
+	def _get_session(self):
+		session = requests.Session()
+		session.headers.update(self.headers)
+		retries = Retry(total=3, backoff_factor=1, status_forcelist=[429, 500, 502, 503, 504])
+		adapter = HTTPAdapter(max_retries=retries)
+		session.mount("https://", adapter)
+		session.mount("http://", adapter)
+		return session
+
 	def _download(self, query, **kwargs) -> list:
 		payload = []
+		session = self._get_session()
 
 		# 1. Match the taxon query string with BOLD
-		tax_response = self._querytax(query)
+		tax_response = self._querytax(query, session=session)
 		successful_terms = tax_response.get("successful_terms", [])
 		if not successful_terms:
 			return payload
@@ -78,20 +96,20 @@ class BOLD(Input):
 			return payload
 
 		# 2. Check record count
-		count_response = self._querycount(matched)
+		count_response = self._querycount(matched, session=session)
 		record_count = count_response.get("records", 0)
 		if record_count == 0:
 			return payload
 
 		# 3. Generate query ID to download the records
-		query_gen = self._querygenerator(matched)
+		query_gen = self._querygenerator(matched, session=session)
 		query_download = query_gen.get("query_id")
 		if not query_download:
 			return payload
 
 		# 4. Download data from BOLD Portal documents endpoint
 		try:
-			response = requests.get(f"https://portal.boldsystems.org/api/documents/{query_download}?length={record_count}&start=0", timeout=30)
+			response = session.get(f"https://portal.boldsystems.org/api/documents/{query_download}?length={record_count}&start=0", timeout=30)
 		except requests.RequestException as e:
 			raise BiodumpyException(f"Download BOLD request failed: {str(e)}")
 
@@ -144,10 +162,11 @@ class BOLD(Input):
 
 		return payload
 
-	def _querytax(self, query):
+	def _querytax(self, query, session=None):
+		session = session or self._get_session()
 		encoded = quote(query, safe="")
 		try:
-			response = requests.get(f"https://portal.boldsystems.org/api/query/preprocessor?query=tax:{encoded}", timeout=30)
+			response = session.get(f"https://portal.boldsystems.org/api/query/preprocessor?query=tax:{encoded}", timeout=30)
 		except requests.RequestException as e:
 			raise BiodumpyException(f"Query tax failed: {str(e)}")
 
@@ -156,10 +175,11 @@ class BOLD(Input):
 
 		return response.json()
 
-	def _querycount(self, query):
+	def _querycount(self, query, session=None):
+		session = session or self._get_session()
 		encoded = quote(query, safe="")
 		try:
-			response = requests.get(f"https://portal.boldsystems.org/api/counts?query={encoded}", timeout=30)
+			response = session.get(f"https://portal.boldsystems.org/api/counts?query={encoded}", timeout=30)
 		except requests.RequestException as e:
 			raise BiodumpyException(f"Query count failed: {str(e)}")
 
@@ -168,10 +188,11 @@ class BOLD(Input):
 
 		return response.json()
 
-	def _querygenerator(self, query):
+	def _querygenerator(self, query, session=None):
+		session = session or self._get_session()
 		encoded = quote(query, safe="")
 		try:
-			response = requests.get(f"https://portal.boldsystems.org/api/query?query={encoded}&extent=full", timeout=30)
+			response = session.get(f"https://portal.boldsystems.org/api/query?query={encoded}&extent=full", timeout=30)
 		except requests.RequestException as e:
 			raise BiodumpyException(f"Query generator failed: {str(e)}")
 
