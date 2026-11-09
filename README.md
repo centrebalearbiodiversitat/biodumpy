@@ -20,7 +20,7 @@
 ``biodumpy`` offers dedicated modules for each supported database, with each module featuring functions specifically designed for retrieving information from its respective source. The modules implemented so far are:
 
 - AVONET (AVONET)
-- Barcode of life data system v4 (BOLD)
+- Barcode of life data system (BOLD)
 - Catalogue of life (COL)
 - Crossref
 - Global biodiversity information facility (GBIF)

@@ -1,7 +1,7 @@
 # Citation for Biodumpy
 If you use `biodumpy` in your research, please cite it as follows:
 
-**Cancellario, T., Golomb Durán , T., Far, A. J., Roldán, A., & Capa, M. (2026). Biodumpy: A comprehensive biological data downloader. Biodiversity Informatics, 20(1). https://doi.org/10.17161/bi.v20i1.24725**
+**Cancellario, T., Golomb Durán, T., Far, A. J., Roldán, A., & Capa, M. (2026). Biodumpy: A comprehensive biological data downloader. Biodiversity Informatics, 20(1). https://doi.org/10.17161/bi.v20i1.24725**
 Available at: [biodumpy](https://pypi.org/project/biodumpy/).
 
 ## Description
@@ -69,6 +69,15 @@ Available at: [tqdm](https://pypi.org/project/tqdm/).
 
 # Citations for API Used
 If you use `biodumpy`, please also consider citing the following API sources for each module utilized:
+
+---
+**AVONET**
+
+**Tobias et al.**
+
+Available at: [AVONET](https://doi.org/10.1111/ele.13898).
+
+**Citation**: Tobias, J. A., Sheard, C., Pigot, A. L., Devenish, A. J., Yang, J., Sayol, F., ... & Schleuning, M. (2022). AVONET: morphological, ecological and geographical data for all birds. *Ecology Letters*, 25(3), 581-597. https://doi.org/10.1111/ele.13898
 
 ---
 **Barcode of life data system (BOLD)**

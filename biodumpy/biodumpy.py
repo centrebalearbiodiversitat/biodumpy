@@ -45,7 +45,7 @@ class Biodumpy:
 			print(
 				"\n 🐔 Please remember to cite biodumpy in your work."
 				"\n Consult the citation file to ensure proper attribution of all modules used. "
-				"\n Cancellario, T., Golomb Durán , T., Far, A. J., Roldán, A., & Capa, M. (2026). Biodumpy: A comprehensive biological data downloader. Biodiversity Informatics, 20(1). https://doi.org/10.17161/bi.v20i1.24725 \n\n"
+				"\n Cancellario, T., Golomb Durán, T., Far, A. J., Roldán, A., & Capa, M. (2026). Biodumpy: A comprehensive biological data downloader. Biodiversity Informatics, 20(1). https://doi.org/10.17161/bi.v20i1.24725 \n\n"
 			)
 			Biodumpy.SHOW_REMINDER_CITE = False
 
