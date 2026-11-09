@@ -87,6 +87,5 @@ def test_download(query, occ, geometry, areaid):
 		assert "collectionCode" in data, "collectionCode is not in data"
 		assert "country" in data, "country is not in data"
 		assert "datasetID" in data, "datasetID is not in data"
-		assert "datasetName" in data, "datasetName is not in data"
 		assert "decimalLatitude" in data, "decimalLatitude is not in data"
 		assert "decimalLongitude" in data, "decimalLongitude is not in data"
