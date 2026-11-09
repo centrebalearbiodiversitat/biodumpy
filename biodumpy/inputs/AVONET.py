@@ -76,13 +76,9 @@ class AVONET(Input):
 					json.dump(data, f, indent=4)
 				return
 			else:
-				raise BiodumpyException(
-					f"Failed to download AVONET dataset from {self.DATA_URL}: HTTP {response.status_code}"
-				)
+				raise BiodumpyException(f"Failed to download AVONET dataset from {self.DATA_URL}: HTTP {response.status_code}")
 		except requests.RequestException as e:
-			raise BiodumpyException(
-				f"Failed to download AVONET dataset from {self.DATA_URL}: {str(e)}"
-			)
+			raise BiodumpyException(f"Failed to download AVONET dataset from {self.DATA_URL}: {str(e)}")
 
 	def _download(self, query, **kwargs) -> list:
 		payload = []

@@ -58,45 +58,41 @@ In detail, we described:
 **Example N.1**
 
 ``` python
+# Import biodumpy package
+from biodumpy import Biodumpy
 
-    # Import biodumpy package
-    from biodumpy import Biodumpy
+# Import GBIF module
+from biodumpy.inputs import GBIF
 
-    # Import GBIF module
-    from biodumpy.inputs import GBIF
+# Create a list of taxa
+taxa = ["Alytes muletensis (Sanchíz & Adrover, 1979)", "Bufotes viridis (Laurenti, 1768)", "Hyla meridionalis Boettger, 1874", "Anax imperator Leach, 1815"]
 
-    # Create a list of taxa
-    taxa = ['Alytes muletensis (Sanchíz & Adrover, 1979)', 'Bufotes viridis (Laurenti, 1768)',
-            'Hyla meridionalis Boettger, 1874', 'Anax imperator Leach, 1815']
+# Set the Biodumpy function with the specific parameters
+bdp = Biodumpy([GBIF(sleep=3, bulk=False, accepted_only=True)])
 
-    # Set the Biodumpy function with the specific parameters
-    bdp = Biodumpy([GBIF(sleep=3, bulk=False, accepted_only=True)])
-
-    # Start the download
-    bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}')
+# Start the download
+bdp.start(taxa, output_path="./downloads/{date}/{module}/{name}")
 ```
 
 **Example N.2**
 
 ``` python
+# Import biodumpy package
+from biodumpy import Biodumpy
 
-    # Import biodumpy package
-    from biodumpy import Biodumpy
+# Import GBIF and IUCN modules
+from biodumpy.inputs import GBIF, IUCN
 
-    # Import GBIF and IUCN modules
-    from biodumpy.inputs import GBIF, IUCN
+api_key = "YOUR_IUCN_API_KEY"
 
-    api_key = 'YOUR_IUCN_API_KEY'
+# Create a list of taxa
+taxa = ["Alytes muletensis", "Bufotes viridis", "Hyla meridionalis", "Anax imperator"]
 
-    # Create a list of taxa
-    taxa = ['Alytes muletensis', 'Bufotes viridis', 'Hyla meridionalis', 'Anax imperator']
+# Set the Biodumpy functions with the specific parameters
+bdp = Biodumpy([GBIF(bulk=False, accepted_only=True), IUCN(api_key=api_key, bulk=True, region=["Global"])])
 
-    # Set the Biodumpy functions with the specific parameters
-    bdp = Biodumpy([GBIF(bulk=False, accepted_only=True),
-                    IUCN(api_key=api_key, bulk=True, region=['Global'])])
-
-    # Start the download
-    bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}')
+# Start the download
+bdp.start(taxa, output_path="./downloads/{date}/{module}/{name}")
 ```
 
 ## Documentation and Support

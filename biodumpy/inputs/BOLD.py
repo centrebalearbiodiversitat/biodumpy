@@ -91,10 +91,7 @@ class BOLD(Input):
 
 		# 4. Download data from BOLD Portal documents endpoint
 		try:
-			response = requests.get(
-				f"https://portal.boldsystems.org/api/documents/{query_download}?length={record_count}&start=0",
-				timeout=30
-			)
+			response = requests.get(f"https://portal.boldsystems.org/api/documents/{query_download}?length={record_count}&start=0", timeout=30)
 		except requests.RequestException as e:
 			raise BiodumpyException(f"Download BOLD request failed: {str(e)}")
 
@@ -111,11 +108,7 @@ class BOLD(Input):
 				fasta_entries = []
 				for entry in res:
 					if entry.get("nuc"):
-						header = (
-							f">{entry.get('processid')}|"
-							f"{entry.get('identification')}|"
-							f"{entry.get('marker_code')}"
-						)
+						header = f">{entry.get('processid')}|{entry.get('identification')}|{entry.get('marker_code')}"
 						fasta_entries.append(header)
 						fasta_entries.append(entry["nuc"])
 				payload = fasta_entries
@@ -124,27 +117,29 @@ class BOLD(Input):
 			elif self.summary:
 				summary_entries = []
 				for entry in res:
-					summary_entries.append({
-						"record_id": entry.get("record_id", None),
-						"processid": entry.get("processid", None),
-						"sampleid": entry.get("sampleid", None),
-						"insdc_acs": entry.get("insdc_acs", None),
-						"bin_uri": entry.get("bin_uri", None),
-						"taxon": entry.get("species") or entry.get("identification", None),
-						"species": entry.get("species", None),
-						"identification": entry.get("identification", None),
-						"collection_date_start": entry.get("collection_date_start", None),
-						"coord": entry.get("coord", None),
-						"country_ocean": entry.get("country/ocean", None),
-						"province_state": entry.get("province/state", None),
-						"region": entry.get("region", None),
-						"identified_by": entry.get("identified_by", None),
-						"inst": entry.get("inst", None),
-						"marker_code": entry.get("marker_code", None),
-						"sequence_run_site": entry.get("sequence_run_site", None),
-						"sequence_upload_date": entry.get("sequence_upload_date", None),
-						"specimens": entry.get("specimens", None)
-					})
+					summary_entries.append(
+						{
+							"record_id": entry.get("record_id", None),
+							"processid": entry.get("processid", None),
+							"sampleid": entry.get("sampleid", None),
+							"insdc_acs": entry.get("insdc_acs", None),
+							"bin_uri": entry.get("bin_uri", None),
+							"taxon": entry.get("species") or entry.get("identification", None),
+							"species": entry.get("species", None),
+							"identification": entry.get("identification", None),
+							"collection_date_start": entry.get("collection_date_start", None),
+							"coord": entry.get("coord", None),
+							"country_ocean": entry.get("country/ocean", None),
+							"province_state": entry.get("province/state", None),
+							"region": entry.get("region", None),
+							"identified_by": entry.get("identified_by", None),
+							"inst": entry.get("inst", None),
+							"marker_code": entry.get("marker_code", None),
+							"sequence_run_site": entry.get("sequence_run_site", None),
+							"sequence_upload_date": entry.get("sequence_upload_date", None),
+							"specimens": entry.get("specimens", None),
+						}
+					)
 				payload = summary_entries
 
 		return payload
@@ -152,10 +147,7 @@ class BOLD(Input):
 	def _querytax(self, query):
 		encoded = quote(query, safe="")
 		try:
-			response = requests.get(
-				f"https://portal.boldsystems.org/api/query/preprocessor?query=tax:{encoded}",
-				timeout=30
-			)
+			response = requests.get(f"https://portal.boldsystems.org/api/query/preprocessor?query=tax:{encoded}", timeout=30)
 		except requests.RequestException as e:
 			raise BiodumpyException(f"Query tax failed: {str(e)}")
 
@@ -167,10 +159,7 @@ class BOLD(Input):
 	def _querycount(self, query):
 		encoded = quote(query, safe="")
 		try:
-			response = requests.get(
-				f"https://portal.boldsystems.org/api/counts?query={encoded}",
-				timeout=30
-			)
+			response = requests.get(f"https://portal.boldsystems.org/api/counts?query={encoded}", timeout=30)
 		except requests.RequestException as e:
 			raise BiodumpyException(f"Query count failed: {str(e)}")
 
@@ -182,10 +171,7 @@ class BOLD(Input):
 	def _querygenerator(self, query):
 		encoded = quote(query, safe="")
 		try:
-			response = requests.get(
-				f"https://portal.boldsystems.org/api/query?query={encoded}&extent=full",
-				timeout=30
-			)
+			response = requests.get(f"https://portal.boldsystems.org/api/query?query={encoded}&extent=full", timeout=30)
 		except requests.RequestException as e:
 			raise BiodumpyException(f"Query generator failed: {str(e)}")
 

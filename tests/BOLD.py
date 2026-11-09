@@ -73,7 +73,7 @@ def test_download(query, summary, output_format):
 		# Check if data is not empty
 		assert len(data) > 0, "data length is 0"
 
-		assert "record_id" in data, "record_id is not in data" 
+		assert "record_id" in data, "record_id is not in data"
 		assert "processid" in data, "processid is not in data"
 		assert "bin_uri" in data, "bin_uri is not in data"
 		assert "specimenid" in data, "specimenid is not in data"

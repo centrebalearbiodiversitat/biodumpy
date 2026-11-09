@@ -54,10 +54,7 @@ def test_avonet_not_found():
 		avonet._download("NonexistentBird")
 
 
-@pytest.mark.parametrize(
-	"query, output_format",
-	[(["Accipiter albogularis"], "json")],
-)
+@pytest.mark.parametrize("query, output_format", [(["Accipiter albogularis"], "json")])
 def test_download(query, output_format):
 	with redirect_stdout(trap):
 		data = avonet_query(query=query, output_format=output_format)

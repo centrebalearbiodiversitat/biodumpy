@@ -68,8 +68,7 @@ class Biodumpy:
 
 		# Check if there are NAs in the element list. If NAs are present, remove them and show a message
 		if any(is_na(e) for e in elements):
-			print("Found NA values, removing them... \n"
-				  "------------------------------------")
+			print("Found NA values, removing them... \n------------------------------------")
 			elements = [e for e in elements if not is_na(e)]
 
 		current_date = datetime.now().strftime("%Y-%m-%d")
