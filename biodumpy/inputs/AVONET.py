@@ -29,7 +29,7 @@ class AVONET(Input):
 	>>> bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}')
 	"""
 
-	DATA_URL = "https://github.com/centrebalearbiodiversitat/biodumpy/releases/download/v0.1.10/AVONET1_BirdLife_plugin.json"
+	DATA_URL = "https://github.com/centrebalearbiodiversitat/biodumpy/releases/download/AVONET/AVONET1_BirdLife_plugin.json"
 
 	_DATA_CACHE = None
 
