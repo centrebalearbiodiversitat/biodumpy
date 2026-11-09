@@ -1,34 +1,47 @@
 import requests
+from urllib.parse import quote
 
 from biodumpy import Input, BiodumpyException
 
 
 class BOLD(Input):
 	"""
-	Query the Barcode of Life Data System (BOLD) database to retrieve taxon genetic or occurrence data.
+	Query the Barcode of Life Data System (BOLD Portal) database to retrieve taxon genetic or occurrence data.
 
 	Parameters
 	----------
-	query : list
-	    The list of taxa to query.
 	summary : bool, optional
-	    If True, the function returns a summary of the downloaded metadata instead of the full records.
-	    Default is False.
+		If True, the function returns a summary of the downloaded metadata instead of the full records.
+		Default is False.
+	output_format : str, optional
+		Output format for the downloaded data ("json" or "fasta"). Default is "json".
+	bulk : bool, optional
+		Whether to merge results into a single file. Default is False.
+	sleep : int, optional
+		Delay between requests in seconds. Default is 3.
 
 	Details
 	-------
-	When `summary` is True, the resulting JSON will include the following information:
+	When `summary` is True, the resulting JSON will include key metadata fields:
 	- `record_id`: The unique identifier for the BOLD record.
 	- `processid`: The process ID associated with the BOLD record.
+	- `sampleid`: The sample identifier.
 	- `bin_uri`: The BIN (Barcode Index Number) URI.
-	- `taxon`: The name of the lower taxon extracted from the taxonomy information.
-	- `country`: The country where the collection event took place.
-	- `province_state`: The province or state of the collection event.
-	- `region`: The region of the collection event.
-	- `lat`: The latitude of the collection event.
-	- `lon`: The longitude of the collection event.
-	- `markercode`: The marker code from the sequence data.
-	- `genbank_accession`: The GenBank accession number from the sequence data.
+	- `taxon`: The taxonomic name (species or identification).
+	- `species`: The species name.
+	- `identification`: The identification string.
+	- `country_ocean`: The country or ocean of collection.
+	- `province_state`: The province or state of collection.
+	- `region`: The geographic region of collection.
+	- `coord`: Geographic coordinates (latitude, longitude).
+	- `marker_code`: The marker code (e.g. COI-5P).
+	- `insdc_acs`: The GenBank / INSDC accession number.
+	- `identified_by`: The identifier person or institution.
+	- `inst`: Housing institution.
+	- `collection_date_start`: Collection date.
+	- `sequence_run_site`: Sequencing facility.
+	- `sequence_upload_date`: Date uploaded to BOLD.
+	- `specimens`: Specimen information.
 
 	Example
 	-------
@@ -44,76 +57,125 @@ class BOLD(Input):
 	def __init__(self, summary: bool = False, **kwargs):
 		super().__init__(**kwargs)
 		self.summary = summary
-		# self.fasta = fasta
-
-		# if self.fasta and output_format != "fasta":
-		# 	raise ValueError("Invalid output_format. Expected fasta.")
 
 		if self.output_format not in {"json", "fasta"}:
 			raise ValueError('Invalid output_format. Expected "json" or "fasta".')
 
+		if self.summary and self.output_format == "fasta":
+			raise BiodumpyException("Invalid parameter combination: output_format='fasta' cannot be used when summary=True.")
+
 	def _download(self, query, **kwargs) -> list:
-		# if self.fasta:
-		if self.output_format == "fasta":
-			response = requests.get(f"http://v4.boldsystems.org/index.php/API_Public/sequence?taxon={query}")
+		payload = []
 
-			if response.status_code != 200:
-				raise BiodumpyException(f"Fasta sequence request. Error {response.status_code}")
-
-			if response.content:
-				response = response.content
-				data_str = response.decode()
-
-				# Split the data by '>'
-				fasta_entries = [f">{entry}" for entry in data_str.split(">") if entry]
-
-				return fasta_entries
-		else:
-			response = requests.get(f"http://v4.boldsystems.org/index.php/API_Public/combined?taxon={query}&format=json")
-
-			payload = []
-
-			if response.status_code != 200:
-				raise BiodumpyException(f"Combined data request. Error {response.status_code}")
-
-			if response.content:
-				results = response.json()
-				if self.summary:
-					results_summary = results.get("bold_records", {}).get("records", [])
-					for entry in results_summary:
-						entry_summary = results_summary[entry]
-
-						# Extract the necessary fields with default None values if keys are missing.
-						# Sequence could contain more than one marker code.
-						sequences = entry_summary.get("sequences", {}).get("sequence", [])
-						markercodes = [seq.get("markercode") for seq in sequences if "markercode" in seq]
-						genbank_accession = [seq.get("genbank_accession") for seq in sequences if "genbank_accession" in seq]
-
-						# Retrieve taxonomy
-						taxonomy = entry_summary.get("taxonomy", {})
-						taxon_name = taxonomy.get(list(taxonomy.keys())[-1], {}).get("taxon", {}).get("name")
-
-						# Retrieve collection event metadata
-						collection_event = entry_summary.get("collection_event", {})
-						coordinates = collection_event.get("coordinates", {})
-
-						payload.append(
-							{
-								"record_id": entry_summary.get("record_id"),
-								"processid": entry_summary.get("processid"),
-								"bin_uri": entry_summary.get("bin_uri"),
-								"taxon": taxon_name,
-								"country": collection_event.get("country"),
-								"province_state": collection_event.get("province_state"),
-								"region": collection_event.get("region"),
-								"lat": coordinates.get("lat") if coordinates else None,
-								"lon": coordinates.get("lon") if coordinates else None,
-								"markercode": "/".join(markercodes) if markercodes else None,
-								"genbank_accession": genbank_accession[0] if genbank_accession else None,
-							}
-						)
-				else:
-					res = results["bold_records"]["records"] if "bold_records" in results and "records" in results["bold_records"] else []
-					payload = list(res.values())
-
+		# 1. Match the taxon query string with BOLD
+		tax_response = self._querytax(query)
+		successful_terms = tax_response.get("successful_terms", [])
+		if not successful_terms:
 			return payload
+
+		matched = successful_terms[0].get("matched")
+		if not matched:
+			return payload
+
+		# 2. Check record count
+		count_response = self._querycount(matched)
+		record_count = count_response.get("records", 0)
+		if record_count == 0:
+			return payload
+
+		# 3. Generate query ID to download the records
+		query_gen = self._querygenerator(matched)
+		query_download = query_gen.get("query_id")
+		if not query_download:
+			return payload
+
+		# 4. Download data from BOLD Portal documents endpoint
+		try:
+			response = requests.get(f"https://portal.boldsystems.org/api/documents/{query_download}?length={record_count}&start=0", timeout=30)
+		except requests.RequestException as e:
+			raise BiodumpyException(f"Download BOLD request failed: {str(e)}")
+
+		if response.status_code != 200:
+			raise BiodumpyException(f"Download BOLD. Error {response.status_code}")
+
+		if response.content:
+			data_json = response.json()
+			res = data_json.get("data", [])
+			payload = res
+
+			# Fasta format
+			if self.output_format == "fasta":
+				fasta_entries = []
+				for entry in res:
+					if entry.get("nuc"):
+						header = f">{entry.get('processid')}|{entry.get('identification')}|{entry.get('marker_code')}"
+						fasta_entries.append(header)
+						fasta_entries.append(entry["nuc"])
+				payload = fasta_entries
+
+			# Summary format
+			elif self.summary:
+				summary_entries = []
+				for entry in res:
+					summary_entries.append(
+						{
+							"record_id": entry.get("record_id", None),
+							"processid": entry.get("processid", None),
+							"sampleid": entry.get("sampleid", None),
+							"insdc_acs": entry.get("insdc_acs", None),
+							"bin_uri": entry.get("bin_uri", None),
+							"taxon": entry.get("species") or entry.get("identification", None),
+							"species": entry.get("species", None),
+							"identification": entry.get("identification", None),
+							"collection_date_start": entry.get("collection_date_start", None),
+							"coord": entry.get("coord", None),
+							"country_ocean": entry.get("country/ocean", None),
+							"province_state": entry.get("province/state", None),
+							"region": entry.get("region", None),
+							"identified_by": entry.get("identified_by", None),
+							"inst": entry.get("inst", None),
+							"marker_code": entry.get("marker_code", None),
+							"sequence_run_site": entry.get("sequence_run_site", None),
+							"sequence_upload_date": entry.get("sequence_upload_date", None),
+							"specimens": entry.get("specimens", None),
+						}
+					)
+				payload = summary_entries
+
+		return payload
+
+	def _querytax(self, query):
+		encoded = quote(query, safe="")
+		try:
+			response = requests.get(f"https://portal.boldsystems.org/api/query/preprocessor?query=tax:{encoded}", timeout=30)
+		except requests.RequestException as e:
+			raise BiodumpyException(f"Query tax failed: {str(e)}")
+
+		if response.status_code != 200:
+			raise BiodumpyException(f"Query tax. Error {response.status_code}")
+
+		return response.json()
+
+	def _querycount(self, query):
+		encoded = quote(query, safe="")
+		try:
+			response = requests.get(f"https://portal.boldsystems.org/api/counts?query={encoded}", timeout=30)
+		except requests.RequestException as e:
+			raise BiodumpyException(f"Query count failed: {str(e)}")
+
+		if response.status_code != 200:
+			raise BiodumpyException(f"Query count. Error {response.status_code}")
+
+		return response.json()
+
+	def _querygenerator(self, query):
+		encoded = quote(query, safe="")
+		try:
+			response = requests.get(f"https://portal.boldsystems.org/api/query?query={encoded}&extent=full", timeout=30)
+		except requests.RequestException as e:
+			raise BiodumpyException(f"Query generator failed: {str(e)}")
+
+		if response.status_code != 200:
+			raise BiodumpyException(f"Query generator. Error {response.status_code}")
+
+		return response.json()

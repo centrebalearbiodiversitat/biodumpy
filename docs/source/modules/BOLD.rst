@@ -25,10 +25,9 @@ Key Features
 Retrieve comprehensive metadata from BOLD
 -----------------------------------------
 
-In this example, we download the information from BOLD setting the parameter ``bulk`` to *True*. This function is based on the BOLD v4 API's endpoints `API_Public/combined`_ and `API_Public/sequence`_.
+In this example, we download the information from BOLD setting the parameter ``bulk`` to *True*. This function is based on the BOLD Portal API `API_portal`_ (API documentation is available at https://portal.boldsystems.org/api/docs). 
 
-.. _API_Public/combined: http://v4.boldsystems.org/index.php/API_Public/combined?
-.. _API_Public/sequence: http://v4.boldsystems.org/index.php/API_Public/sequence?
+.. _API_portal: https://portal.boldsystems.org/api
 
 .. note::
 

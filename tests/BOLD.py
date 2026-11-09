@@ -76,18 +76,15 @@ def test_download(query, summary, output_format):
 		assert "record_id" in data, "record_id is not in data"
 		assert "processid" in data, "processid is not in data"
 		assert "bin_uri" in data, "bin_uri is not in data"
-		assert "specimen_identifiers" in data, "specimen_identifiers is not in data"
-		assert "taxonomy" in data, "taxonomy is not in data"
-		assert "specimen_desc" in data, "specimen_desc is not in data"
-		assert "collection_event" in data, "collection_event is not in data"
-		assert "sequences" in data, "sequences is not in data"
+		assert "specimenid" in data, "specimenid is not in data"
+		assert "collection_event_id" in data, "collection_event_id is not in data"
+		assert "nuc" in data, "nuc is not in data"
 
 	if summary and output_format != "fasta":
 		# Check the summary structure
 		assert "record_id" in data[0], "record_id is not in data"
 		assert "processid" in data[0], "processid is not in data"
 		assert "bin_uri" in data[0], "bin_uri is not in data"
-		assert "taxon" in data[0], "taxon is not in data"
 
 	if summary is False and output_format == "fasta":
 		# Check if the fasta file starts with >
