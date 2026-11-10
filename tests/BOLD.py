@@ -61,6 +61,13 @@ def test_bold_initialization():
 		BOLD(output_format="xml")
 
 
+@pytest.mark.skipif(
+	os.getenv("CI") == "true" or os.getenv("GITHUB_ACTIONS") == "true", reason="BOLD Portal API (portal.boldsystems.org) blocks CI / GitHub Actions runner IPs with Cloudflare 403"
+)
+@pytest.mark.skipif(
+	os.getenv("CI") == "true" or os.getenv("GITHUB_ACTIONS") == "true",
+	reason="BOLD Portal API (portal.boldsystems.org) blocks CI / GitHub Actions runner IPs with Cloudflare 403",
+)
 @pytest.mark.parametrize("query, summary, output_format", [(["Alytes muletensis"], True, "json"), (["Alytes muletensis"], False, "json"), (["Alytes muletensis"], False, "fasta")])
 def test_download(query, summary, output_format):
 	with redirect_stdout(trap):
