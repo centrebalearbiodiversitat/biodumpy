@@ -1,7 +1,7 @@
 {
   "biodumpy": {
-    "bib": "@article{cancellario2025biodumpy, \n title={biodumpy: A Comprehensive Biological Data Downloader}, \n  author={Cancellario, T and Golomb Duran, T and Far, AJ and Roldan, A and Capa, M}, \n journal={bioRxiv}, \n  pages={2025--07}, \n  year={2025}, \n  publisher={Cold Spring Harbor Laboratory}}",
-    "apa": "Cancellario, T., Golomb Durán, T., Far, A. J., Roldán, A., & Capa, M. (2025). biodumpy: A Comprehensive Biological Data Downloader. bioRxiv, 2025-07."
+    "bib": "@article{cancellario2026biodumpy, title={Biodumpy: A comprehensive biological data downloader}, volume={20}, url={https://journals.ku.edu/jbi/article/view/24725}, DOI={10.17161/bi.v20i1.24725}, number={1}, journal={Biodiversity Informatics}, author={Cancellario, Tommaso and Golomb Durán, Tomas and Far, Antoni Josep and Roldán, Alejandro and Capa, Maria}, year={2026}, month={Mar.} }",
+    "apa": "Cancellario, T., Golomb Durán, T., Far, A. J., Roldán, A., & Capa, M. (2026). Biodumpy: A comprehensive biological data downloader. Biodiversity Informatics, 20(1). https://doi.org/10.17161/bi.v20i1.24725"
   },
   "AVONET": {
     "bib": "@article{tobias2022avonet,\n  author = {Tobias, J. A. and Sheard, C. and Pigot, A. L. and Devenish, A. J. and Yang, J. and Sayol, F. and ... and Schleuning, M.},\n  title = {AVONET: morphological, ecological and geographical data for all birds},\n  journal = {Ecology Letters},\n  year = {2022},\n  volume = {25},\n  number = {3},\n  pages = {581-597}\n}",

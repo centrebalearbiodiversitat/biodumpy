@@ -1,6 +1,6 @@
 GBIF Module
 ===========
-
+ 
 .. _GBIF_module:
 
 
@@ -60,7 +60,6 @@ The ``GBIF`` module provides also the ability to download occurrences for a spec
 
     from biodumpy import Biodumpy
     from biodumpy.inputs import GBIF
-    import json
 
     # Download data
     gbif_backbone = 'd7dddbf4-2cf0-4f39-9b2a-bb099caae36c'

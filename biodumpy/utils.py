@@ -2,6 +2,7 @@ import csv
 import json
 import os
 import re
+import math
 from copy import deepcopy
 
 
@@ -99,6 +100,18 @@ def clean_nones(value):
 		return {key: clean_nones(val) for key, val in value.items() if val is not None}
 	else:
 		return value
+
+
+def is_na(x):
+	"""
+	Function to check if a value is "NA" (None or NaN)
+
+	Example:
+		elements = [1, 2, None, np.nan, 4, float('nan'), 5]
+		elements = [e for e in elements if not is_na(e)]
+	"""
+
+	return x is None or (isinstance(x, float) and math.isnan(x))
 
 
 def dump_to_csv(file_name, obj_list):

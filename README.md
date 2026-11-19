@@ -1,4 +1,6 @@
-<img src="https://raw.githubusercontent.com/centrebalearbiodiversitat/biodumpy/refs/heads/master/docs/source/static/Biodumpy_logo.png" alt="Project Logo" width="200">
+<p align="center">
+    <img src="docs/source/static/Biodumpy_logo.png" alt="Project Logo" width="200">
+</p>
 
 # biodumpy: A Comprehensive Biological Data Downloader
 
@@ -17,7 +19,8 @@
 ## Key Features
 ``biodumpy`` offers dedicated modules for each supported database, with each module featuring functions specifically designed for retrieving information from its respective source. The modules implemented so far are:
 
-- Barcode of life data system v4 (BOLD)
+- AVONET (AVONET)
+- Barcode of life data system (BOLD)
 - Catalogue of life (COL)
 - Crossref
 - Global biodiversity information facility (GBIF)
@@ -55,45 +58,41 @@ In detail, we described:
 **Example N.1**
 
 ``` python
+# Import biodumpy package
+from biodumpy import Biodumpy
 
-    # Import biodumpy package
-    from biodumpy import Biodumpy
+# Import GBIF module
+from biodumpy.inputs import GBIF
 
-    # Import GBIF module
-    from biodumpy.inputs import GBIF
+# Create a list of taxa
+taxa = ["Alytes muletensis (Sanchíz & Adrover, 1979)", "Bufotes viridis (Laurenti, 1768)", "Hyla meridionalis Boettger, 1874", "Anax imperator Leach, 1815"]
 
-    # Create a list of taxa
-    taxa = ['Alytes muletensis (Sanchíz & Adrover, 1979)', 'Bufotes viridis (Laurenti, 1768)',
-            'Hyla meridionalis Boettger, 1874', 'Anax imperator Leach, 1815']
+# Set the Biodumpy function with the specific parameters
+bdp = Biodumpy([GBIF(sleep=3, bulk=False, accepted_only=True)])
 
-    # Set the Biodumpy function with the specific parameters
-    bdp = Biodumpy([GBIF(sleep=3, bulk=False, accepted_only=True)])
-
-    # Start the download
-    bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}')
+# Start the download
+bdp.start(taxa, output_path="./downloads/{date}/{module}/{name}")
 ```
 
 **Example N.2**
 
 ``` python
+# Import biodumpy package
+from biodumpy import Biodumpy
 
-    # Import biodumpy package
-    from biodumpy import Biodumpy
+# Import GBIF and IUCN modules
+from biodumpy.inputs import GBIF, IUCN
 
-    # Import GBIF and IUCN modules
-    from biodumpy.inputs import GBIF, IUCN
+api_key = "YOUR_IUCN_API_KEY"
 
-    api_key = 'YOUR_IUCN_API_KEY'
+# Create a list of taxa
+taxa = ["Alytes muletensis", "Bufotes viridis", "Hyla meridionalis", "Anax imperator"]
 
-    # Create a list of taxa
-    taxa = ['Alytes muletensis', 'Bufotes viridis', 'Hyla meridionalis', 'Anax imperator']
+# Set the Biodumpy functions with the specific parameters
+bdp = Biodumpy([GBIF(bulk=False, accepted_only=True), IUCN(api_key=api_key, bulk=True, region=["Global"])])
 
-    # Set the Biodumpy functions with the specific parameters
-    bdp = Biodumpy([GBIF(bulk=False, accepted_only=True),
-                    IUCN(api_key=api_key, bulk=True, region=['Global'])])
-
-    # Start the download
-    bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}')
+# Start the download
+bdp.start(taxa, output_path="./downloads/{date}/{module}/{name}")
 ```
 
 ## Documentation and Support
@@ -103,7 +102,7 @@ For detailed documentation and tutorials, please visit the ``biodumpy`` Read the
 ## Contribution
 ``biodumpy`` is an open-source project, and contributions are welcome! 
 If you have ideas for new features, bug fixes, or improvements, please submit an issue or pull request in our GitHub repository or contact with the support team
-[✉️ here](mailto:t.cancellario@uib.eu?subject=biodumpy_support).
+[✉️ here](mailto:tommaso.cancellario@gmail.com?subject=biodumpy_support).
 
 
 ## License

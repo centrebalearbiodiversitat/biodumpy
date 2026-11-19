@@ -10,6 +10,7 @@ Modules
 
 The current modules are dedicated for the following databases:
 
+- :doc:`modules/AVONET`
 - :doc:`modules/BOLD`
 - :doc:`modules/COL`
 - :doc:`modules/Crossref`

@@ -44,7 +44,7 @@ To make ``biodumpy`` easier to use, we have designed a general structure that is
 Examples
 --------
 
-Here, we provide two examples illustrating the general structure of a ``biodumpy``. In detail, we described:
+Here, we provide two examples illustrating the general structure of ``biodumpy``. In detail, we described:
 
 - **Example n.1 - Single Module**. We demonstrate how to use a single ``biodumpy`` module (e.g., GBIF).
 - **Example n.2 - Multiple Modules**. We show how to use multiple ``biodumpy`` modules (e.g., GBIF and COL).
@@ -85,8 +85,8 @@ Example n.2
 	taxa = ['Alytes muletensis', 'Bufotes viridis', 'Hyla meridionalis', 'Anax imperator']
 
 	# Set the biodumpy functions with the specific parameters
-	bdp = Biodumpy([GBIF(bulk=True, accepted_only=True),
-					COL(bulk=True)])
+	bdp = Biodumpy([GBIF(bulk=True, accepted_only=True), 
+                    COL(bulk=True)])
 
 	# Start the download
 	bdp.start(taxa, output_path='./downloads/{date}/{module}/{name}')
@@ -97,7 +97,7 @@ The ``bulk`` parameter
 
 An important parameter common to all modules is ``bulk``. This parameter controls how information is organized and saved, allowing users to customize the data structure according to their needs (Fig. 1).
 
-- If ``bulk`` is *True*, the information downloaded for each taxon is merged into a single file. This option may be useful if the amount of the total data is limited and for consolidating data and simplifying file management.
+- If ``bulk`` is *True*, the information downloaded for each taxon is merged into a single file. This option may be useful if the amount of the total data is limited, for consolidating data, and simplifying file management.
 
 - If ``bulk`` is *False*, the information for each taxon is saved in a separate file. This option is useful for detailed analysis, when individual taxon files are required or when the amount of data for each taxon is large.
 
@@ -110,7 +110,7 @@ Another important parameter available across all modules is ``sleep``. This para
 
 - If ``sleep`` is set to a lower value (e.g., 0 or 0.1 seconds), the requests are made with minimal delay. This option is suitable for small or local datasets where speed is a priority and server restrictions are not a concern.
 
-By default, ``sleep`` is set to 0.1 seconds. However, we encourage users to adjust this parameter based on the API’s rate policies to ensure responsible data access and avoid overloading external servers.
+By default, ``sleep`` is set to 3 seconds. However, we encourage users to adjust this parameter based on the API’s rate policies to ensure responsible data access and avoid overloading external servers.
 
 Save result location
 --------------------
